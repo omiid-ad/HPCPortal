@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "IranSans";
+    src: url("../fonts/IRANSansWeb(FaNum).ttf");
+}
+
+body {
+    font-family: "IranSans", serif;
+    font-size: 18px;
+    overflow-x: hidden;
+}
+
+.top-logo {
+    display: block;
+    margin: 15px auto;
+}
+
+nav {
+    box-shadow: 0 10px 15px -15px #28a745;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.box {
+    padding: 20px;
+    width: 500px;
+    margin: 100px auto;
+    box-shadow: 1px 2px 9px #5a6268;
+    border: 1px solid #5a6268;
+    border-radius:5px;
+}
+
+.label-right {
+    width: 100%;
+    text-align: right;
+}
