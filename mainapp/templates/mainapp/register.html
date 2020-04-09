@@ -1,0 +1,50 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}ثبت نام{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <form dir="rtl" method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li class="text-danger text-right small">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="label-right" for="inputEmail4">نام</label>
+                    <input required name="first_name" type="text" class="form-control" id="inputEmail4">
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="label-right" for="inputPassword4">نام خانوادگی</label>
+                    <input required name="last_name" type="text" class="form-control" id="inputPassword4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress">ایمیل</label>
+                <input required name="email" type="email" class="form-control" id="inputAddress"
+                       placeholder="ایمیل معتبر و غیرتکراری">
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress2">کلمه عبور</label>
+                <input required name="password1" type="password" class="form-control" id="inputAddress2">
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress2">تکرار کلمه ی عبور</label>
+                <input required name="password2" type="password" class="form-control" id="inputAddress2">
+                <small id="inputAddress2" class="form-text text-danger text-right mt-2">× دقت کنید در صورت عدم تکمیل
+                    پروفایل،
+                    امکان درخواست وجود ندارد
+                </small>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">برو به "تکمیل پروفایل"</button>
+        </form>
+    </div>
+{% endblock %}

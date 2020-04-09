@@ -1,0 +1,42 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}تکمیل پروفایل{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <form dir="rtl" method="post" action="{% url 'complete_profile' %}">
+            {% csrf_token %}
+
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li class="text-danger text-right small">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="label-right" for="inputEmail4">دانشگاه</label>
+                    <input required name="uni" type="text" class="form-control" id="inputEmail4">
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="label-right" for="inputPassword4">رشته</label>
+                    <input required name="field" type="text" class="form-control" id="inputPassword4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress2">نام و نام خانوادگی استاد راهنما</label>
+                <input required name="master_name" type="text" class="form-control" id="inputAddress2">
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress">ایمیل استاد راهنما</label>
+                <input required name="email" type="email" class="form-control" id="inputAddress"
+                       placeholder="ایمیل معتبر و غیرتکراری">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">تکمیل</button>
+        </form>
+    </div>
+{% endblock %}
