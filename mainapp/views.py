@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth import login as django_login
+from django.contrib.auth import login as django_login, authenticate, logout as django_logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .models import *
@@ -7,12 +8,35 @@ from .models import *
 
 def index(request):
     if not request.user.is_authenticated:
-        redirect('login')
-    return render(request, 'mainapp/index.html')
+        return redirect('login')
+    else:
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+            return redirect('complete_profile')
+        else:
+            all_requests = Request.objects.filter(user=profile).order_by('-date_requested')
+            context = {
+                'all_requests': all_requests,
+            }
+            return render(request, 'mainapp/index.html', context)
 
 
 def login(request):
-    return render(request, 'mainapp/login.html')
+    if request.method == "GET" and not request.user.is_authenticated:
+        return render(request, 'mainapp/login.html')
+    elif request.user.is_authenticated:
+        return redirect('index')
+    elif request.method == "POST":
+        user = authenticate(username=request.POST['email'], password=request.POST['password'])
+        if user is not None:
+            django_login(request, user)
+            messages.success(request, 'با موفقیت وارد شدید')
+            return redirect('index')
+        else:
+            messages.error(request, "ایمیل یا رمز عبور اشتباه است")
+            return redirect('login')
 
 
 def register(request):
@@ -31,6 +55,7 @@ def register(request):
         return redirect('complete_profile')
 
 
+@login_required(login_url='/login')
 def complete_profile(request):
     if request.method == "GET":
         return render(request, 'mainapp/complete_profile.html')
@@ -41,3 +66,10 @@ def complete_profile(request):
         profile.save()
         messages.success(request, "پروفایل با موفقیت تکمیل شد")
         return redirect('index')
+
+
+@login_required(login_url='/login')
+def logout(request):
+    django_logout(request)
+    messages.success(request, "با موفقیت خارج شدید")
+    return redirect('index')
