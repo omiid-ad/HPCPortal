@@ -101,9 +101,8 @@ def calc_cost(request):
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
     total = cpu + ram + disk + days
-    expire_date = timezone.now() + datetime.timedelta(days=days)
+
     data = {
-        'expire_date': expire_date,
         'total': total,
         'status': 200
     }

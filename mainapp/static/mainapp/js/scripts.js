@@ -10,10 +10,6 @@ function calcCost() {
     xhttp.onreadystatechange = function () {
         var result = JSON.parse(this.response);
         var total = JSON.parse(result["total"]);
-        var expire_date = JSON.parse(result["expire_date"]);
-        window.alert(expire_date);
-        window.alert(total);
-        // document.getElementById("cost").value = total;
-        // document.getElementById("expireddate").innerHTML = expire_date;
+        document.getElementById("cost").value = total;
     }
 }
