@@ -51,14 +51,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-6">
-                    some stuff
+                    <p class="small m-3">Shahid Chamran University of Ahvaz, All rights reserved - <span
+                            id="footer_current_year_eng"></span>
+                    </p>
                 </div>
-                <div class="col-6">
-                    contact us
-                </div>
-                <div class="col-12 text-center m-2">
-                    All rights reserved , <span id="footer_year"></span>
-                </div>
+                <div class="col-6 text-right">
+                    <p class="small m-3"> تمام حقوق مادی و معنوی این وب‌سایت متعلق به دانشگاه شهید چمران اهواز می باشد -
+                        <span id="footer_current_year_fa"></span></p></div>
+
             </div>
         </div>
 
@@ -73,6 +73,11 @@
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
     <script src="{% static 'mainapp/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'mainapp/js/scripts.js' %}"></script>
+    <script>
+        document.getElementById("footer_current_year_fa").innerHTML = new Date().getFullYear();
+        document.getElementById("footer_current_year_eng").innerHTML = new Date().getFullYear();
+    </script>
 {% endblock %}
 
 </body>
