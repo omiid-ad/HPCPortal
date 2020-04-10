@@ -1,0 +1,90 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}ثبت درخواست جدید{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <form dir="rtl" method="post" action="{% url 'new_request' %}">
+            {% csrf_token %}
+
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li class="text-danger text-right small">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+
+            <div class="form-group">
+                <label class="label-right" for="os">سیستم عامل</label>
+                <select name="os" required id="os" class="form-control">
+                    <option selected>انتخاب کنید...</option>
+                    <option value="Win">Windows</option>
+                    <option value="Lin">Linux</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label class="label-right" for="cpu">پردازنده</label>
+                    <div class="input-group">
+                        <input name="cpu" required value="0" type="number" class="form-control" id="cpu">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">GHz</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="label-right" for="ram">حافظه رم</label>
+                    <div class="input-group">
+                        <input name="ram" required value="0" type="number" id="ram" class="form-control">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">GB</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="label-right" for="disk">دیسک</label>
+                    <div class="input-group">
+                        <input name="disk" required value="0" type="number" id="disk" class="form-control">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">GB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="appname">برنامه ها</label>
+                <textarea name="app_name" class="form-control" id="appname" rows="2"
+                          placeholder="نام هر برنامه را با یک خط تیره (−) از هم جدا کنید..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label class="label-right" for="days">تعداد روزها</label>
+                    <input name="days" value="0" required type="number" class="form-control" id="days">
+                </div>
+                <div class="form-group col-md-5">
+                    <label class="label-right" for="expireddate">تاریخ سررسید</label>
+                    <input name="expired_date" readonly type="date" class="form-control" id="expireddate">
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="label-right" for="cost">هزینه برآورد شده</label>
+                    <div class="input-group">
+                        <input name="cost" value="0" readonly type="number" class="form-control" id="cost">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">تومان</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="desc">توضیحات</label>
+                <textarea name="description" class="form-control" id="desc" rows="2"
+                          placeholder="درصورت نیاز، توضیحاتی وارد نمایید..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">ارسال درخواست</button>
+        </form>
+    </div>
+{% endblock %}

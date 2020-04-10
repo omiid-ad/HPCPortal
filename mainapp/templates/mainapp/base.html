@@ -35,6 +35,7 @@
                             <a class="navbar-link" href="{% url 'register' %}">ثبت نام</a>
                             <a class="navbar-link" href="{% url 'index' %}">خانه</a>
                         {% else %}
+                            <a href="{% url 'new_request' %}">درخواست جدید</a>
                             <ul class="navbar-nav navbar-link">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">

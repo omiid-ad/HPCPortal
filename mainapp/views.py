@@ -73,3 +73,23 @@ def logout(request):
     django_logout(request)
     messages.success(request, "با موفقیت خارج شدید")
     return redirect('index')
+
+
+@login_required(login_url='/login')
+def new_request(request):
+    if request.method == "GET":
+        return render(request, 'mainapp/new_request.html')
+    elif request.method == "POST":
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+            return redirect('complete_profile')
+        new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
+                                             cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
+                                             app_name=request.POST["app_name"], days=int(request.POST["days"]),
+                                             show_cost=int(request.POST["cost"]),
+                                             description=request.POST["description"])
+        new_request.save()
+        messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
+        return redirect('index')
