@@ -4,10 +4,62 @@
 
 {% block msg %}
     {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="alert {{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
     {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% ifequal all_requests.count 0 %}
+        هیچ درخواستی ندارید
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-dark table-bordered" dir="rtl">
+                <thead>
+                <tr>
+                    <th>تاریخ درخواست</th>
+                    <th>تاریخ انقضا</th>
+                    <th>سیستم عامل</th>
+                    <th>نام برنامه ها</th>
+                    <th>پردازنده</th>
+                    <th>رم</th>
+                    <th>دیسک</th>
+                    <th>هزینه</th>
+                    <th>توضیحات</th>
+                    <th>شماره سریال</th>
+                    <th>وضعیت تایید</th>
+                    <th>وضعیت سرویس</th>
+                    <th>ویرایش سرویس</th>
+                    <th>تمدید سرویس</th>
+                    <th>لغو سرویس</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for req in all_requests %}
+                    <tr class="table-primary">
+                        <td>{{ req.date_requested }}</td>
+                        <td>{{ req.date_expired }}</td>
+                        <td>{{ req.os }}</td>
+                        <td>{{ req.app_name }}</td>
+                        <td>{{ req.cpu }}</td>
+                        <td>{{ req.ram }}</td>
+                        <td>{{ req.disk }}</td>
+                        <td>{{ req.show_cost }}</td>
+                        <td>{{ req.description }}</td>
+                        <td>{{ req.serial_number }}</td>
+                        <td>{{ req.acceptance_status }}</td>
+                        <td>{{ req.renewal_status }}</td>
+                        <td>none</td>
+                        <td>none</td>
+                        <td>none</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endifequal %}
 {% endblock %}
