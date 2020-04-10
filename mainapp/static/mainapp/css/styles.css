@@ -51,3 +51,26 @@ a:hover {
     bottom: 0;
     width: 100%;
 }
+
+.alert {
+    width: fit-content;
+    margin: 10px 10px 10px auto;
+}
+
+div.dropdown-menu a {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar-link {
+    margin: 10px 30px;
+}
+
+table {
+    margin: 50px auto;
+}
+th {
+    text-align: center;
+    font-size: small;
+}
