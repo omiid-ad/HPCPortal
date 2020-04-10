@@ -44,10 +44,10 @@ class Request(models.Model):
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     description = models.TextField(blank=True, verbose_name="توضیحات")
     serial_number = models.CharField(max_length=16, editable=False, unique=True, verbose_name="شماره سریال")
-    acceptance_status = models.CharField(max_length=20, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
-                                         default=ACCEPTANCE_STATUS[0])
-    renewal_status = models.CharField(max_length=20, choices=RENEWAL_STATUS, verbose_name="وضعیت سرویس",
-                                      default=RENEWAL_STATUS[1])
+    acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
+                                         default='Pen')
+    renewal_status = models.CharField(max_length=200, choices=RENEWAL_STATUS, verbose_name="وضعیت سرویس",
+                                      default='Ok')
 
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
