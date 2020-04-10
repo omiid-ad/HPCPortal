@@ -93,3 +93,19 @@ def new_request(request):
         new_request.save()
         messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
         return redirect('index')
+
+
+def calc_cost(request):
+    cpu = int(request.GET.get('cpu'))
+    ram = int(request.GET.get('ram'))
+    disk = int(request.GET.get('disk'))
+    days = int(request.GET.get('days'))
+    total = cpu + ram + disk + days
+    expire_date = timezone.now() + datetime.timedelta(days=days)
+    data = {
+        'expire_date': expire_date,
+        'total': total,
+        'status': 200
+    }
+    from django.http import JsonResponse
+    return JsonResponse(data)
