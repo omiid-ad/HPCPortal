@@ -4,21 +4,32 @@
 
 {% block content %}
     <div class="box">
-        <form dir="rtl">
+        <form dir="rtl" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li class="text-danger text-right small">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
             <div class="form-group">
                 <label class="label-right" for="exampleInputEmail1">ایمیل</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                <small id="emailHelp" class="form-text text-danger text-right">error goes here
-                </small>
+                <input name="email" required type="email" class="form-control" id="exampleInputEmail1"
+                       aria-describedby="emailHelp">
             </div>
             <div class="form-group">
                 <label class="label-right" for="exampleInputPassword1">رمز عبور</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
+                <input name="password" required type="password" class="form-control" id="exampleInputPassword1">
             </div>
             <button type="submit" class="btn btn-success btn-block">ورود</button>
         </form>
         <div class="border-top m-4">
-            <a class="d-block text-right m-2 small " href="#">ثبت نام</a>
+            <a class="d-block text-right m-2 small " href="{% url 'register' %}">ثبت نام</a>
             <a class="d-block text-right m-2 small" href="#">ورود بعنوان مدیر</a>
         </div>
     </div>
