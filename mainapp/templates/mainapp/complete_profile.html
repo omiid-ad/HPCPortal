@@ -2,6 +2,17 @@
 {% load static %}
 {% block title %}تکمیل پروفایل{% endblock %}
 
+{% block msg %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="box">
         <form dir="rtl" method="post" action="{% url 'complete_profile' %}">
