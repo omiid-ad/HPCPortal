@@ -14,6 +14,16 @@ class Profile(models.Model):
     guidance_master_full_name = models.CharField(max_length=100, verbose_name="استاد راهنما")
     guidance_master_email = models.EmailField(max_length=200, verbose_name="ایمیل استاد راهنما")
 
+    class Meta:
+        verbose_name_plural = "پروفایل"
+
+    def __str__(self):
+        return self.user.get_full_name() + " - " + self.user.username
+
+    @property
+    def get_user_full_name(self):
+        return self.user.get_full_name()
+
 
 class Request(models.Model):
     OS = [
@@ -32,7 +42,7 @@ class Request(models.Model):
         ('Can', 'لغو شده')
     ]
 
-    date_requested = models.DateField(default=timezone.now)
+    date_requested = models.DateField(default=timezone.now, verbose_name="تاریخ درخواست")
     date_expired = models.DateField(editable=False, verbose_name="تاریخ سررسید", null=True)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name="کاربر", null=True)
     os = models.CharField(choices=OS, max_length=50, verbose_name="سیستم عامل")
@@ -56,4 +66,7 @@ class Request(models.Model):
         super().save()
 
     def __str__(self):
-        return str(self.date_expired)
+        return self.serial_number
+
+    class Meta:
+        verbose_name_plural = "درخواست"
