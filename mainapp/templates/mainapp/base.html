@@ -19,14 +19,26 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-4">
-                    <form action="" class="w-100 h-100 d-flex justify-content-center align-items-center">
-                        {% csrf_token %}
-                        <label class="m-3" for="search"><i class="fas fa-search"></i></label>
-                        <input name="search" id="search" class="form-control m-3" type="search">
-                    </form>
+                    <div class="d-flex justify-content-start align-items-center w-100 h-100">
+                        {% if user.is_authenticated %}
+                            <ul class="navbar-nav navbar-link">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                                        {{ user.first_name }} {{ user.last_name }}
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a href="{% url 'index' %}">درخواست ها</a>
+                                        <a href="{% url 'edit_profile' %}">ویرایش پروفایل</a>
+                                        <a href="{% url 'logout' %}">خروج از حساب</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="col-4">
-                    <a href="#"><img class="top-logo" src="{% static 'mainapp/img/big-logo.png' %}" alt="logo"></a>
+                    <a href="{% url 'index' %}"><img class="top-logo" src="{% static 'mainapp/img/big-logo.png' %}"
+                                                     alt="logo"></a>
                 </div>
                 <div class="col-4">
                     <div class="d-flex justify-content-end align-items-center w-100 h-100">
@@ -35,19 +47,6 @@
                             <a class="navbar-link" href="{% url 'register' %}">ثبت نام</a>
                             <a class="navbar-link" href="{% url 'index' %}">خانه</a>
                         {% else %}
-                            <a href="{% url 'new_request' %}">درخواست جدید</a>
-                            <ul class="navbar-nav navbar-link">
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                                        {{ user.first_name }} {{ user.last_name }}
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a href="#">درخواست ها</a>
-                                        <a href="#">ویرایش پروفایل</a>
-                                        <a href="{% url 'logout' %}">خروج از حساب</a>
-                                    </div>
-                                </li>
-                            </ul>
                             <a href="{% url 'index' %}">خانه</a>
                         {% endif %}
                     </div>
