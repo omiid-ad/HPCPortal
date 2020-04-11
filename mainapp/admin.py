@@ -44,19 +44,41 @@ class RequestA(admin.ModelAdmin):
     actions = ["accept", "reject", "normal", "cancel", "suspend"]
 
     def accept(self, request, queryset):
-        queryset.update(acceptance_status='Acc')
+        for obj in queryset:
+            obj.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
+            obj.acceptance_status = 'Acc'
+            obj.save()
+
+    accept.short_description = "تایید درخواست ها"
 
     def reject(self, request, queryset):
-        queryset.update(acceptance_status='Rej')
+        for obj in queryset:
+            obj.date_expired = None
+            obj.acceptance_status = 'Rej'
+            obj.save()
+
+    reject.short_description = "رد درخواست ها"
 
     def normal(self, request, queryset):
         queryset.update(renewal_status='Ok')
 
+    normal.short_description = "سرویس نرمال"
+
     def cancel(self, request, queryset):
-        queryset.update(renewal_status='Can')
+        for obj in queryset:
+            obj.date_expired = None
+            obj.renewal_status = 'Can'
+            obj.save()
+
+    cancel.short_description = "لغو سرویس ها"
 
     def suspend(self, request, queryset):
-        queryset.update(renewal_status='Sus')
+        for obj in queryset:
+            obj.date_expired = None
+            obj.renewal_status = 'Sus'
+            obj.save()
+
+    suspend.short_description = "تعلیق سرویس ها"
 
 
 admin.site.register(Profile, ProfileA)
