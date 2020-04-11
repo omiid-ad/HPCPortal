@@ -19,9 +19,10 @@
         </h3>
     {% else %}
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered" dir="rtl">
+            <table class="table table-striped table-hover" dir="rtl">
                 <thead>
                 <tr>
+                    <th>#</th>
                     <th>تاریخ درخواست</th>
                     <th>تاریخ انقضا</th>
                     <th>سیستم عامل</th>
@@ -42,6 +43,7 @@
                 <tbody>
                 {% for req in all_requests %}
                     <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}">
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ req.date_requested.isoformat }}</td>
                         <td>{{ req.date_expired.isoformat }}</td>
                         <td>{{ req.get_os_display }}</td>

@@ -18,7 +18,7 @@
         <form dir="rtl" method="post" action="{% url 'complete_profile' %}">
             {% csrf_token %}
 
-            {% if messages %}
+            {% ifequal message.tags 'error' %}
                 <div class="messages">
                     <ul>
                         {% for message in messages %}
@@ -26,7 +26,13 @@
                         {% endfor %}
                     </ul>
                 </div>
-            {% endif %}
+            {% endifequal %}
+
+            <div class="form-header">
+                <h3 class="form-title">
+                    تکمیل پروفایل
+                </h3>
+            </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
@@ -45,7 +51,7 @@
             <div class="form-group">
                 <label class="label-right" for="inputAddress">ایمیل استاد راهنما</label>
                 <input required name="email" type="email" class="form-control" id="inputAddress"
-                       placeholder="ایمیل معتبر و غیرتکراری">
+                       placeholder="ایمیل معتبر ">
             </div>
             <button type="submit" class="btn btn-success btn-block">تکمیل</button>
         </form>

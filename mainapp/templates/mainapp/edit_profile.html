@@ -18,7 +18,7 @@
         <form dir="rtl" method="post" action="{% url 'edit_profile' %}">
             {% csrf_token %}
 
-            {% if messages %}
+            {% ifequal message.tags 'error' %}
                 <div class="messages">
                     <ul>
                         {% for message in messages %}
@@ -26,7 +26,13 @@
                         {% endfor %}
                     </ul>
                 </div>
-            {% endif %}
+            {% endifequal %}
+
+            <div class="form-header">
+                <h3 class="form-title">
+                    ویرایش پروفایل
+                </h3>
+            </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
