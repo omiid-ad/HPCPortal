@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -62,7 +60,6 @@ class Request(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
             self.serial_number = serial_generator()
-        self.date_expired = self.date_requested + datetime.timedelta(days=self.days)
         super().save()
 
     def __str__(self):
