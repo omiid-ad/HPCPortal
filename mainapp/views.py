@@ -46,6 +46,16 @@ def register(request):
         if request.POST['password1'] != request.POST['password2']:
             messages.error(request, "کلمه عبور و تکرار آن مطابقت ندارند")
             return render(request, 'mainapp/register.html')
+        if len(request.POST['password1']) < 8:
+            messages.error(request, "رمز عبور باید حداقل ۸ کاراکتر باشد")
+            return render(request, 'mainapp/register.html')
+        try:
+            dup_email = User.objects.get(email=request.POST['email'])
+        except User.DoesNotExist:
+            dup_email = None
+        if dup_email is not None:
+            messages.error(request, "ایمیل وارد شده تکراری میباشد")
+            return render(request, 'mainapp/register.html')
         user = User.objects.create(username=request.POST['email'], first_name=request.POST['first_name'],
                                    last_name=request.POST['last_name'], email=request.POST['email'])
         user.set_password(request.POST['password1'])
