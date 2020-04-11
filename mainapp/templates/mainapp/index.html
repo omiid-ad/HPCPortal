@@ -15,10 +15,11 @@
 
 {% block content %}
     {% ifequal all_requests.count 0 %}
-        هیچ درخواستی ندارید
+        <h3 class="text-center m-5 p-5">هیچ درخواستی ندارید، <span class="border-bottom border-success"><strong><a href="{% url 'new_request' %}"> برای ثبت درخواست اقدام کن</a></strong></span>
+        </h3>
     {% else %}
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-dark table-bordered" dir="rtl">
+            <table class="table table-striped table-hover table-bordered" dir="rtl">
                 <thead>
                 <tr>
                     <th>تاریخ درخواست</th>
@@ -40,19 +41,19 @@
                 </thead>
                 <tbody>
                 {% for req in all_requests %}
-                    <tr class="table-primary">
-                        <td>{{ req.date_requested }}</td>
-                        <td>{{ req.date_expired }}</td>
-                        <td>{{ req.os }}</td>
+                    <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}">
+                        <td>{{ req.date_requested.isoformat }}</td>
+                        <td>{{ req.date_expired.isoformat }}</td>
+                        <td>{{ req.get_os_display }}</td>
                         <td>{{ req.app_name }}</td>
-                        <td>{{ req.cpu }}</td>
-                        <td>{{ req.ram }}</td>
-                        <td>{{ req.disk }}</td>
-                        <td>{{ req.show_cost }}</td>
+                        <td>{{ req.cpu }}GHz</td>
+                        <td>{{ req.ram }}GB</td>
+                        <td>{{ req.disk }}GB</td>
+                        <td>{{ req.show_cost }}تومان</td>
                         <td>{{ req.description }}</td>
                         <td>{{ req.serial_number }}</td>
-                        <td>{{ req.acceptance_status }}</td>
-                        <td>{{ req.renewal_status }}</td>
+                        <td>{{ req.get_acceptance_status_display }}</td>
+                        <td>{{ req.get_renewal_status_display }}</td>
                         <td>none</td>
                         <td>none</td>
                         <td>none</td>
