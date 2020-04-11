@@ -70,7 +70,31 @@ div.dropdown-menu a {
 table {
     margin: 50px auto;
 }
+
 th {
     text-align: center;
     font-size: small;
+}
+
+.form-header {
+    border-bottom: 1px solid grey;
+    margin-bottom: 5px;
+}
+
+.form-title {
+    font-weight: bolder;
+    font-size: 24px;
+    padding: 10px;
+    text-align: center;
+}
+
+.table thead th {
+    vertical-align: middle;
+}
+
+.table tbody td {
+    vertical-align: middle !important;
+    font-weight: lighter;
+    font-size: 12px;
+    text-align: center;
 }
