@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
 from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.shortcuts import render, redirect
 
 from .models import *
@@ -146,4 +147,29 @@ def edit_profile(request):
         profile.save()
 
         messages.success(request, "ویرایش با موفقیت انجام شد")
+        return redirect('index')
+
+
+def extend(request, pk):
+    try:
+        extended_service = Request.objects.get(pk=pk)
+    except Request.DoesNotExist:
+        raise Http404("Not found")
+    if extended_service.acceptance_status != 'Acc':
+        messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
+        return redirect('index')
+    if extended_service.renewal_status == 'Can' or extended_service.renewal_status == 'Sus':
+        messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
+        return redirect('index')
+
+    if request.method == "GET":
+        context = {
+            'extended_service': extended_service,
+        }
+        return render(request, "mainapp/extend.html", context)
+    elif request.method == "POST":
+        ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]))
+        ext_req.save()
+        messages.success(request,
+                         "درخواست تمدید با موفقیت ارسال شد. درصورت تایید، تاریخ سررسید سرویس مورد نظر به روزرسانی میشود")
         return redirect('index')

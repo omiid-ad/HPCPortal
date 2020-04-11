@@ -15,7 +15,8 @@
 
 {% block content %}
     {% ifequal all_requests.count 0 %}
-        <h3 class="text-center m-5 p-5">هیچ درخواستی ندارید، <span class="border-bottom border-success"><strong><a href="{% url 'new_request' %}"> برای ثبت درخواست اقدام کن</a></strong></span>
+        <h3 class="text-center m-5 p-5">هیچ درخواستی ندارید، <span class="border-bottom border-success"><strong><a
+                href="{% url 'new_request' %}"> برای ثبت درخواست اقدام کن</a></strong></span>
         </h3>
     {% else %}
         <div class="table-responsive">
@@ -41,7 +42,7 @@
                 </thead>
                 <tbody>
                 {% for req in all_requests %}
-                    <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}">
+                    <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}{% ifnotequal req.renewal_status 'Ok' %} table-danger{% endifnotequal %}{% endifequal %}">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ req.date_requested.isoformat }}</td>
                         <td>{{ req.date_expired.isoformat }}</td>
@@ -55,7 +56,7 @@
                         <td>{{ req.serial_number }}</td>
                         <td>{{ req.get_acceptance_status_display }}</td>
                         <td>{{ req.get_renewal_status_display }}</td>
-                        <td>none</td>
+                        <td><a class="extend-link" href="{% url 'extend' req.pk %}">تمدید</a></td>
                         <td>none</td>
                     </tr>
                 {% endfor %}

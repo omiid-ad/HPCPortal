@@ -66,4 +66,23 @@ class Request(models.Model):
         return self.serial_number
 
     class Meta:
-        verbose_name_plural = "درخواست"
+        verbose_name_plural = "درخواست سرویس"
+
+
+class ExtendRequest(models.Model):
+    ACCEPTANCE_STATUS = [
+        ('Pen', 'در انتظار تایید'),
+        ('Acc', 'تایید شده'),
+        ('Rej', 'رد شده')
+    ]
+
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
+    days = models.IntegerField(default=0, verbose_name="تعداد روزها")
+    acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
+                                         default='Pen')
+
+    class Meta:
+        verbose_name_plural = "درخواست های تمدید"
+
+    def __str__(self):
+        return self.request.serial_number

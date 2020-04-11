@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from .models import *
@@ -22,7 +24,8 @@ class ProfileA(admin.ModelAdmin):
 
 class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
-    readonly_fields = ('date_requested', 'date_expired', 'serial_number', 'show_cost', 'user')
+    readonly_fields = (
+        'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status', 'renewal_status')
     list_display = ('get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status')
     list_filter = ('date_expired', 'acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
@@ -81,8 +84,41 @@ class RequestA(admin.ModelAdmin):
     suspend.short_description = "تعلیق سرویس ها"
 
 
+class ExtendRequestA(admin.ModelAdmin):
+    readonly_fields = ('acceptance_status',)
+    list_display = ('request', 'days', 'acceptance_status')
+    list_filter = ('acceptance_status',)
+    search_fields = ['request__serial_number', ]
+    fieldsets = (
+        ('اطلاعات سرویس', {'fields': ('request',)}),
+        ('بیشتر', {'fields': ('days', 'acceptance_status')}),
+    )
+
+    actions = ["accept", "reject"]
+
+    def accept(self, request, queryset):
+        for obj in queryset:
+            if obj.request.date_expired is not None:
+                obj.request.date_expired = obj.request.date_expired + datetime.timedelta(days=obj.days)
+            else:
+                obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
+            obj.acceptance_status = 'Acc'
+            obj.request.save()
+            obj.save()
+
+    accept.short_description = "تایید درخواست های تمدید"
+
+    def reject(self, request, queryset):
+        for obj in queryset:
+            obj.acceptance_status = 'Rej'
+            obj.save()
+
+    reject.short_description = "رد درخواست های تمدید"
+
+
 admin.site.register(Profile, ProfileA)
 admin.site.register(Request, RequestA)
+admin.site.register(ExtendRequest, ExtendRequestA)
 admin.site.unregister(Group)
 
 admin.site.site_header = "پنل مدیریت پرتال"

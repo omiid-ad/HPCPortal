@@ -1,0 +1,51 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}فرم درخواست تمدید{% endblock %}
+
+{% block msg %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <form dir="rtl" method="post" action="{% url 'extend' extended_service.pk %}">
+            {% csrf_token %}
+
+            {% ifequal message.tags 'error' %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li class="text-danger text-right small">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endifequal %}
+
+            <div class="form-header">
+                <h3 class="form-title">
+                    درخواست تمدید سرویس
+                </h3>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label class="label-right" for="service">سرویس انتخاب شده</label>
+                    <input value="{{ extended_service.serial_number }}" name="service" readonly type="text"
+                           class="form-control" id="service">
+                </div>
+                <div class="form-group col-md-4">
+                    <label class="label-right" for="days">تعداد روزها</label>
+                    <input name="days" value="0" required type="number" class="form-control" id="days">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">ارسال درخواست تمدید</button>
+        </form>
+    </div>
+{% endblock %}

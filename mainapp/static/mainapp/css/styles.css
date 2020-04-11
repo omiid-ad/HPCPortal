@@ -98,3 +98,10 @@ th {
     font-size: 12px;
     text-align: center;
 }
+.extend-link {
+    padding: 5px;
+    border: 1px solid #28a745;
+    border-radius: 5px;
+    font-weight: bolder;
+    background-color: white;
+}
