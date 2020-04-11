@@ -9,6 +9,7 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{% static 'mainapp/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'mainapp/css/styles.css' %}">
+        <link rel="icon" href="{% static 'mainapp/img/big-logo.png' %}">
         <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
         <title>{% block title %}{% endblock %}</title>
     </head>
@@ -47,7 +48,8 @@
                             <a class="navbar-link" href="{% url 'register' %}">ثبت نام</a>
                             <a class="navbar-link" href="{% url 'index' %}">خانه</a>
                         {% else %}
-                            <a href="{% url 'index' %}">خانه</a>
+                            <a class="navbar-link" href="{% url 'new_request' %}">ارسال درخواست جدید</a>
+                            <a class="navbar-link" href="{% url 'index' %}">خانه</a>
                         {% endif %}
                     </div>
                 </div>

@@ -11,6 +11,7 @@ body {
     font-family: "IranSans", serif;
     font-size: 18px;
     overflow-x: hidden;
+    background-color: #f2f4f7;
 }
 
 .top-logo {
@@ -20,6 +21,7 @@ body {
 
 nav {
     box-shadow: 0 10px 15px -15px #28a745;
+    background-color: white;
 }
 
 a {
@@ -38,6 +40,11 @@ a:hover {
     box-shadow: 1px 2px 9px #5a6268;
     border: 1px solid #5a6268;
     border-radius: 5px;
+    background-color: white;
+}
+
+.box-60 {
+    width: 60%!important;
 }
 
 .label-right {
@@ -54,13 +61,15 @@ a:hover {
 
 .alert {
     width: fit-content;
-    margin: 10px 10px 10px auto;
+    margin: 10px 10px 0 auto;
 }
 
 div.dropdown-menu a {
     display: block;
     width: 100%;
     text-align: center;
+    margin: 10px 0;
+    padding: 5px;
 }
 
 .navbar-link {

@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="box">
+    <div class="box box-60">
         <form dir="rtl" method="post" action="{% url 'new_request' %}">
             {% csrf_token %}
 
@@ -34,16 +34,15 @@
                 </h3>
             </div>
 
-
-            <div class="form-group">
-                <label class="label-right" for="os">سیستم عامل</label>
-                <select name="os" required id="os" class="form-control">
-                    <option value="Win">Windows</option>
-                    <option value="Lin">Linux</option>
-                </select>
-            </div>
             <div class="form-row">
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
+                    <label class="label-right" for="os">سیستم عامل</label>
+                    <select name="os" required id="os" class="form-control">
+                        <option value="Win">Windows</option>
+                        <option value="Lin">Linux</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
                     <label class="label-right" for="cpu">پردازنده</label>
                     <div class="input-group">
                         <input onchange="calcCost()" name="cpu" required value="0" type="number" class="form-control"
@@ -53,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label class="label-right" for="ram">حافظه رم</label>
                     <div class="input-group">
                         <input onchange="calcCost()" name="ram" required value="0" type="number" id="ram"
@@ -63,7 +62,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                     <label class="label-right" for="disk">دیسک</label>
                     <div class="input-group">
                         <input onchange="calcCost()" name="disk" required value="0" type="number" id="disk"
@@ -97,7 +96,7 @@
             </div>
             <div class="form-group">
                 <label class="label-right" for="desc">توضیحات</label>
-                <textarea name="description" class="form-control" id="desc" rows="2"
+                <textarea name="description" class="form-control" id="desc" rows="3"
                           placeholder="درصورت نیاز، توضیحاتی وارد نمایید..."></textarea>
             </div>
             <button type="submit" class="btn btn-success btn-block">ارسال درخواست</button>
