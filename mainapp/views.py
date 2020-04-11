@@ -108,3 +108,32 @@ def calc_cost(request):
     }
     from django.http import JsonResponse
     return JsonResponse(data)
+
+
+@login_required(login_url='/login')
+def edit_profile(request):
+    if request.method == "GET":
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+            return redirect('complete_profile')
+        context = {
+            'profile': profile,
+        }
+        return render(request, 'mainapp/edit_profile.html', context)
+    elif request.method == "POST":
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+            return redirect('complete_profile')
+
+        profile.university = request.POST["uni"]
+        profile.field = request.POST["field"]
+        profile.guidance_master_email = request.POST["email"]
+        profile.guidance_master_full_name = request.POST["master_name"]
+        profile.save()
+
+        messages.success(request, "ویرایش با موفقیت انجام شد")
+        return redirect('index')

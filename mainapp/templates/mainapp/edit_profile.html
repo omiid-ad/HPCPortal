@@ -1,0 +1,58 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}ویرایش پروفایل{% endblock %}
+
+{% block msg %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-info alert-dismissible fade show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <form dir="rtl" method="post" action="{% url 'edit_profile' %}">
+            {% csrf_token %}
+
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li class="text-danger text-right small">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="label-right" for="inputEmail4">دانشگاه</label>
+                    <input value="{{ profile.university }}" required name="uni" type="text" class="form-control"
+                           id="inputEmail4">
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="label-right" for="inputPassword4">رشته</label>
+                    <input value="{{ profile.field }}" required name="field" type="text" class="form-control"
+                           id="inputPassword4">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress2">نام و نام خانوادگی استاد راهنما</label>
+                <input value="{{ profile.guidance_master_full_name }}" required name="master_name" type="text"
+                       class="form-control" id="inputAddress2">
+            </div>
+            <div class="form-group">
+                <label class="label-right" for="inputAddress">ایمیل استاد راهنما</label>
+                <input value="{{ profile.guidance_master_email }}" required name="email" type="email"
+                       class="form-control"
+                       id="inputAddress">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">ویرایش</button>
+        </form>
+    </div>
+{% endblock %}
+
