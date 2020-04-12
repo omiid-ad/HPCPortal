@@ -8,10 +8,10 @@ from .models import *
 
 class ProfileA(admin.ModelAdmin):
     date_hierarchy = 'user__date_joined'
-    list_display = ('get_user_full_name', 'university', 'field', 'guidance_master_full_name')
+    list_display = ('get_user_full_name', 'get_user_email', 'university', 'field', 'guidance_master_full_name')
     list_filter = ('field', 'university')
     readonly_fields = ('user', 'university', 'field', 'guidance_master_full_name', 'guidance_master_email')
-    search_fields = ['user__first_name', 'user__last_name']
+    search_fields = ['user__first_name', 'user__last_name', 'user__email']
     fieldsets = (
         ('اطلاعات دانشگاهی', {'fields': ('user', 'university', 'field')}),
         ('اطلاعات استاد راهنما', {'fields': ('guidance_master_full_name', 'guidance_master_email')}),
@@ -22,6 +22,11 @@ class ProfileA(admin.ModelAdmin):
 
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__last_name'
+
+    def get_user_email(self, obj):
+        return obj.user.email
+
+    get_user_email.short_description = 'ایمیل'
 
 
 class RequestA(admin.ModelAdmin):
@@ -153,9 +158,10 @@ UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_superuser')
 UserAdmin.fieldsets = (
     ('None', {'fields': ('username', 'password')}),
     ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'email')}),
-    ('دسترسی ها', {'fields': ('is_active', 'is_superuser', ('last_login', 'date_joined'))}),
+    ('دسترسی ها', {'fields': (('is_active', 'is_superuser'), ('last_login', 'date_joined'))}),
 )
 UserAdmin.list_filter = ('is_superuser', 'is_active')
+UserAdmin.readonly_fields = ('username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined')
 
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdmin)
