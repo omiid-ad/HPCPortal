@@ -31,7 +31,7 @@ def login(request):
         return redirect('index')
     elif request.method == "POST":
         user = authenticate(username=request.POST['email'], password=request.POST['password'])
-        if user is not None:
+        if user is not None and user.is_active:
             django_login(request, user)
             messages.success(request, 'با موفقیت وارد شدید')
             return redirect('index')
