@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from .models import *
@@ -9,6 +10,7 @@ class ProfileA(admin.ModelAdmin):
     date_hierarchy = 'user__date_joined'
     list_display = ('get_user_full_name', 'university', 'field', 'guidance_master_full_name')
     list_filter = ('field', 'university')
+    readonly_fields = ('user', 'university', 'field', 'guidance_master_full_name', 'guidance_master_email')
     search_fields = ['user__first_name', 'user__last_name']
     fieldsets = (
         ('اطلاعات دانشگاهی', {'fields': ('user', 'university', 'field')}),
@@ -25,7 +27,8 @@ class ProfileA(admin.ModelAdmin):
 class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
     readonly_fields = (
-        'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status', 'renewal_status')
+        'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
+        'renewal_status')
     list_display = ('get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status')
     list_filter = ('date_expired', 'acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
@@ -85,7 +88,7 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status',)
+    readonly_fields = ('acceptance_status', 'days')
     list_display = ('request', 'days', 'acceptance_status')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
@@ -146,6 +149,16 @@ class CancelRequestA(admin.ModelAdmin):
     reject.short_description = "رد درخواست های لغو"
 
 
+UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_staff')
+UserAdmin.fieldsets = (
+    ('None', {'fields': ('username', 'password')}),
+    ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'email')}),
+    ('دسترسی ها', {'fields': ('is_active', 'is_staff', ('last_login', 'date_joined'))}),
+)
+UserAdmin.list_filter = ('is_staff', 'is_active')
+
+admin.site.unregister(User)
+admin.site.register(CustomUser, UserAdmin)
 admin.site.register(Profile, ProfileA)
 admin.site.register(Request, RequestA)
 admin.site.register(ExtendRequest, ExtendRequestA)

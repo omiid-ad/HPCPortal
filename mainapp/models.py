@@ -5,6 +5,13 @@ from django.utils import timezone
 from .utils import serial_generator
 
 
+class CustomUser(User):
+    class Meta:
+        proxy = True
+        app_label = 'auth'
+        verbose_name_plural = "کاربران"
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="کاربر")
     field = models.CharField(max_length=100, verbose_name="رشته")
