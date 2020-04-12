@@ -161,7 +161,7 @@ UserAdmin.fieldsets = (
     ('دسترسی ها', {'fields': (('is_active', 'is_superuser'), ('last_login', 'date_joined'))}),
 )
 UserAdmin.list_filter = ('is_superuser', 'is_active')
-UserAdmin.readonly_fields = ('username', 'first_name', 'last_name', 'email', 'last_login', 'date_joined')
+UserAdmin.readonly_fields = ('last_login', 'date_joined')
 
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdmin)
