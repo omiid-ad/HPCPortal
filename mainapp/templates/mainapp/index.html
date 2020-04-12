@@ -53,11 +53,11 @@
                         <td>{{ req.disk }}GB</td>
                         <td>{{ req.show_cost }}تومان</td>
                         <td>{{ req.description }}</td>
-                        <td>{{ req.serial_number }}</td>
+                        <td id="serial">{{ req.serial_number }}</td>
                         <td>{{ req.get_acceptance_status_display }}</td>
                         <td>{{ req.get_renewal_status_display }}</td>
-                        <td><a class="extend-link" href="{% url 'extend' req.pk %}">تمدید</a></td>
-                        <td>none</td>
+                        <td><a class="extend-link" href="{% url 'extend' req.pk %}">درخواست تمدید</a></td>
+                        <td><a onclick="cancelYN({{ req.pk }})" class="cancel-link" href="#">درخواست لغو</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

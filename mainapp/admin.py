@@ -116,9 +116,40 @@ class ExtendRequestA(admin.ModelAdmin):
     reject.short_description = "رد درخواست های تمدید"
 
 
+class CancelRequestA(admin.ModelAdmin):
+    readonly_fields = ('acceptance_status',)
+    list_display = ('request', 'acceptance_status')
+    list_filter = ('acceptance_status',)
+    search_fields = ['request__serial_number', ]
+    fieldsets = (
+        ('اطلاعات سرویس', {'fields': ('request',)}),
+        ('بیشتر', {'fields': ('acceptance_status',)}),
+    )
+
+    actions = ["accept", "reject"]
+
+    def accept(self, request, queryset):
+        for obj in queryset:
+            obj.request.renewal_status = "Can"
+            obj.acceptance_status = 'Acc'
+            obj.request.date_expired = None
+            obj.request.save()
+            obj.save()
+
+    accept.short_description = "تایید درخواست های لغو"
+
+    def reject(self, request, queryset):
+        for obj in queryset:
+            obj.acceptance_status = 'Rej'
+            obj.save()
+
+    reject.short_description = "رد درخواست های لغو"
+
+
 admin.site.register(Profile, ProfileA)
 admin.site.register(Request, RequestA)
 admin.site.register(ExtendRequest, ExtendRequestA)
+admin.site.register(CancelRequest, CancelRequestA)
 admin.site.unregister(Group)
 
 admin.site.site_header = "پنل مدیریت پرتال"

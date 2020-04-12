@@ -44,7 +44,7 @@ a:hover {
 }
 
 .box-60 {
-    width: 60%!important;
+    width: 60% !important;
 }
 
 .label-right {
@@ -107,10 +107,21 @@ th {
     font-size: 12px;
     text-align: center;
 }
+
 .extend-link {
     padding: 5px;
     border: 1px solid #28a745;
     border-radius: 5px;
     font-weight: bolder;
     background-color: white;
+    color: #28a745;
+}
+
+.cancel-link {
+    padding: 5px;
+    border: 1px solid #721c24;
+    border-radius: 5px;
+    font-weight: bolder;
+    background-color: white;
+    color: red;
 }

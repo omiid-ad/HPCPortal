@@ -86,3 +86,21 @@ class ExtendRequest(models.Model):
 
     def __str__(self):
         return self.request.serial_number
+
+
+class CancelRequest(models.Model):
+    ACCEPTANCE_STATUS = [
+        ('Pen', 'در انتظار تایید'),
+        ('Acc', 'تایید شده'),
+        ('Rej', 'رد شده')
+    ]
+
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
+    acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
+                                         default='Pen')
+
+    class Meta:
+        verbose_name_plural = "درخواست های لغو"
+
+    def __str__(self):
+        return self.request.serial_number

@@ -12,5 +12,6 @@ urlpatterns = [
     path('calc_cost/', calc_cost, name="calc_cost"),
     path('edit_profile/', edit_profile, name="edit_profile"),
     path('extend/<int:pk>', extend, name="extend"),
+    path('cancel/', cancel, name="cancel"),
 
 ]

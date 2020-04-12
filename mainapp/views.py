@@ -173,3 +173,37 @@ def extend(request, pk):
         messages.success(request,
                          "درخواست تمدید با موفقیت ارسال شد. درصورت تایید، تاریخ سررسید سرویس مورد نظر به روزرسانی میشود")
         return redirect('index')
+
+
+def cancel(request):
+    if 'pk' in request.GET:
+        pk = int(request.GET.get('pk'))
+        try:
+            canceled_service = Request.objects.get(pk=pk)
+        except Request.DoesNotExist:
+            raise Http404("Not found")
+        if canceled_service.acceptance_status != 'Acc':
+            messages.error(request, "امکان ارسال درخواست لغو برای سرویس موردنظر وجود ندارد")
+            data = {
+                'status': 201,
+            }
+            from django.http import JsonResponse
+            return JsonResponse(data)
+        if canceled_service.renewal_status == 'Can' or canceled_service.renewal_status == 'Sus':
+            messages.error(request, "امکان ارسال درخواست لغو برای سرویس موردنظر وجود ندارد")
+            data = {
+                'status': 201,
+            }
+            from django.http import JsonResponse
+            return JsonResponse(data)
+
+        can_req = CancelRequest.objects.create(request=canceled_service)
+        can_req.save()
+        messages.success(request,
+                         "درخواست لغو با موفقیت ارسال شد. درصورت تایید، وضعیت سرویس مورد نظر به روزرسانی میشود")
+
+        data = {
+            'status': 200,
+        }
+        from django.http import JsonResponse
+        return JsonResponse(data)
