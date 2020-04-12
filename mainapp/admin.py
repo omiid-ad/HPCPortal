@@ -149,13 +149,13 @@ class CancelRequestA(admin.ModelAdmin):
     reject.short_description = "رد درخواست های لغو"
 
 
-UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_staff')
+UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_superuser')
 UserAdmin.fieldsets = (
     ('None', {'fields': ('username', 'password')}),
     ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'email')}),
-    ('دسترسی ها', {'fields': ('is_active', 'is_staff', ('last_login', 'date_joined'))}),
+    ('دسترسی ها', {'fields': ('is_active', 'is_superuser', ('last_login', 'date_joined'))}),
 )
-UserAdmin.list_filter = ('is_staff', 'is_active')
+UserAdmin.list_filter = ('is_superuser', 'is_active')
 
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdmin)
