@@ -1,3 +1,6 @@
+import urllib
+import json
+
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
 from django.contrib.auth.decorators import login_required
@@ -5,6 +8,7 @@ from django.http import Http404
 from django.shortcuts import render, redirect
 
 from .models import *
+from HPCPortal import settings
 
 
 def index(request):
@@ -31,12 +35,28 @@ def login(request):
         return redirect('index')
     elif request.method == "POST":
         user = authenticate(username=request.POST['email'], password=request.POST['password'])
-        if user is not None and user.is_active:
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req = urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+        if user is not None and user.is_active and result['success']:
             django_login(request, user)
             messages.success(request, 'با موفقیت وارد شدید')
             return redirect('index')
-        else:
+        elif user is None:
             messages.error(request, "ایمیل یا رمز عبور اشتباه است")
+            return redirect('login')
+        elif not user.is_active:
+            messages.error(request, "حساب شما توسط مدیر غیرفعال شده است")
+            return redirect('login')
+        elif not result['success']:
+            messages.error(request, "reCAPTCHA failed")
             return redirect('login')
 
 
@@ -56,6 +76,19 @@ def register(request):
             dup_email = None
         if dup_email is not None:
             messages.error(request, "ایمیل وارد شده تکراری میباشد")
+            return render(request, 'mainapp/register.html')
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req = urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+        if not result['success']:
+            messages.error(request, "reCAPTCHA failed")
             return render(request, 'mainapp/register.html')
         user = User.objects.create(username=request.POST['email'], first_name=request.POST['first_name'],
                                    last_name=request.POST['last_name'], email=request.POST['email'])

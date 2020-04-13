@@ -124,4 +124,6 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
+GOOGLE_RECAPTCHA_SECRET_KEY = data['recaptcha'][0]["GOOGLE_RECAPTCHA_SECRET_KEY"]
+
 config.close()  # closing config file

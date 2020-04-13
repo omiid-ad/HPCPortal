@@ -125,3 +125,9 @@ th {
     background-color: white;
     color: red;
 }
+
+.captcha {
+    display: flex;
+    margin: 15px;
+    justify-content: center;
+}
