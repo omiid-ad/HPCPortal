@@ -76,7 +76,7 @@ def register(request):
             dup_email = None
         if dup_email is not None:
             messages.error(request, "ایمیل وارد شده تکراری میباشد")
-            return render(request, 'mainapp/register.html')
+            return redirect('register')
         recaptcha_response = request.POST.get('g-recaptcha-response')
         url = 'https://www.google.com/recaptcha/api/siteverify'
         values = {
@@ -89,7 +89,7 @@ def register(request):
         result = json.loads(response.read().decode())
         if not result['success']:
             messages.error(request, "reCAPTCHA failed")
-            return render(request, 'mainapp/register.html')
+            return redirect('register')
         user = User.objects.create(username=request.POST['email'], first_name=request.POST['first_name'],
                                    last_name=request.POST['last_name'], email=request.POST['email'])
         user.set_password(request.POST['password1'])
@@ -158,25 +158,42 @@ def edit_profile(request):
     if request.method == "GET":
         try:
             profile = Profile.objects.get(user=request.user)
+            user = User.objects.get(pk=request.user.pk)
         except Profile.DoesNotExist:
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
         context = {
             'profile': profile,
+            'user': user,
         }
         return render(request, 'mainapp/edit_profile.html', context)
     elif request.method == "POST":
         try:
             profile = Profile.objects.get(user=request.user)
+            user = User.objects.get(pk=request.user.pk)
         except Profile.DoesNotExist:
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
+        if request.user.email != request.POST["email"]:
+            try:
+                dup_email = User.objects.get(email=request.POST['email'])
+            except User.DoesNotExist:
+                dup_email = None
+            if dup_email is not None:
+                messages.error(request, "ایمیل وارد شده تکراری میباشد")
+                return redirect('edit_profile')
+
+        user.first_name = request.POST["first_name"]
+        user.last_name = request.POST["last_name"]
+        user.email = request.POST["email"]
+        user.username = request.POST["email"]
 
         profile.university = request.POST["uni"]
         profile.field = request.POST["field"]
-        profile.guidance_master_email = request.POST["email"]
+        profile.guidance_master_email = request.POST["master_email"]
         profile.guidance_master_full_name = request.POST["master_name"]
         profile.save()
+        user.save()
 
         messages.success(request, "ویرایش با موفقیت انجام شد")
         return redirect('index')
