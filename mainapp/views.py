@@ -22,6 +22,10 @@ def index(request):
             return redirect('complete_profile')
         else:
             all_requests = Request.objects.filter(user=profile).order_by('-date_requested')
+            for req in all_requests:
+                if req.is_expired() and req.renewal_status != 'Exp':
+                    req.renewal_status = 'Exp'
+                    req.save()
             context = {
                 'all_requests': all_requests,
             }

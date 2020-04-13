@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -74,6 +76,11 @@ class Request(models.Model):
 
     class Meta:
         verbose_name_plural = "درخواست سرویس"
+
+    def is_expired(self):
+        if self.date_expired is not None:
+            if self.date_expired <= datetime.datetime.now().date():
+                return True
 
 
 class ExtendRequest(models.Model):
