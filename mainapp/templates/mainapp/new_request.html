@@ -75,9 +75,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="label-right" for="appname">برنامه ها</label>
-                <textarea name="app_name" class="form-control" id="appname" rows="2"
-                          placeholder="نام هر برنامه را با خط تیره (−) از یکدیگر جدا کنید" required></textarea>
+                <label class="label-right" for="tokenfield">برنامه ها</label>
+                <input required name="app_name" type="text" class="form-control" id="tokenfield"
+                       placeholder="بعد از وارد کردن نام هر برنامه،اینتر را بزنید"/>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-4">
@@ -98,4 +98,17 @@
             <button type="submit" class="btn btn-success btn-block">ارسال درخواست</button>
         </form>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+      <script>
+        $('#tokenfield').tokenfield({
+            autocomplete: {
+                source: ['MathLab', 'ANSYS'],
+                delay: 100
+            },
+            showAutocompleteOnFocus: true
+        })
+    </script>
 {% endblock %}
