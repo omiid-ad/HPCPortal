@@ -34,6 +34,9 @@
                 </h3>
             </div>
             <div class="form-row">
+                <div class="form-group col-12 d-flex">
+                    <label class="label-right text-muted in-form-header" for="inputEmail4">اطلاعات شخصی</label>
+                </div>
                 <div class="form-group col-md-6">
                     <label class="label-right" for="inputEmail4">نام</label>
                     <input value="{{ user.first_name }}" required name="first_name" type="text" class="form-control"
@@ -52,6 +55,9 @@
                        placeholder="ایمیل معتبر و غیرتکراری">
             </div>
             <div class="form-row">
+                <div class="form-group col-12 d-flex">
+                    <label class="label-right text-muted in-form-header" for="inputEmail4">اطلاعات دانشگاهی</label>
+                </div>
                 <div class="form-group col-md-6">
                     <label class="label-right" for="inputEmail4">دانشگاه</label>
                     <input value="{{ profile.university }}" required name="uni" type="text" class="form-control"

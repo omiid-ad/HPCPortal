@@ -32,10 +32,10 @@
                     <th>رم</th>
                     <th>دیسک</th>
                     <th>هزینه</th>
-                    <th>توضیحات</th>
-                    <th>شماره سریال</th>
                     <th>وضعیت تایید</th>
                     <th>وضعیت سرویس</th>
+                    <th>شماره سریال</th>
+                    <th>توضیحات</th>
                     <th>تمدید سرویس</th>
                     <th>لغو سرویس</th>
                 </tr>
@@ -46,18 +46,31 @@
                         <td>{{ forloop.counter }}</td>
                         <td>{{ req.date_requested.isoformat }}</td>
                         <td>{{ req.date_expired.isoformat }}</td>
-                        <td>{{ req.get_os_display }}</td>
+                        <td>{% ifequal req.os 'Lin' %}<i class="fab fa-linux os-icon-linux"></i>{% else %}
+                            <i class="fab fa-windows os-icon-windows"></i>{% endifequal %}</td>
                         <td>{{ req.app_name }}</td>
                         <td>{{ req.cpu }}GHz</td>
                         <td>{{ req.ram }}GB</td>
                         <td>{{ req.disk }}GB</td>
                         <td>{{ req.show_cost }}تومان</td>
-                        <td>{{ req.description }}</td>
-                        <td id="serial">{{ req.serial_number }}</td>
-                        <td>{{ req.get_acceptance_status_display }}</td>
+                        <td>
+                            {% ifequal req.acceptance_status 'Acc' %}<i class="far fa-check-circle accept-icon"></i>{% endifequal %}
+                            {% ifequal req.acceptance_status 'Rej' %}<i class="far fa-times-circle reject-icon"></i>{% endifequal %}
+                            {% ifequal req.acceptance_status 'Pen' %}درانتظارتایید{% endifequal %}
+                        </td>
                         <td>{{ req.get_renewal_status_display }}</td>
-                        <td><a class="extend-link" href="{% url 'extend' req.pk %}">درخواست تمدید</a></td>
-                        <td><a onclick="cancelYN({{ req.pk }})" class="cancel-link" href="#">درخواست لغو</a></td>
+                        <td id="serial">{{ req.serial_number }}</td>
+                        <td>{{ req.description }}</td>
+                        <td>
+                            <a class="extend-link" href="{% url 'extend' req.pk %}">
+                                <i class="fas fa-calendar-plus"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a onclick="cancelYN({{ req.pk }})" class="cancel-link" href="#">
+                                <i class="fas fa-power-off"></i>
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>

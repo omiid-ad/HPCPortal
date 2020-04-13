@@ -109,20 +109,16 @@ th {
 }
 
 .extend-link {
+    font-size: 20px;
     padding: 5px;
-    border: 1px solid #28a745;
-    border-radius: 5px;
     font-weight: bolder;
-    background-color: white;
     color: #28a745;
 }
 
 .cancel-link {
+    font-size: 20px;
     padding: 5px;
-    border: 1px solid #721c24;
-    border-radius: 5px;
     font-weight: bolder;
-    background-color: white;
     color: red;
 }
 
@@ -130,4 +126,30 @@ th {
     display: flex;
     margin: 15px;
     justify-content: center;
+}
+
+.in-form-header {
+    margin: 30px 5px 0 0;
+    border-bottom: 1px solid #e6e1e1;
+    width: 50%;
+    font-size: 15px;
+}
+
+.os-icon-linux {
+    font-size: 17px;
+}
+
+.os-icon-windows {
+    font-size: 17px;
+    color: #07c9f5;
+}
+
+.accept-icon {
+    font-size: 17px;
+    color: #0b7021;
+}
+
+.reject-icon {
+    font-size: 17px;
+    color: #fa511e;
 }
