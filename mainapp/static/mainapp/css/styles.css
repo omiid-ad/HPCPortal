@@ -186,3 +186,29 @@ th {
     transition: 150ms linear;
     opacity: 1;
 }
+
+/*mobile view*/
+@media (max-width: 630px) {
+    .box {
+        width: 90%;
+    }
+    .box-60 {
+        width: 90%!important;
+    }
+    .small-tip {
+        font-size: 12px;
+        word-spacing: -2px;
+    }
+    .top-logo {
+        height: 70px;
+    }
+    .my-link {
+        font-size: 14px;
+    }
+    .text-sm-center {
+        text-align: center!important;
+    }
+    .navbar-link {
+        margin: 10px 10px;
+    }
+}
