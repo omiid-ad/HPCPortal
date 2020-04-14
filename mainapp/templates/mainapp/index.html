@@ -19,7 +19,7 @@
                 href="{% url 'new_request' %}"> برای ثبت درخواست اقدام کن</a></strong></span>
         </h3>
     {% else %}
-        <div class="table-responsive">
+        <div class="table-responsive text-nowrap">
             <table class="table table-striped table-hover" dir="rtl">
                 <thead>
                 <tr>
@@ -54,20 +54,24 @@
                         <td>{{ req.disk }}GB</td>
                         <td>{{ req.show_cost }}تومان</td>
                         <td>
-                            {% ifequal req.acceptance_status 'Acc' %}<i class="far fa-check-circle accept-icon"></i>{% endifequal %}
-                            {% ifequal req.acceptance_status 'Rej' %}<i class="far fa-times-circle reject-icon"></i>{% endifequal %}
+                            {% ifequal req.acceptance_status 'Acc' %}
+                                <i class="far fa-check-circle accept-icon"></i>{% endifequal %}
+                            {% ifequal req.acceptance_status 'Rej' %}
+                                <i class="far fa-times-circle reject-icon"></i>{% endifequal %}
                             {% ifequal req.acceptance_status 'Pen' %}درانتظارتایید{% endifequal %}
                         </td>
                         <td>{{ req.get_renewal_status_display }}</td>
                         <td id="serial">{{ req.serial_number }}</td>
                         <td>{{ req.description }}</td>
                         <td>
-                            <a class="extend-link" href="{% url 'extend' req.pk %}">
+                            <a data-toggle="tooltip" title="ارسال درخواست تمدید سرویس" class="extend-link"
+                               href="{% url 'extend' req.pk %}">
                                 <i class="fas fa-calendar-plus"></i>
                             </a>
                         </td>
                         <td>
-                            <a onclick="cancelYN({{ req.pk }})" class="cancel-link" href="#">
+                            <a data-toggle="tooltip" title="ارسال درخواست لغو سرویس" onclick="cancelYN({{ req.pk }})"
+                               class="cancel-link" href="#">
                                 <i class="fas fa-power-off"></i>
                             </a>
                         </td>

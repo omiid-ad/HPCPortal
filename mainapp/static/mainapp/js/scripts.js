@@ -34,5 +34,9 @@ function cancelYN(pk) {
             }
         }
     }
+}
 
+function profileHover() {
+    let dd = document.getElementById("navbardrop");
+        dd.click();
 }
