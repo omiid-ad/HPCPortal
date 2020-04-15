@@ -215,4 +215,7 @@ th {
     .dropdown-menu {
         min-width: 8rem;
     }
+    .form-title{
+        font-size: 20px;
+    }
 }
