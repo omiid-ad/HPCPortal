@@ -187,35 +187,56 @@ th {
     opacity: 1;
 }
 
+button.close {
+    margin-left: 0 !important;
+}
+
+.alert {
+    text-align: right !important;
+}
+
 /*mobile view*/
 @media (max-width: 575px) {
+    .alert {
+        margin: 10px 8px;
+        font-size: 16px;
+    }
+
     .box {
         width: 90%;
     }
+
     .box-60 {
-        width: 90%!important;
+        width: 90% !important;
     }
+
     .small-tip {
         font-size: 12px;
         word-spacing: -2px;
     }
+
     .top-logo {
         height: 70px;
     }
+
     .my-link {
         font-size: 11px;
         white-space: nowrap;
     }
+
     .text-sm-center {
-        text-align: center!important;
+        text-align: center !important;
     }
+
     .navbar-link {
         margin: 10px 10px;
     }
+
     .dropdown-menu {
         min-width: 8rem;
     }
-    .form-title{
+
+    .form-title {
         font-size: 20px;
     }
 }
