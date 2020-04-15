@@ -19,8 +19,13 @@
                 href="{% url 'new_request' %}"> برای ثبت درخواست اقدام کن</a></strong></span>
         </h3>
     {% else %}
-        <div class="table-responsive text-nowrap">
-            <table class="table table-striped table-hover" dir="rtl">
+        <div class="col-12 d-sm-none">
+            <div class="alert alert-secondary mt-3 p-2 ml-auto mr-auto">
+                برای مشاهده کامل جدول، به طرفین بکشید
+            </div>
+        </div>
+        <div class="table-responsive text-nowrap" dir="rtl">
+            <table class="table table-striped table-hover" >
                 <thead>
                 <tr>
                     <th>#</th>

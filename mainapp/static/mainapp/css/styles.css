@@ -188,7 +188,7 @@ th {
 }
 
 /*mobile view*/
-@media (max-width: 630px) {
+@media (max-width: 575px) {
     .box {
         width: 90%;
     }
@@ -203,12 +203,16 @@ th {
         height: 70px;
     }
     .my-link {
-        font-size: 14px;
+        font-size: 11px;
+        white-space: nowrap;
     }
     .text-sm-center {
         text-align: center!important;
     }
     .navbar-link {
         margin: 10px 10px;
+    }
+    .dropdown-menu {
+        min-width: 8rem;
     }
 }
