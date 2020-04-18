@@ -239,4 +239,11 @@ button.close {
     .form-title {
         font-size: 20px;
     }
+
+    .my-arrow {
+        transform: scale(2.5);
+    }
+    div.alert-info {
+        margin-left: auto;
+    }
 }

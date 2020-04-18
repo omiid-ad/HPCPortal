@@ -31,7 +31,7 @@
                                        data-toggle="dropdown">
                                         {{ user.first_name }} {{ user.last_name }}
                                     </a>
-                                    <div class="dropdown-menu">
+                                    <div onmouseleave="profileHover()" class="dropdown-menu">
                                         <a class=" my-link" href="{% url 'index' %}">درخواست ها</a>
                                         <a class=" my-link" href="{% url 'edit_profile' %}">ویرایش پروفایل</a>
                                         <div class="dropdown-divider"></div>

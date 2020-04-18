@@ -37,6 +37,9 @@ function cancelYN(pk) {
 }
 
 function profileHover() {
-    let dd = document.getElementById("navbardrop");
+    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    if (vw > 576) {
+        let dd = document.getElementById("navbardrop");
         dd.click();
+    }
 }
