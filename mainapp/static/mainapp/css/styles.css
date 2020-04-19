@@ -209,11 +209,16 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+/*end*/
+
 .line-trough {
     text-decoration: line-through;
 }
 
-/*end*/
+div.filter-option-inner-inner {
+    text-align: right;
+}
+
 
 /*mobile view*/
 @media (max-width: 575px) {
