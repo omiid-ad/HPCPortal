@@ -196,6 +196,21 @@ button.close {
     text-align: right !important;
 }
 
+/*remove inc/dec arrows in input types*/
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/*end*/
+
 /*mobile view*/
 @media (max-width: 575px) {
     .alert {
@@ -244,6 +259,7 @@ button.close {
     .my-arrow {
         transform: scale(2.5);
     }
+
     div.alert-info {
         margin-left: auto;
     }
