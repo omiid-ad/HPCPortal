@@ -1,5 +1,6 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
+{% load humanize %}
 {% block title %}صفحه اصلی{% endblock %}
 
 {% block msg %}
@@ -55,10 +56,10 @@
                         <td>{% ifequal req.os 'Lin' %}<i class="fab fa-linux os-icon-linux"></i>{% else %}
                             <i class="fab fa-windows os-icon-windows"></i>{% endifequal %}</td>
                         <td>{{ req.app_name }}</td>
-                        <td>{{ req.cpu|floatformat }}عدد</td>
-                        <td>GB{{ req.ram|floatformat }}</td>
-                        <td>GB{{ req.disk|floatformat }}</td>
-                        <td>{{ req.show_cost }}تومان</td>
+                        <td>{{ req.cpu|floatformat }} عدد</td>
+                        <td>GB {{ req.ram|floatformat }}</td>
+                        <td>GB {{ req.disk|floatformat }}</td>
+                        <td>{{ req.show_cost|intcomma }} تومان</td>
                         <td>
                             {% ifequal req.acceptance_status 'Acc' %}
                                 <i class="far fa-check-circle accept-icon"></i>{% endifequal %}
