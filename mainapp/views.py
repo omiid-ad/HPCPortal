@@ -1,5 +1,7 @@
+import locale
 import urllib
 import json
+from math import trunc
 
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
@@ -147,7 +149,8 @@ def calc_cost(request):
     ram = int(request.GET.get('ram'))
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
-    total = cpu + ram + disk + days
+    total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
+    total = f'{trunc(round(total) / 1000) * 1000:,d}'
 
     data = {
         'total': total,

@@ -46,7 +46,7 @@
                 <div class="form-group col-md-3">
                     <label class="label-right" for="cpu">هسته پردازشی</label>
                     <div class="input-group">
-                        <input onchange="calcCost()" name="cpu" required value="0" type="number" class="form-control"
+                        <input name="cpu" required value="0" type="number" class="form-control"
                                id="cpu">
                         <div class="input-group-prepend">
                             <span class="input-group-text">عدد</span>
@@ -56,7 +56,7 @@
                 <div class="form-group col-md-3">
                     <label class="label-right" for="ram">حافظه رم</label>
                     <div class="input-group">
-                        <input onchange="calcCost()" name="ram" required value="0" type="number" id="ram"
+                        <input name="ram" required value="0" type="number" id="ram"
                                class="form-control">
                         <div class="input-group-prepend">
                             <span class="input-group-text">GB</span>
@@ -66,7 +66,7 @@
                 <div class="form-group col-md-3">
                     <label class="label-right" for="disk">دیسک</label>
                     <div class="input-group">
-                        <input onchange="calcCost()" name="disk" required value="0" type="number" id="disk"
+                        <input name="disk" required value="0" type="number" id="disk"
                                class="form-control">
                         <div class="input-group-prepend">
                             <span class="input-group-text">GB</span>
@@ -82,13 +82,13 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label class="label-right" for="days">تعداد روزها</label>
-                    <input onchange="calcCost()" name="days" value="0" required type="number" class="form-control"
+                    <input name="days" value="0" required type="number" class="form-control"
                            id="days">
                 </div>
                 <div class="form-group col-md-8">
                     <label class="label-right" for="cost">هزینه برآورد شده</label>
                     <div class="input-group">
-                        <input name="cost" value="0" readonly type="number" class="form-control" id="cost">
+                        <input name="cost" value="0" readonly type="text" class="form-control" id="cost">
                         <div class="input-group-prepend">
                             <span class="input-group-text">تومان</span>
                         </div>
@@ -102,7 +102,7 @@
 
 {% block scripts %}
     {{ block.super }}
-      <script>
+    <script>
         $('#tokenfield').tokenfield({
             autocomplete: {
                 source: ['MathLab', 'ANSYS'],
@@ -110,5 +110,23 @@
             },
             showAutocompleteOnFocus: true
         })
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input").change(function () {
+                let cpu = $("#cpu").val();
+                let ram = $("#ram").val();
+                let disk = $("#disk").val();
+                let days = $("#days").val();
+                $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                    if(result.status === 200){
+                        $("#cost").val(result.total);
+                    }
+                    else{
+                        $("#cost").val("NaN");
+                    }
+                });
+            });
+        });
     </script>
 {% endblock %}
