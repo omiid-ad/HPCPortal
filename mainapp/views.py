@@ -137,9 +137,11 @@ def new_request(request):
             return redirect('complete_profile')
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         cost = locale.atoi(request.POST["cost_disc"])
+        app_name_list = request.POST.getlist('app_name')
+        app_name = ', '.join(app_name_list)
         new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                              cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
-                                             app_name=request.POST["app_name"], days=int(request.POST["days"]),
+                                             app_name=app_name, days=int(request.POST["days"]),
                                              show_cost=int(cost))
         new_request.save()
         messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
