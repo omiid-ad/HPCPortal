@@ -34,7 +34,7 @@
                     <th>تاریخ انقضا</th>
                     <th>سیستم عامل</th>
                     <th>نام برنامه ها</th>
-                    <th>پردازنده</th>
+                    <th>هسته های پردازشی</th>
                     <th>رم</th>
                     <th>دیسک</th>
                     <th>هزینه</th>
@@ -55,9 +55,9 @@
                         <td>{% ifequal req.os 'Lin' %}<i class="fab fa-linux os-icon-linux"></i>{% else %}
                             <i class="fab fa-windows os-icon-windows"></i>{% endifequal %}</td>
                         <td>{{ req.app_name }}</td>
-                        <td>{{ req.cpu }}GHz</td>
-                        <td>{{ req.ram }}GB</td>
-                        <td>{{ req.disk }}GB</td>
+                        <td>{{ req.cpu|floatformat }}عدد</td>
+                        <td>GB{{ req.ram|floatformat }}</td>
+                        <td>GB{{ req.disk|floatformat }}</td>
                         <td>{{ req.show_cost }}تومان</td>
                         <td>
                             {% ifequal req.acceptance_status 'Acc' %}
