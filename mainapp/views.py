@@ -135,10 +135,12 @@ def new_request(request):
         except Profile.DoesNotExist:
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        cost = locale.atoi(request.POST["cost_disc"])
         new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                              cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                              app_name=request.POST["app_name"], days=int(request.POST["days"]),
-                                             show_cost=int(request.POST["cost"]))
+                                             show_cost=int(cost))
         new_request.save()
         messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
         return redirect('index')
