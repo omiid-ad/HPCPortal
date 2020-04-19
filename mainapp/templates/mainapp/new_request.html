@@ -46,7 +46,7 @@
                 <div class="form-group col-md-3">
                     <label class="label-right" for="cpu">هسته پردازشی</label>
                     <div class="input-group">
-                        <input name="cpu" required value="0" type="number" class="form-control"
+                        <input name="cpu" required value="0" type="number" class="form-control" min="1" max="12"
                                id="cpu">
                         <div class="input-group-prepend">
                             <span class="input-group-text">عدد</span>
@@ -56,7 +56,7 @@
                 <div class="form-group col-md-3">
                     <label class="label-right" for="ram">حافظه رم</label>
                     <div class="input-group">
-                        <input name="ram" required value="0" type="number" id="ram"
+                        <input name="ram" required value="4" type="number" id="ram" min="4" max="30"
                                class="form-control">
                         <div class="input-group-prepend">
                             <span class="input-group-text">GB</span>
@@ -66,7 +66,7 @@
                 <div class="form-group col-md-3">
                     <label class="label-right" for="disk">دیسک</label>
                     <div class="input-group">
-                        <input name="disk" required value="0" type="number" id="disk"
+                        <input name="disk" required value="30" type="number" id="disk" min="30" max="140"
                                class="form-control">
                         <div class="input-group-prepend">
                             <span class="input-group-text">GB</span>
@@ -93,7 +93,7 @@
             <div class="form-row">
                 <div class="form-group col-12 col-md-4">
                     <label class="label-right" for="days">تعداد روزها</label>
-                    <input name="days" value="0" required type="number" class="form-control"
+                    <input name="days" value="15" required type="number" class="form-control" min="15"
                            id="days">
                 </div>
                 <div class="form-group col-6 col-md-4">
