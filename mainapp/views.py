@@ -150,10 +150,26 @@ def calc_cost(request):
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
     total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
-    total = f'{trunc(round(total) / 1000) * 1000:,d}'
+
+    user = request.user
+    try:
+        profile = Profile.objects.get(user=user)
+    except Profile.DoesNotExist:
+        raise Http404("user not found")
+    if profile.university.__contains__("چمران"):
+        total_disc = (70 * total) / 100
+    else:
+        total_disc = total
+
+    total_disc = trunc(round(total_disc) / 1000) * 1000
+    total_disc = f'{total_disc:,d}'
+
+    total = trunc(round(total) / 1000) * 1000
+    total = f'{total:,d}'
 
     data = {
         'total': total,
+        'total_disc': total_disc,
         'status': 200
     }
     from django.http import JsonResponse

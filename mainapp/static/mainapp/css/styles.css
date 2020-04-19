@@ -209,6 +209,10 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.line-trough {
+    text-decoration: line-through;
+}
+
 /*end*/
 
 /*mobile view*/
@@ -262,5 +266,9 @@ input[type=number] {
 
     div.alert-info {
         margin-left: auto;
+    }
+
+    label.label-right {
+        font-size: 15px;
     }
 }
