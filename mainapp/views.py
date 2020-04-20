@@ -160,7 +160,8 @@ def calc_cost(request):
         profile = Profile.objects.get(user=user)
     except Profile.DoesNotExist:
         raise Http404("user not found")
-    if profile.university.__contains__("چمران"):
+    if profile.university.__contains__("چمران") or profile.university.__contains__(
+            "chamran") or profile.university.__contains__("chamraan"):
         total_disc = (70 * total) / 100
     else:
         total_disc = total
