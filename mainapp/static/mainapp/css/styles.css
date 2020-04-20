@@ -266,7 +266,8 @@ div.filter-option-inner-inner {
     }
 
     .my-arrow {
-        transform: scale(2.5);
+        font-size: 45px;
+        margin-top: -35px;
     }
 
     div.alert-info {
@@ -275,5 +276,8 @@ div.filter-option-inner-inner {
 
     label.label-right {
         font-size: 15px;
+    }
+    div.table-responsive {
+        margin-bottom: 110px;
     }
 }
