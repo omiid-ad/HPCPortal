@@ -74,22 +74,30 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="label-right" for="apps">برنامه ها</label>
-                <select required name="app_name" id="apps" class="selectpicker form-control" multiple>
-                    <option value="Abaqus">Abaqus</option>
-                    <option value="Ansys">Ansys</option>
-                    <option value="Bowtie">Bowtie</option>
-                    <option value="Flow3d">Flow3d</option>
-                    <option value="Gaussian">Gaussian</option>
-                    <option value="Gromacs">Gromacs</option>
-                    <option value="Lammps">Lammps</option>
-                    <option value="Matlab">Matlab</option>
-                    <option value="Namd">Namd</option>
-                    <option value="Siesta">Siesta</option>
-                    <option value="Other">سایر</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group col-12 col-md-6">
+                    <label class="label-right" for="apps">برنامه ها</label>
+                    <select required name="app_name" id="apps" class="selectpicker form-control" multiple>
+                        <option value="Abaqus">Abaqus</option>
+                        <option value="Ansys">Ansys</option>
+                        <option value="Bowtie">Bowtie</option>
+                        <option value="Flow3d">Flow3d</option>
+                        <option value="Gaussian">Gaussian</option>
+                        <option value="Gromacs">Gromacs</option>
+                        <option value="Lammps">Lammps</option>
+                        <option value="Matlab">Matlab</option>
+                        <option value="Namd">Namd</option>
+                        <option value="Siesta">Siesta</option>
+                        <option value="Other">سایر</option>
+                    </select>
+                </div>
+                <div class="form-group col-12 col-md-6">
+                    <label class="label-right" for="user_desc">توضیحات بیشتر</label>
+                    <textarea class="form-control" id="user_desc" name="user_desc" rows="2"
+                              placeholder="اگر سوالی دارید یا نام برنامه موردنظرتان در لیست نبود، در این قسمت بنویسید..."></textarea>
+                </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group col-12 col-md-4">
                     <label class="label-right" for="days">تعداد روزها</label>

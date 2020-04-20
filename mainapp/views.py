@@ -142,7 +142,7 @@ def new_request(request):
         new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                              cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                              app_name=app_name, days=int(request.POST["days"]),
-                                             show_cost=int(cost))
+                                             show_cost=int(cost), user_description=request.POST["user_desc"])
         new_request.save()
         messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
         return redirect('index')

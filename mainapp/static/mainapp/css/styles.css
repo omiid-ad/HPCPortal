@@ -219,6 +219,10 @@ div.filter-option-inner-inner {
     text-align: right;
 }
 
+#user_desc.form-control {
+    font-size: 10px;
+}
+
 
 /*mobile view*/
 @media (max-width: 575px) {
@@ -277,6 +281,7 @@ div.filter-option-inner-inner {
     label.label-right {
         font-size: 15px;
     }
+
     div.table-responsive {
         margin-bottom: 110px;
     }

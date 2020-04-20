@@ -60,6 +60,7 @@ class Request(models.Model):
     days = models.IntegerField(default=0, verbose_name="تعداد روزها")
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     description = models.TextField(blank=True, verbose_name="توضیحات")
+    user_description = models.TextField(blank=True, verbose_name="توضیحات کاربر")
     serial_number = models.CharField(max_length=16, editable=False, unique=True, verbose_name="شماره سریال")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
