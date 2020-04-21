@@ -31,17 +31,14 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>تاریخ درخواست</th>
+                    <th>شماره سریال</th>
                     <th>تاریخ انقضا</th>
                     <th>سیستم عامل</th>
                     <th>نام برنامه ها</th>
-                    <th>هسته های پردازشی</th>
-                    <th>رم</th>
-                    <th>دیسک</th>
+                    <th>مشخضات فنی سرویس</th>
                     <th>هزینه</th>
                     <th>وضعیت تایید</th>
                     <th>وضعیت سرویس</th>
-                    <th>شماره سریال</th>
                     <th>توضیحات</th>
                     <th>تمدید سرویس</th>
                     <th>لغو سرویس</th>
@@ -51,14 +48,17 @@
                 {% for req in all_requests %}
                     <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}{% ifnotequal req.renewal_status 'Ok' %} table-danger{% endifnotequal %}{% endifequal %}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ req.date_requested.isoformat }}</td>
+                        <td id="serial">{{ req.serial_number }}</td>
                         <td>{{ req.date_expired.isoformat }}</td>
                         <td>{% ifequal req.os 'Lin' %}<i class="fab fa-linux os-icon-linux"></i>{% else %}
                             <i class="fab fa-windows os-icon-windows"></i>{% endifequal %}</td>
                         <td>{{ req.app_name }}</td>
-                        <td>{{ req.cpu|floatformat }} عدد</td>
-                        <td>GB {{ req.ram|floatformat }}</td>
-                        <td>GB {{ req.disk|floatformat }}</td>
+                        <td>
+                            <button type="button" class="btn" data-toggle="modal"
+                                    data-target="#techModal{{ forloop.counter }}">
+                                <i class="fas fa-chevron-circle-down"></i>
+                            </button>
+                        </td>
                         <td>{{ req.show_cost|intcomma }} تومان</td>
                         <td>
                             {% ifequal req.acceptance_status 'Acc' %}
@@ -70,7 +70,6 @@
                             {% ifequal req.acceptance_status 'Caning' %}درانتظارلغو{% endifequal %}
                         </td>
                         <td>{{ req.get_renewal_status_display }}</td>
-                        <td id="serial">{{ req.serial_number }}</td>
                         <td>{% if req.description %}
                             <button type="button" class="btn" data-toggle="modal"
                                     data-target="#myModal{{ forloop.counter }}">
@@ -115,6 +114,34 @@
                             </div>
                         </div>
                     {% endif %}
+                    <!-- The DescriptionModal -->
+                    <div class="modal fade" id="techModal{{ forloop.counter }}">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">مشخضات فنی</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body text-right">
+                                    <p><strong>دیسک : </strong>‌{{ req.disk|floatformat }} گیگابایت</p>
+                                    <br>
+                                    <p><strong>تعداد هسته های پردازشی : </strong>{{ req.cpu|floatformat }} عدد</p>
+                                    <br>
+                                    <p><strong>رم : </strong>{{ req.ram|floatformat }} گیگابایت</p>
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
                 </tbody>
             </table>

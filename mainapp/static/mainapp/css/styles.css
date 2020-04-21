@@ -22,10 +22,10 @@ body {
     display: block;
     margin: 15px auto;
     height: 95px;
+    transition: 250ms ease-in-out;
 }
 
 .top-logo:hover {
-    transition: 250ms linear;
     opacity: 65%;
 }
 
