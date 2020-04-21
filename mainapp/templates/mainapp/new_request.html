@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="box box-60">
+    <div class="box box-70">
         <form dir="rtl" method="post" action="{% url 'new_request' %}">
             {% csrf_token %}
 
@@ -35,7 +35,7 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-12">
                     <label class="label-right" for="os">سیستم عامل</label>
                     <select name="os" required id="os" class="form-control custom-select">
                         <option value="">انتخاب کنید...</option>
@@ -43,17 +43,20 @@
                         <option value="Lin">Linux</option>
                     </select>
                 </div>
-                <div class="form-group col-md-3">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12 col-sm-2">
                     <label class="label-right" for="cpu">هسته پردازشی</label>
                     <div class="input-group">
-                        <input name="cpu" required value="0" type="number" class="form-control" min="1" max="12"
+                        <input name="cpu" required value="0" type="number" class="form-control" min="1"
+                               max="12"
                                id="cpu">
-                        <div class="input-group-prepend">
+                        <div class="input-group-prepend ">
                             <span class="input-group-text">عدد</span>
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-6 col-sm-2">
                     <label class="label-right" for="ram">حافظه رم</label>
                     <div class="input-group">
                         <input name="ram" required value="4" type="number" id="ram" min="4" max="30"
@@ -63,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-6 col-sm-2">
                     <label class="label-right" for="disk">دیسک</label>
                     <div class="input-group">
                         <input name="disk" required value="30" type="number" id="disk" min="30" max="140"
@@ -73,9 +76,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-12 col-md-6">
+                <div class="form-group col-12 col-sm-6">
                     <label class="label-right" for="apps">برنامه ها</label>
                     <select required name="app_name" id="apps" class="selectpicker form-control" multiple>
                         <option value="Abaqus">Abaqus</option>
@@ -91,20 +92,14 @@
                         <option value="Other">سایر</option>
                     </select>
                 </div>
-                <div class="form-group col-12 col-md-6">
-                    <label class="label-right" for="user_desc">توضیحات بیشتر</label>
-                    <textarea class="form-control" id="user_desc" name="user_desc" rows="2"
-                              placeholder="اگر سوالی دارید یا نام برنامه موردنظرتان در لیست نبود، در این قسمت بنویسید..."></textarea>
-                </div>
             </div>
-
             <div class="form-row">
-                <div class="form-group col-12 col-md-4">
+                <div class="form-group col-sm-2">
                     <label class="label-right" for="days">تعداد روزها</label>
                     <input name="days" value="15" required type="number" class="form-control" min="15"
                            id="days">
                 </div>
-                <div class="form-group col-6 col-md-4">
+                <div class="form-group col-sm-5">
                     <label class="label-right" for="cost">هزینه برآورد شده</label>
                     <div class="input-group">
                         <input name="cost" value="0" readonly type="text"
@@ -114,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-6 col-md-4">
+                <div class="form-group col-sm-5">
                     <label class="label-right" for="cost_disc">هزینه با اعمال تخفیف</label>
                     <div class="input-group">
                         <input name="cost_disc" value="0" readonly type="text" class="form-control" id="cost_disc">
@@ -124,7 +119,16 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-block">ارسال درخواست</button>
+
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <label class="label-right" for="user_desc">توضیحات بیشتر</label>
+                    <textarea class="form-control" id="user_desc" name="user_desc" rows="4"
+                              placeholder="اگر سوالی دارید یا نام برنامه موردنظرتان در لیست نبود، در این قسمت بنویسید..."></textarea>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-success btn-block mt-4">ارسال درخواست</button>
         </form>
     </div>
 {% endblock %}

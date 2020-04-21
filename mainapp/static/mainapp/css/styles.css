@@ -49,12 +49,17 @@ a:hover {
     margin: 100px auto;
     box-shadow: 1px 2px 9px #5a6268;
     border: 1px solid #5a6268;
-    border-radius: 5px;
+    border-bottom-left-radius: 35px;
+    border-top-right-radius: 35px;
     background-color: white;
 }
 
 .box-60 {
     width: 60% !important;
+}
+
+.box-70 {
+    width: 70% !important;
 }
 
 .label-right {
@@ -219,10 +224,14 @@ div.filter-option-inner-inner {
     text-align: right;
 }
 
-#user_desc.form-control {
-    font-size: 10px;
+#user_desc.form-control::placeholder {
+    font-size: 12px;
 }
 
+label.label-right {
+    font-size: 14px;
+    white-space: nowrap;
+}
 
 /*mobile view*/
 @media (max-width: 575px) {
@@ -232,10 +241,14 @@ div.filter-option-inner-inner {
     }
 
     .box {
-        width: 90%;
+        width: 90% !important;
     }
 
     .box-60 {
+        width: 90% !important;
+    }
+
+    box-70 {
         width: 90% !important;
     }
 
