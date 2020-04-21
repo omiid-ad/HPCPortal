@@ -1,5 +1,3 @@
-import datetime
-
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin
 from django.contrib.auth.models import Group
@@ -78,7 +76,9 @@ class RequestA(admin.ModelAdmin):
     def cancel(self, request, queryset):
         for obj in queryset:
             obj.date_expired = None
+            obj.request.acceptance_status = "Rej"
             obj.renewal_status = 'Can'
+            obj.request.save()
             obj.save()
 
     cancel.short_description = "لغو سرویس ها"
@@ -86,7 +86,9 @@ class RequestA(admin.ModelAdmin):
     def suspend(self, request, queryset):
         for obj in queryset:
             obj.date_expired = None
+            obj.request.acceptance_status = "Rej"
             obj.renewal_status = 'Sus'
+            obj.request.save()
             obj.save()
 
     suspend.short_description = "تعلیق سرویس ها"

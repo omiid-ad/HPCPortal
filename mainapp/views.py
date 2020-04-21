@@ -28,6 +28,7 @@ def index(request):
             for req in all_requests:
                 if req.is_expired() and req.renewal_status != 'Exp':
                     req.renewal_status = 'Exp'
+                    req.date_expired = None
                     req.save()
             context = {
                 'all_requests': all_requests,
