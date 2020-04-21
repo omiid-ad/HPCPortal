@@ -136,13 +136,22 @@ def new_request(request):
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-        cost = locale.atoi(request.POST["cost_disc"])
+        cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
+        cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
         app_name_list = request.POST.getlist('app_name')
         app_name = ', '.join(app_name_list)
-        new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
-                                             cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
-                                             app_name=app_name, days=int(request.POST["days"]),
-                                             show_cost=int(cost), user_description=request.POST["user_desc"])
+        if profile.university.__contains__("چمران") or profile.university.__contains__(
+                "chamran") or profile.university.__contains__("chamraan"):
+
+            new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
+                                                 cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
+                                                 app_name=app_name, days=int(request.POST["days"]),
+                                                 show_cost=int(cost_disc), user_description=request.POST["user_desc"])
+        else:
+            new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
+                                                 cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
+                                                 app_name=app_name, days=int(request.POST["days"]),
+                                                 show_cost=int(cost), user_description=request.POST["user_desc"])
         new_request.save()
         messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
         return redirect('index')
@@ -154,17 +163,7 @@ def calc_cost(request):
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
     total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
-
-    user = request.user
-    try:
-        profile = Profile.objects.get(user=user)
-    except Profile.DoesNotExist:
-        raise Http404("user not found")
-    if profile.university.__contains__("چمران") or profile.university.__contains__(
-            "chamran") or profile.university.__contains__("chamraan"):
-        total_disc = (70 * total) / 100
-    else:
-        total_disc = total
+    total_disc = (70 * total) / 100
 
     total_disc = trunc(round(total_disc) / 1000) * 1000
     total_disc = f'{total_disc:,d}'
