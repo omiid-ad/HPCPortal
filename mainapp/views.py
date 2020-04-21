@@ -247,6 +247,8 @@ def extend(request, pk):
     elif request.method == "POST":
         ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]))
         ext_req.save()
+        extended_service.acceptance_status = 'Exting'
+        extended_service.save()
         messages.success(request,
                          "درخواست تمدید با موفقیت ارسال شد. درصورت تایید، تاریخ سررسید سرویس مورد نظر به روزرسانی میشود")
         return redirect('index')
@@ -276,6 +278,8 @@ def cancel(request):
 
         can_req = CancelRequest.objects.create(request=canceled_service)
         can_req.save()
+        canceled_service.acceptance_status = 'Caning'
+        canceled_service.save()
         messages.success(request,
                          "درخواست لغو با موفقیت ارسال شد. درصورت تایید، وضعیت سرویس مورد نظر به روزرسانی میشود")
 

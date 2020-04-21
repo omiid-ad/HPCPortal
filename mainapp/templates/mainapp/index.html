@@ -66,6 +66,8 @@
                             {% ifequal req.acceptance_status 'Rej' %}
                                 <i class="far fa-times-circle reject-icon"></i>{% endifequal %}
                             {% ifequal req.acceptance_status 'Pen' %}درانتظارتایید{% endifequal %}
+                            {% ifequal req.acceptance_status 'Exting' %}درانتظارتمدید{% endifequal %}
+                            {% ifequal req.acceptance_status 'Caning' %}درانتظارلغو{% endifequal %}
                         </td>
                         <td>{{ req.get_renewal_status_display }}</td>
                         <td id="serial">{{ req.serial_number }}</td>

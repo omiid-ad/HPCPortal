@@ -40,7 +40,9 @@ class Request(models.Model):
     ACCEPTANCE_STATUS = [
         ('Pen', 'در انتظار تایید'),
         ('Acc', 'تایید شده'),
-        ('Rej', 'رد شده')
+        ('Rej', 'رد شده'),
+        ('Exting', 'در انتظار تمدید'),
+        ('Caning', 'در انتظار لغو'),
     ]
     RENEWAL_STATUS = [
         ('Exp', 'منقضی'),

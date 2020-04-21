@@ -111,6 +111,7 @@ class ExtendRequestA(admin.ModelAdmin):
             else:
                 obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
             obj.acceptance_status = 'Acc'
+            obj.request.acceptance_status = 'Acc'
             obj.request.save()
             obj.save()
 
@@ -119,6 +120,8 @@ class ExtendRequestA(admin.ModelAdmin):
     def reject(self, request, queryset):
         for obj in queryset:
             obj.acceptance_status = 'Rej'
+            obj.request.acceptance_status = "Rej"
+            obj.request.save()
             obj.save()
 
     reject.short_description = "رد درخواست های تمدید"
@@ -139,6 +142,7 @@ class CancelRequestA(admin.ModelAdmin):
     def accept(self, request, queryset):
         for obj in queryset:
             obj.request.renewal_status = "Can"
+            obj.request.acceptance_status = "Acc"
             obj.acceptance_status = 'Acc'
             obj.request.date_expired = None
             obj.request.save()
@@ -149,6 +153,8 @@ class CancelRequestA(admin.ModelAdmin):
     def reject(self, request, queryset):
         for obj in queryset:
             obj.acceptance_status = 'Rej'
+            obj.request.acceptance_status = "Rej"
+            obj.request.save()
             obj.save()
 
     reject.short_description = "رد درخواست های لغو"
