@@ -298,4 +298,7 @@ label.label-right {
     div.table-responsive {
         margin-bottom: 110px;
     }
+    .footer {
+        opacity: 1 !important;
+    }
 }
