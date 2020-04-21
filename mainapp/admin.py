@@ -33,15 +33,15 @@ class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
-        'renewal_status', 'user_description')
-    list_display = ('get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status')
+        'renewal_status', 'user_description', 'receipt')
+    list_display = ('get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'receipt')
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
         ('جزئیات زمانی درخواست', {'fields': ('date_requested', 'date_expired', 'days')}),
         ('جزئیات فنی درخواست', {'fields': ('cpu', 'ram', 'disk', 'app_name')}),
-        ('جزئیات مالی درخواست', {'fields': ('show_cost',)}),
+        ('جزئیات مالی درخواست', {'fields': ('show_cost', 'receipt')}),
         ('توضیحات', {'fields': ('user_description', 'description',)}),
         ('وضعیت درخواست', {'fields': ('acceptance_status', 'renewal_status')}),
     )

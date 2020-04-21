@@ -6,6 +6,7 @@ from math import trunc
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import FileSystemStorage
 from django.http import Http404
 from django.shortcuts import render, redirect
 
@@ -140,17 +141,21 @@ def new_request(request):
         cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
         app_name_list = request.POST.getlist('app_name')
         app_name = ', '.join(app_name_list)
+        receipt = request.FILES["receipt"]
+        fs = FileSystemStorage()
+        filename = fs.save(receipt.name, receipt)
         if profile.university.__contains__("چمران") or profile.university.__contains__(
                 "chamran") or profile.university.__contains__("chamraan"):
-
             new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                                  cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                                  app_name=app_name, days=int(request.POST["days"]),
+                                                 receipt=filename,
                                                  show_cost=int(cost_disc), user_description=request.POST["user_desc"])
         else:
             new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                                  cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                                  app_name=app_name, days=int(request.POST["days"]),
+                                                 receipt=filename,
                                                  show_cost=int(cost), user_description=request.POST["user_desc"])
         new_request.save()
         messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")

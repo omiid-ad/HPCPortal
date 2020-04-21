@@ -43,6 +43,15 @@ a:hover {
     text-decoration: none;
 }
 
+label.custom-file-label {
+    text-align: center;
+}
+
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+    content: "فایل‌ها";
+}
+
+
 .box {
     padding: 20px;
     width: 500px;
@@ -225,7 +234,7 @@ div.filter-option-inner-inner {
 }
 
 #user_desc.form-control::placeholder {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 label.label-right {
@@ -235,6 +244,10 @@ label.label-right {
 
 /*mobile view*/
 @media (max-width: 575px) {
+    label.custom-file-label {
+        text-align: left;
+        font-size: 13px;
+    }
     .alert {
         margin: 10px 8px;
         font-size: 16px;
@@ -298,6 +311,7 @@ label.label-right {
     div.table-responsive {
         margin-bottom: 110px;
     }
+
     .footer {
         opacity: 1 !important;
     }
