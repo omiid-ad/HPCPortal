@@ -244,26 +244,26 @@ def edit_profile(request):
             if dup_email is not None:
                 messages.error(request, "ایمیل وارد شده تکراری میباشد")
                 return redirect('edit_profile')
-            if request.POST["first_name"] != "" and request.POST["last_name"] != "" and request.POST["email"] != "" and \
-                    request.POST["uni"] != "" and request.POST["field"] != "" and request.POST["master_email"] != "" and \
-                    request.POST["master_name"] != "":
-                user.first_name = request.POST["first_name"]
-                user.last_name = request.POST["last_name"]
-                user.email = request.POST["email"]
-                user.username = request.POST["email"]
+        if request.POST["first_name"] != "" and request.POST["last_name"] != "" and request.POST["email"] != "" and \
+                request.POST["uni"] != "" and request.POST["field"] != "" and request.POST["master_email"] != "" and \
+                request.POST["master_name"] != "":
+            user.first_name = request.POST["first_name"]
+            user.last_name = request.POST["last_name"]
+            user.email = request.POST["email"]
+            user.username = request.POST["email"]
 
-                profile.university = request.POST["uni"]
-                profile.field = request.POST["field"]
-                profile.guidance_master_email = request.POST["master_email"]
-                profile.guidance_master_full_name = request.POST["master_name"]
-                profile.save()
-                user.save()
+            profile.university = request.POST["uni"]
+            profile.field = request.POST["field"]
+            profile.guidance_master_email = request.POST["master_email"]
+            profile.guidance_master_full_name = request.POST["master_name"]
+            profile.save()
+            user.save()
 
-                messages.success(request, "ویرایش با موفقیت انجام شد")
-                return redirect('index')
-            else:
-                messages.error(request, "فرم را به درستی پر کنید")
-                return redirect('edit_profile')
+            messages.success(request, "ویرایش با موفقیت انجام شد")
+            return redirect('index')
+        else:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('edit_profile')
 
 
 def extend(request, pk):
