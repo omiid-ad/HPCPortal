@@ -34,14 +34,14 @@
                 </h3>
             </div>
 
-            <div class="form-row">
+            <div class="form-row mt-4">
                 <div class="form-group col-12">
                     <label class="label-right" for="service">سرویس انتخاب شده</label>
                     <input value="{{ extended_service.serial_number }}" name="service" readonly type="text"
                            class="form-control" id="service">
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-4">
                 <div class="form-group col-sm-4">
                     <label class="label-right" for="days">تعداد روزها</label>
                     <input name="days" value="15" required type="number" class="form-control" id="days" min="15">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row">
+            <div class="form-row mt-4">
                 <div class="form-group col-12">
                     <div class="custom-file">
                         <input required type="file" accept="image/*" class="custom-file-input" name="receipt"
@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-block">ارسال درخواست تمدید</button>
+            <button type="submit" class="btn btn-success btn-block mt-4">ارسال درخواست تمدید</button>
         </form>
     </div>
 {% endblock %}
