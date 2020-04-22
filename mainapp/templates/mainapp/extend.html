@@ -14,8 +14,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="box">
-        <form dir="rtl" method="post" action="{% url 'extend' extended_service.pk %}">
+    <div class="box box-50">
+        <form dir="rtl" method="post" action="{% url 'extend' extended_service.pk %}" enctype="multipart/form-data">
             {% csrf_token %}
 
             {% ifequal message.tags 'error' %}
@@ -35,17 +35,86 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-md-8">
+                <div class="form-group col-12">
                     <label class="label-right" for="service">سرویس انتخاب شده</label>
                     <input value="{{ extended_service.serial_number }}" name="service" readonly type="text"
                            class="form-control" id="service">
                 </div>
-                <div class="form-group col-md-4">
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-4">
                     <label class="label-right" for="days">تعداد روزها</label>
                     <input name="days" value="15" required type="number" class="form-control" id="days" min="15">
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="label-right" for="cost">هزینه کاربران سایر دانشگاه‌ها</label>
+                    <div class="input-group">
+                        <input name="cost" value="0" readonly type="text"
+                               class="form-control" id="cost">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">تومان</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label class="label-right" for="cost_disc">هزینه کاربران دانشگاه</label>
+                    <div class="input-group">
+                        <input name="cost_disc" value="0" readonly type="text" class="form-control" id="cost_disc">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">تومان</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-12">
+                    <div class="custom-file">
+                        <input required type="file" accept="image/*" class="custom-file-input" name="receipt"
+                               id="customFile">
+                        <label class="custom-file-label" for="customFile">عکس فیش‌واریزی خود را آپلود کنید...</label>
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn btn-success btn-block">ارسال درخواست تمدید</button>
         </form>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let cpu = {{ extended_service.cpu }};
+            let ram = {{ extended_service.ram }};
+            let disk = {{ extended_service.disk }};
+            let days = $("#days").val();
+            $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                if (result.status === 200) {
+                    $("#cost").val(result.total);
+                    $("#cost_disc").val(result.total_disc);
+                } else {
+                    $("#cost").val("NaN");
+                    $("#cost_disc").val("NaN");
+                }
+            });
+            $("#days").change(function () {
+                days = $("#days").val();
+                $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                    if (result.status === 200) {
+                        $("#cost").val(result.total);
+                        $("#cost_disc").val(result.total_disc);
+                    } else {
+                        $("#cost").val("NaN");
+                        $("#cost_disc").val("NaN");
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
 {% endblock %}

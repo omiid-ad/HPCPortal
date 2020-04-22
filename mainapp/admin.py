@@ -95,13 +95,13 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days')
-    list_display = ('request', 'days', 'acceptance_status')
+    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt')
+    list_display = ('request', 'days', 'acceptance_status', 'show_cost', 'receipt')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
-        ('بیشتر', {'fields': ('days', 'acceptance_status')}),
+        ('بیشتر', {'fields': ('days', 'acceptance_status', 'show_cost', 'receipt')}),
     )
 
     actions = ["accept", "reject"]

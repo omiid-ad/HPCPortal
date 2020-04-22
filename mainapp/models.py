@@ -96,6 +96,8 @@ class ExtendRequest(models.Model):
 
     request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
     days = models.IntegerField(default=0, verbose_name="تعداد روزها")
+    receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
+    show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
 

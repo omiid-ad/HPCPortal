@@ -250,7 +250,24 @@ def extend(request, pk):
         }
         return render(request, "mainapp/extend.html", context)
     elif request.method == "POST":
-        ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]))
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+            return redirect('complete_profile')
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
+        cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
+        receipt = request.FILES["receipt"]
+        fs = FileSystemStorage()
+        filename = fs.save(receipt.name, receipt)
+        if profile.university.__contains__("چمران") or profile.university.__contains__(
+                "chamran") or profile.university.__contains__("chamraan"):
+            ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
+                                                   show_cost=int(cost_disc), receipt=filename)
+        else:
+            ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
+                                                   show_cost=int(cost), receipt=filename)
         ext_req.save()
         extended_service.acceptance_status = 'Exting'
         extended_service.save()

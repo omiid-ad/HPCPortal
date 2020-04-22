@@ -242,12 +242,17 @@ label.label-right {
     white-space: nowrap;
 }
 
+.box-50 {
+    width: 50% !important;
+}
+
 /*mobile view*/
 @media (max-width: 575px) {
     label.custom-file-label {
         text-align: left;
         font-size: 13px;
     }
+
     .alert {
         margin: 10px 8px;
         font-size: 16px;
