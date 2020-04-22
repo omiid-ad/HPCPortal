@@ -48,7 +48,7 @@
                 <div class="form-group col-12 col-sm-2">
                     <label class="label-right" for="cpu">هسته پردازشی</label>
                     <div class="input-group">
-                        <input name="cpu" required value="0" type="number" class="form-control" min="1"
+                        <input name="cpu" required value="1" type="number" class="form-control" min="1"
                                max="12"
                                id="cpu">
                         <div class="input-group-prepend ">
@@ -145,11 +145,24 @@
     {{ block.super }}
     <script type="text/javascript">
         $(document).ready(function () {
+            let cpu = $("#cpu").val();
+            let ram = $("#ram").val();
+            let disk = $("#disk").val();
+            let days = $("#days").val();
+            $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                if (result.status === 200) {
+                    $("#cost").val(result.total);
+                    $("#cost_disc").val(result.total_disc);
+                } else {
+                    $("#cost").val("NaN");
+                    $("#cost_disc").val("NaN");
+                }
+            });
             $("input").change(function () {
-                let cpu = $("#cpu").val();
-                let ram = $("#ram").val();
-                let disk = $("#disk").val();
-                let days = $("#days").val();
+                cpu = $("#cpu").val();
+                ram = $("#ram").val();
+                disk = $("#disk").val();
+                days = $("#days").val();
                 $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
                     if (result.status === 200) {
                         $("#cost").val(result.total);
