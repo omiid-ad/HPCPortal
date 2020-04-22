@@ -2,6 +2,11 @@
 {% load static %}
 {% block title %}ثبت نام | مرکز پزدازش سریع دانشگاه شهید چمران اهواز{% endblock %}
 
+{% block head %}
+    {{ block.super }}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}
+
 {% block msg %}
     {% if messages %}
         {% for message in messages %}
@@ -63,7 +68,7 @@
                     امکان درخواست وجود ندارد
                 </small>
             </div>
-{#            <div class="captcha g-recaptcha" data-sitekey="6LfBE-kUAAAAAJPkm3umVjcukTc5aRVysfYvlH7o"></div>#}
+            {#            <div class="captcha g-recaptcha" data-sitekey="6LfBE-kUAAAAAJPkm3umVjcukTc5aRVysfYvlH7o"></div>#}
             <button type="submit" class="btn btn-success btn-block">برو به "تکمیل پروفایل"</button>
         </form>
     </div>

@@ -2,6 +2,11 @@
 {% load static %}
 {% block title %}ورود | مرکز پزدازش سریع دانشگاه شهید چمران اهواز{% endblock %}
 
+{% block head %}
+    {{ block.super }}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{% endblock %}
+
 {% block msg %}
     {% if messages %}
         {% for message in messages %}
