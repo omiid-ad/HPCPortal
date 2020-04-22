@@ -42,30 +42,34 @@ def login(request):
     elif request.user.is_authenticated:
         return redirect('index')
     elif request.method == "POST":
-        user = authenticate(username=request.POST['email'], password=request.POST['password'])
-        # recaptcha_response = request.POST.get('g-recaptcha-response')
-        # url = 'https://www.google.com/recaptcha/api/siteverify'
-        # values = {
-        #     'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-        #     'response': recaptcha_response
-        # }
-        # data = urllib.parse.urlencode(values).encode()
-        # req = urllib.request.Request(url, data=data)
-        # response = urllib.request.urlopen(req)
-        # result = json.loads(response.read().decode())
-        if user is not None and user.is_active:  # and result['success']:
-            django_login(request, user)
-            messages.success(request, 'با موفقیت وارد شدید')
-            return redirect('index')
-        elif user is None:
-            messages.error(request, "ایمیل یا رمز عبور اشتباه است")
+        if request.POST['email'] != "" and request.POST['password'] != "":
+            user = authenticate(username=request.POST['email'], password=request.POST['password'])
+            # recaptcha_response = request.POST.get('g-recaptcha-response')
+            # url = 'https://www.google.com/recaptcha/api/siteverify'
+            # values = {
+            #     'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            #     'response': recaptcha_response
+            # }
+            # data = urllib.parse.urlencode(values).encode()
+            # req = urllib.request.Request(url, data=data)
+            # response = urllib.request.urlopen(req)
+            # result = json.loads(response.read().decode())
+            if user is not None and user.is_active:  # and result['success']:
+                django_login(request, user)
+                messages.success(request, 'با موفقیت وارد شدید')
+                return redirect('index')
+            elif user is None:
+                messages.error(request, "ایمیل یا رمز عبور اشتباه است")
+                return redirect('login')
+            elif not user.is_active:
+                messages.error(request, "حساب شما توسط مدیر غیرفعال شده است")
+                return redirect('login')
+            # elif not result['success']:
+            #     messages.error(request, "reCAPTCHA failed")
+            #     return redirect('login')
+        else:
+            messages.error(request, "فرم را به درستی پر کنید")
             return redirect('login')
-        elif not user.is_active:
-            messages.error(request, "حساب شما توسط مدیر غیرفعال شده است")
-            return redirect('login')
-        # elif not result['success']:
-        #     messages.error(request, "reCAPTCHA failed")
-        #     return redirect('login')
 
 
 def register(request):
@@ -76,39 +80,44 @@ def register(request):
         else:
             return render(request, 'mainapp/register.html')
     elif request.method == "POST":
-        if request.POST['password1'] != request.POST['password2']:
-            messages.error(request, "کلمه عبور و تکرار آن مطابقت ندارند")
-            return render(request, 'mainapp/register.html')
-        if len(request.POST['password1']) < 8:
-            messages.error(request, "رمز عبور باید حداقل ۸ کاراکتر باشد")
-            return render(request, 'mainapp/register.html')
-        try:
-            dup_email = User.objects.get(email=request.POST['email'])
-        except User.DoesNotExist:
-            dup_email = None
-        if dup_email is not None:
-            messages.error(request, "ایمیل وارد شده تکراری میباشد")
+        if request.POST["first_name"] != "" and request.POST["last_name"] != "" and request.POST["email"] != "" and \
+                request.POST["password1"] != "" and request.POST["password2"] != "":
+            if request.POST['password1'] != request.POST['password2']:
+                messages.error(request, "کلمه عبور و تکرار آن مطابقت ندارند")
+                return render(request, 'mainapp/register.html')
+            if len(request.POST['password1']) < 8:
+                messages.error(request, "رمز عبور باید حداقل ۸ کاراکتر باشد")
+                return render(request, 'mainapp/register.html')
+            try:
+                dup_email = User.objects.get(email=request.POST['email'])
+            except User.DoesNotExist:
+                dup_email = None
+            if dup_email is not None:
+                messages.error(request, "ایمیل وارد شده تکراری میباشد")
+                return redirect('register')
+            # recaptcha_response = request.POST.get('g-recaptcha-response')
+            # url = 'https://www.google.com/recaptcha/api/siteverify'
+            # values = {
+            #     'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            #     'response': recaptcha_response
+            # }
+            # data = urllib.parse.urlencode(values).encode()
+            # req = urllib.request.Request(url, data=data)
+            # response = urllib.request.urlopen(req)
+            # result = json.loads(response.read().decode())
+            # if not result['success']:
+            #     messages.error(request, "reCAPTCHA failed")
+            #     return redirect('register')
+            user = User.objects.create(username=request.POST['email'], first_name=request.POST['first_name'],
+                                       last_name=request.POST['last_name'], email=request.POST['email'])
+            user.set_password(request.POST['password1'])
+            user.save()
+            messages.success(request, 'حساب با موفقیت ایجاد شد')
+            django_login(request, user)
+            return redirect('complete_profile')
+        else:
+            messages.error(request, "فرم را به درستی پر کنید")
             return redirect('register')
-        # recaptcha_response = request.POST.get('g-recaptcha-response')
-        # url = 'https://www.google.com/recaptcha/api/siteverify'
-        # values = {
-        #     'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-        #     'response': recaptcha_response
-        # }
-        # data = urllib.parse.urlencode(values).encode()
-        # req = urllib.request.Request(url, data=data)
-        # response = urllib.request.urlopen(req)
-        # result = json.loads(response.read().decode())
-        # if not result['success']:
-        #     messages.error(request, "reCAPTCHA failed")
-        #     return redirect('register')
-        user = User.objects.create(username=request.POST['email'], first_name=request.POST['first_name'],
-                                   last_name=request.POST['last_name'], email=request.POST['email'])
-        user.set_password(request.POST['password1'])
-        user.save()
-        messages.success(request, 'حساب با موفقیت ایجاد شد')
-        django_login(request, user)
-        return redirect('complete_profile')
 
 
 @login_required(login_url='/login')
@@ -116,12 +125,18 @@ def complete_profile(request):
     if request.method == "GET":
         return render(request, 'mainapp/complete_profile.html')
     elif request.method == "POST":
-        profile = Profile.objects.create(user=request.user, guidance_master_full_name=request.POST["master_name"],
-                                         guidance_master_email=request.POST["email"],
-                                         university=request.POST["uni"], field=request.POST["field"])
-        profile.save()
-        messages.success(request, "پروفایل با موفقیت تکمیل شد")
-        return redirect('index')
+        if request.POST["master_name"] != "" and request.POST["email"] != "" and request.POST["uni"] != "" and \
+                request.POST["field"] != "":
+            profile = Profile.objects.create(user=request.user,
+                                             guidance_master_full_name=request.POST["master_name"],
+                                             guidance_master_email=request.POST["email"],
+                                             university=request.POST["uni"], field=request.POST["field"])
+            profile.save()
+            messages.success(request, "پروفایل با موفقیت تکمیل شد")
+            return redirect('index')
+        else:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('complete_profile')
 
 
 @login_required(login_url='/login')
@@ -144,27 +159,37 @@ def new_request(request):
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
         cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
-        app_name_list = request.POST.getlist('app_name')
-        app_name = ', '.join(app_name_list)
-        receipt = request.FILES["receipt"]
-        fs = FileSystemStorage()
-        filename = fs.save(receipt.name, receipt)
-        if profile.university.__contains__("چمران") or profile.university.__contains__(
-                "chamran") or profile.university.__contains__("chamraan"):
-            new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
-                                                 cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
-                                                 app_name=app_name, days=int(request.POST["days"]),
-                                                 receipt=filename,
-                                                 show_cost=int(cost_disc), user_description=request.POST["user_desc"])
+
+        if request.POST["os"] != "" and request.POST["ram"] != "" and int(request.POST["ram"]) >= 4 and int(
+                request.POST["ram"]) <= 30 and request.POST["cpu"] != "" and int(request.POST["cpu"]) >= 1 and int(
+            request.POST["cpu"]) <= 12 and request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
+            request.POST["disk"]) <= 140 and request.POST.getlist('app_name') and request.POST[
+            "days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and int(cost) > 0 and \
+                request.POST["cost_disc"] != "" and int(cost_disc) > 0 and request.FILES["receipt"]:
+            app_name_list = request.POST.getlist('app_name')
+            app_name = ', '.join(app_name_list)
+            receipt = request.FILES["receipt"]
+            fs = FileSystemStorage()
+            filename = fs.save(receipt.name, receipt)
+            if profile.university.__contains__("چمران") or profile.university.__contains__(
+                    "chamran") or profile.university.__contains__("chamraan"):
+                new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
+                                                     cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
+                                                     app_name=app_name, days=int(request.POST["days"]),
+                                                     receipt=filename, show_cost=int(cost_disc),
+                                                     user_description=request.POST["user_desc"])
+            else:
+                new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
+                                                     cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
+                                                     app_name=app_name, days=int(request.POST["days"]),
+                                                     receipt=filename,
+                                                     show_cost=int(cost), user_description=request.POST["user_desc"])
+            new_request.save()
+            messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
+            return redirect('index')
         else:
-            new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
-                                                 cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
-                                                 app_name=app_name, days=int(request.POST["days"]),
-                                                 receipt=filename,
-                                                 show_cost=int(cost), user_description=request.POST["user_desc"])
-        new_request.save()
-        messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
-        return redirect('index')
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('new_request')
 
 
 def calc_cost(request):
@@ -219,21 +244,26 @@ def edit_profile(request):
             if dup_email is not None:
                 messages.error(request, "ایمیل وارد شده تکراری میباشد")
                 return redirect('edit_profile')
+            if request.POST["first_name"] != "" and request.POST["last_name"] != "" and request.POST["email"] != "" and \
+                    request.POST["uni"] != "" and request.POST["field"] != "" and request.POST["master_email"] != "" and \
+                    request.POST["master_name"] != "":
+                user.first_name = request.POST["first_name"]
+                user.last_name = request.POST["last_name"]
+                user.email = request.POST["email"]
+                user.username = request.POST["email"]
 
-        user.first_name = request.POST["first_name"]
-        user.last_name = request.POST["last_name"]
-        user.email = request.POST["email"]
-        user.username = request.POST["email"]
+                profile.university = request.POST["uni"]
+                profile.field = request.POST["field"]
+                profile.guidance_master_email = request.POST["master_email"]
+                profile.guidance_master_full_name = request.POST["master_name"]
+                profile.save()
+                user.save()
 
-        profile.university = request.POST["uni"]
-        profile.field = request.POST["field"]
-        profile.guidance_master_email = request.POST["master_email"]
-        profile.guidance_master_full_name = request.POST["master_name"]
-        profile.save()
-        user.save()
-
-        messages.success(request, "ویرایش با موفقیت انجام شد")
-        return redirect('index')
+                messages.success(request, "ویرایش با موفقیت انجام شد")
+                return redirect('index')
+            else:
+                messages.error(request, "فرم را به درستی پر کنید")
+                return redirect('edit_profile')
 
 
 def extend(request, pk):
@@ -262,22 +292,27 @@ def extend(request, pk):
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
         cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
-        receipt = request.FILES["receipt"]
-        fs = FileSystemStorage()
-        filename = fs.save(receipt.name, receipt)
-        if profile.university.__contains__("چمران") or profile.university.__contains__(
-                "chamran") or profile.university.__contains__("chamraan"):
-            ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
-                                                   show_cost=int(cost_disc), receipt=filename)
+        if request.POST["days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and \
+                int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0 and request.FILES["receipt"]:
+            receipt = request.FILES["receipt"]
+            fs = FileSystemStorage()
+            filename = fs.save(receipt.name, receipt)
+            if profile.university.__contains__("چمران") or profile.university.__contains__(
+                    "chamran") or profile.university.__contains__("chamraan"):
+                ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
+                                                       show_cost=int(cost_disc), receipt=filename)
+            else:
+                ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
+                                                       show_cost=int(cost), receipt=filename)
+            ext_req.save()
+            extended_service.acceptance_status = 'Exting'
+            extended_service.save()
+            messages.success(request,
+                             "درخواست تمدید با موفقیت ارسال شد. درصورت تایید، تاریخ سررسید سرویس مورد نظر به روزرسانی میشود")
+            return redirect('index')
         else:
-            ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
-                                                   show_cost=int(cost), receipt=filename)
-        ext_req.save()
-        extended_service.acceptance_status = 'Exting'
-        extended_service.save()
-        messages.success(request,
-                         "درخواست تمدید با موفقیت ارسال شد. درصورت تایید، تاریخ سررسید سرویس مورد نظر به روزرسانی میشود")
-        return redirect('index')
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('extend')
 
 
 def cancel(request):
