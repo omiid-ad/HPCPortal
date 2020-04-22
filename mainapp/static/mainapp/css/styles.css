@@ -104,10 +104,6 @@ div.dropdown-menu a {
     margin: 10px 30px;
 }
 
-table {
-    margin: 50px auto;
-}
-
 th {
     text-align: center;
     font-size: small;
@@ -246,6 +242,10 @@ label.label-right {
     width: 50% !important;
 }
 
+th {
+    cursor: pointer;
+}
+
 /*mobile view*/
 @media (max-width: 575px) {
     label.custom-file-label {
@@ -255,7 +255,7 @@ label.label-right {
 
     .alert {
         margin: 10px 8px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .box {
