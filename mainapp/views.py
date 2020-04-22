@@ -70,7 +70,11 @@ def login(request):
 
 def register(request):
     if request.method == "GET":
-        return render(request, 'mainapp/register.html')
+        if request.user.is_authenticated:
+            messages.error(request, "شما قبلا ثبت نام کرده اید")
+            return redirect('index')
+        else:
+            return render(request, 'mainapp/register.html')
     elif request.method == "POST":
         if request.POST['password1'] != request.POST['password2']:
             messages.error(request, "کلمه عبور و تکرار آن مطابقت ندارند")
