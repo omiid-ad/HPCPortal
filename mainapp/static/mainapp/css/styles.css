@@ -163,17 +163,22 @@ th {
 }
 
 .os-icon-linux {
-    font-size: 17px;
+    font-size: 35px;
+    color: #6b6854;
 }
 
 .os-icon-windows {
-    font-size: 17px;
+    font-size: 35px;
     color: #07c9f5;
 }
 
 .accept-icon {
     font-size: 17px;
     color: #0b7021;
+}
+
+.midnightblue {
+    color: midnightblue;
 }
 
 .reject-icon {

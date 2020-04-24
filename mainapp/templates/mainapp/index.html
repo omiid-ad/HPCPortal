@@ -39,8 +39,6 @@
                     <th>#</th>
                     <th>شماره سریال</th>
                     <th>تاریخ انقضا</th>
-                    <th>سیستم عامل</th>
-                    <th>نام برنامه ها</th>
                     <th>مشخضات فنی سرویس</th>
                     <th>هزینه</th>
                     <th>وضعیت تایید</th>
@@ -56,9 +54,6 @@
                         <td>{{ forloop.counter }}</td>
                         <td id="serial">{{ req.serial_number }}</td>
                         <td>{{ req.date_expired.isoformat }}</td>
-                        <td>{% ifequal req.os 'Lin' %}<i class="fab fa-linux os-icon-linux"></i>{% else %}
-                            <i class="fab fa-windows os-icon-windows"></i>{% endifequal %}</td>
-                        <td>{{ req.app_name }}</td>
                         <td>
                             <button type="button" class="btn" data-toggle="modal"
                                     data-target="#techModal{{ forloop.counter }}">
@@ -120,7 +115,7 @@
                             </div>
                         </div>
                     {% endif %}
-                    <!-- The DescriptionModal -->
+                    <!-- The TechnicalModal -->
                     <div class="modal fade" id="techModal{{ forloop.counter }}">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
@@ -132,12 +127,23 @@
                                 </div>
 
                                 <!-- Modal body -->
-                                <div class="modal-body text-right">
-                                    <p><strong>دیسک : </strong>‌{{ req.disk|floatformat }} گیگابایت</p>
-                                    <br>
-                                    <p><strong>تعداد هسته های پردازشی : </strong>{{ req.cpu|floatformat }} عدد</p>
-                                    <br>
-                                    <p><strong>رم : </strong>{{ req.ram|floatformat }} گیگابایت</p>
+                                <div class="modal-body text-center">
+                                    <p><strong>سیستم عامل : </strong></p>
+                                    <p>
+                                        {% ifequal req.os 'Lin' %}
+                                            <i class="fab fa-linux os-icon-linux"></i>
+                                        {% else %}
+                                            <i class="fab fa-windows os-icon-windows"></i>
+                                        {% endifequal %}
+                                    </p>
+                                    <p><strong>دیسک : </strong></p>
+                                    <p class="midnightblue">‌{{ req.disk|floatformat }} گیگابایت</p>
+                                    <p><strong>تعداد هسته های پردازشی : </strong></p>
+                                    <p class="midnightblue">{{ req.cpu|floatformat }} عدد</p>
+                                    <p><strong>رم : </strong></p>
+                                    <p class="midnightblue">{{ req.ram|floatformat }} گیگابایت</p>
+                                    <p><strong>نام برنامه‌ها : </strong></p>
+                                    <p class="midnightblue">{{ req.app_name }}</p>
                                 </div>
 
                                 <!-- Modal footer -->
@@ -168,9 +174,8 @@
                 "searching": false,
                 "columnDefs": [
                     {"orderable": false, "targets": 3},
-                    {"orderable": false, "targets": 5},
-                    {"orderable": false, "targets": 10},
-                    {"orderable": false, "targets": 11}
+                    {"orderable": false, "targets": 8},
+                    {"orderable": false, "targets": 9}
                 ]
             });
 
