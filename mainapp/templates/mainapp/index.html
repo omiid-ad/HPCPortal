@@ -52,7 +52,7 @@
                 {% for req in all_requests %}
                     <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}{% ifnotequal req.renewal_status 'Ok' %} table-danger{% endifnotequal %}{% endifequal %}">
                         <td>{{ forloop.counter }}</td>
-                        <td id="serial">{{ req.serial_number }}</td>
+                        <td id="serial{{ req.pk }}">{{ req.serial_number }}</td>
                         <td>{{ req.date_expired.isoformat }}</td>
                         <td>
                             <button type="button" class="btn" data-toggle="modal"

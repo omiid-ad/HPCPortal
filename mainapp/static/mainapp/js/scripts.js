@@ -1,5 +1,6 @@
 function cancelYN(pk) {
-    let serial = document.getElementById("serial");
+    let serId = "serial" + pk.toString();
+    let serial = document.getElementById(serId);
     let msg = "آیا از ارسال درخواست لغو برای سرویس " + serial.innerHTML + " اطمینان دارید؟";
     let conf = window.confirm(msg);
 
