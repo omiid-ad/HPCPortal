@@ -211,6 +211,15 @@ button.close {
     text-align: right !important;
 }
 
+div.swal-title {
+    direction: rtl;
+}
+
+div.swal-text {
+    direction: rtl;
+    text-align: right;
+}
+
 /*remove inc/dec arrows in input types*/
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
