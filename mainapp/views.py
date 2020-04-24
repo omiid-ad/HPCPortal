@@ -165,7 +165,7 @@ def new_request(request):
             request.POST["cpu"]) <= 12 and request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
             request.POST["disk"]) <= 140 and request.POST.getlist('app_name') and request.POST[
             "days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and int(cost) > 0 and \
-                request.POST["cost_disc"] != "" and int(cost_disc) > 0 and request.FILES["receipt"]:
+                request.POST["cost_disc"] != "" and int(cost_disc) > 0 and "receipt" in request.FILES:
             app_name_list = request.POST.getlist('app_name')
             app_name = ', '.join(app_name_list)
             receipt = request.FILES["receipt"]
@@ -293,7 +293,7 @@ def extend(request, pk):
         cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
         cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
         if request.POST["days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and \
-                int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0 and request.FILES["receipt"]:
+                int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0 and "receipt" in request.FILES:
             receipt = request.FILES["receipt"]
             fs = FileSystemStorage()
             filename = fs.save(receipt.name, receipt)
