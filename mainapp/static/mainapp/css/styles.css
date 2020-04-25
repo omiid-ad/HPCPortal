@@ -217,7 +217,7 @@ div.swal-title {
 
 div.swal-text {
     direction: rtl;
-    text-align: right;
+    text-align: center;
 }
 
 /*remove inc/dec arrows in input types*/

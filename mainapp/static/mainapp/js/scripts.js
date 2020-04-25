@@ -1,3 +1,14 @@
+function showMsg(msg, icon, title, button, dangerMode, timer) {
+    swal({
+        title: title,
+        text: msg,
+        icon: icon,
+        buttons: button,
+        dangerMode: dangerMode,
+        timer: timer
+    })
+}
+
 function cancelYN(pk) {
     let serId = "serial" + pk.toString();
     let serial = document.getElementById(serId);
