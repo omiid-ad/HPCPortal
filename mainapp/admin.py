@@ -60,10 +60,12 @@ class RequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
                                   level=messages.ERROR)
+                return
             obj.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
             obj.acceptance_status = 'Acc'
             obj.renewal_status = 'Ok'
             obj.save()
+        self.message_user(request, "با موفقیت تایید شدند", level=messages.SUCCESS)
 
     accept.short_description = "تایید درخواست ها"
 
@@ -73,14 +75,17 @@ class RequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
+                return
             obj.date_expired = None
             obj.acceptance_status = 'Rej'
             obj.save()
+        self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد درخواست ها"
 
     def normal(self, request, queryset):
         queryset.update(renewal_status='Ok')
+        self.message_user(request, "وضعیت درخواست(ها) با موفقیت نرمال شد", level=messages.SUCCESS)
 
     normal.short_description = "سرویس نرمال"
 
@@ -90,10 +95,12 @@ class RequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل لغو شده بودند و نمیتوانید دوباره آنهارا لغو کنید",
                                   level=messages.ERROR)
+                return
             obj.date_expired = None
             obj.acceptance_status = "Rej"
             obj.renewal_status = 'Can'
             obj.save()
+        self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
 
     cancel.short_description = "لغو سرویس ها"
 
@@ -103,10 +110,12 @@ class RequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل تعلیق شده بودند و نمیتوانید دوباره آنهارا تعلیق کنید",
                                   level=messages.ERROR)
+                return
             obj.date_expired = None
             obj.acceptance_status = "Rej"
             obj.renewal_status = 'Sus'
             obj.save()
+        self.message_user(request, "با موفقیت تعلیق شدند", level=messages.SUCCESS)
 
     suspend.short_description = "تعلیق سرویس ها"
 
@@ -129,6 +138,7 @@ class ExtendRequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
                                   level=messages.ERROR)
+                return
             if obj.request.date_expired is not None:
                 obj.request.date_expired = obj.request.date_expired + datetime.timedelta(days=obj.days)
             else:
@@ -137,6 +147,7 @@ class ExtendRequestA(admin.ModelAdmin):
             obj.request.acceptance_status = 'Acc'
             obj.request.save()
             obj.save()
+        self.message_user(request, "با موفقیت تمدید شدند", level=messages.SUCCESS)
 
     accept.short_description = "تایید درخواست های تمدید"
 
@@ -146,10 +157,12 @@ class ExtendRequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
+                return
             obj.acceptance_status = 'Rej'
             obj.request.acceptance_status = "Rej"
             obj.request.save()
             obj.save()
+        self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد درخواست های تمدید"
 
@@ -172,12 +185,14 @@ class CancelRequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
                                   level=messages.ERROR)
+                return
             obj.request.renewal_status = "Can"
             obj.request.acceptance_status = "Acc"
             obj.acceptance_status = 'Acc'
             obj.request.date_expired = None
             obj.request.save()
             obj.save()
+        self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
 
     accept.short_description = "تایید درخواست های لغو"
 
@@ -187,10 +202,12 @@ class CancelRequestA(admin.ModelAdmin):
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
+                return
             obj.acceptance_status = 'Rej'
             obj.request.acceptance_status = "Rej"
             obj.request.save()
             obj.save()
+        self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد درخواست های لغو"
 
