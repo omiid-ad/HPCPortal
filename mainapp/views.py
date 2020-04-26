@@ -165,24 +165,23 @@ def new_request(request):
             request.POST["cpu"]) <= 12 and request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
             request.POST["disk"]) <= 140 and request.POST.getlist('app_name') and request.POST[
             "days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and int(cost) > 0 and \
-                request.POST["cost_disc"] != "" and int(cost_disc) > 0 and "receipt" in request.FILES:
+                request.POST["cost_disc"] != "" and int(cost_disc) > 0:  # and "receipt" in request.FILES:
             app_name_list = request.POST.getlist('app_name')
             app_name = ', '.join(app_name_list)
-            receipt = request.FILES["receipt"]
-            fs = FileSystemStorage()
-            filename = fs.save(receipt.name, receipt)
+            # receipt = request.FILES["receipt"]
+            # fs = FileSystemStorage()
+            # filename = fs.save(receipt.name, receipt)
             if profile.university.__contains__("چمران") or profile.university.__contains__(
                     "chamran") or profile.university.__contains__("chamraan"):
                 new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                                      cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                                      app_name=app_name, days=int(request.POST["days"]),
-                                                     receipt=filename, show_cost=int(cost_disc),
+                                                     show_cost=int(cost_disc),
                                                      user_description=request.POST["user_desc"])
             else:
                 new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                                      cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                                      app_name=app_name, days=int(request.POST["days"]),
-                                                     receipt=filename,
                                                      show_cost=int(cost), user_description=request.POST["user_desc"])
             new_request.save()
             messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
@@ -349,3 +348,36 @@ def cancel(request):
         }
         from django.http import JsonResponse
         return JsonResponse(data)
+
+
+@login_required(login_url='/login')
+def pay(request, pk):
+    try:
+        found_request = Request.objects.get(pk=pk)
+    except Request.DoesNotExist:
+        raise Http404("request not found")
+    if request.method == "GET":
+        context = {
+            'req': found_request,
+        }
+        return render(request, 'mainapp/payment.html', context)
+    elif request.method == "POST":
+
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        cost = locale.atoi(request.POST["cost"])
+
+        if "receipt" in request.FILES and int(cost) == found_request.show_cost:
+            receipt = request.FILES["receipt"]
+            fs = FileSystemStorage()
+            filename = fs.save(receipt.name, receipt)
+            desc = request.POST["desc"]
+
+            payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc)
+            payment.save()
+            found_request.payment = payment
+            found_request.save()
+            messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر،اعمال خواهد شد")
+            return redirect('index')
+        else:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('pay', pk=pk)
