@@ -32,6 +32,26 @@ class Profile(models.Model):
         return self.user.get_full_name()
 
 
+class Payment(models.Model):
+    ACCEPTANCE_STATUS = [
+        ('Pen', 'در انتظار تایید'),
+        ('Acc', 'تایید شده'),
+        ('Rej', 'رد شده'),
+    ]
+    date_payed = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ پرداخت")
+    acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
+                                         default='Pen')
+    receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
+    description = models.TextField(blank=True, verbose_name="توضیحات")
+    cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
+
+    def __str__(self):
+        return self.pk
+
+    class Meta:
+        verbose_name_plural = "پرداخت ها"
+
+
 class Request(models.Model):
     OS = [
         ('Win', 'Windows'),
@@ -65,7 +85,7 @@ class Request(models.Model):
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     description = models.TextField(blank=True, verbose_name="توضیحات")
     user_description = models.TextField(blank=True, verbose_name="توضیحات کاربر")
-    receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True, verbose_name="پرداخت")
     serial_number = models.CharField(max_length=16, editable=False, unique=True, verbose_name="شماره سریال")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')

@@ -31,17 +31,16 @@ class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
-        'renewal_status', 'user_description', 'receipt', 'date_expired_admin_only')
+        'renewal_status', 'user_description', 'date_expired_admin_only')
     list_display = (
-        'get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'date_expired',
-        'receipt')
+        'get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'date_expired')
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
         ('جزئیات زمانی درخواست', {'fields': ('date_requested', 'date_expired', 'days', 'date_expired_admin_only')}),
         ('جزئیات فنی درخواست', {'fields': ('cpu', 'ram', 'disk', 'app_name')}),
-        ('جزئیات مالی درخواست', {'fields': ('show_cost', 'receipt')}),
+        ('جزئیات مالی درخواست', {'fields': ('show_cost',)}),
         ('توضیحات', {'fields': ('user_description', 'description',)}),
         ('وضعیت درخواست', {'fields': ('acceptance_status', 'renewal_status')}),
     )
@@ -213,6 +212,18 @@ class CancelRequestA(admin.ModelAdmin):
     reject.short_description = "رد درخواست های لغو"
 
 
+class PaymentA(admin.ModelAdmin):
+    date_hierarchy = 'date_payed'
+    readonly_fields = ('date_payed', 'acceptance_status', 'receipt', 'description', 'cost')
+    list_display = ('date_payed', 'cost', 'acceptance_status', 'receipt')
+    list_filter = ('acceptance_status',)
+
+    fieldsets = (
+        ('اطلاعات پرداخت', {'fields': ('date_payed', 'cost', 'receipt')}),
+        ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
+    )
+
+
 UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_staff')
 UserAdmin.fieldsets = (
     ('None', {'fields': ('username', 'password')}),
@@ -228,6 +239,7 @@ admin.site.register(Profile, ProfileA)
 admin.site.register(Request, RequestA)
 admin.site.register(ExtendRequest, ExtendRequestA)
 admin.site.register(CancelRequest, CancelRequestA)
+admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 
 admin.site.site_header = "پنل مدیریت پرتال"
