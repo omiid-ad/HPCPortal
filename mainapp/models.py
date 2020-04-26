@@ -46,7 +46,7 @@ class Payment(models.Model):
     cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
 
     def __str__(self):
-        return self.pk
+        return str(self.cost)
 
     class Meta:
         verbose_name_plural = "پرداخت ها"
