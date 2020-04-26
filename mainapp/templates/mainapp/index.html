@@ -71,6 +71,7 @@
                             {% ifequal req.acceptance_status 'Pen' %}درانتظارتایید{% endifequal %}
                             {% ifequal req.acceptance_status 'Exting' %}درانتظارتمدید{% endifequal %}
                             {% ifequal req.acceptance_status 'Caning' %}درانتظارلغو{% endifequal %}
+                            {% ifequal req.acceptance_status 'Paying' %}درانتظارپرداخت{% endifequal %}
                         </td>
                         <td>{{ req.get_renewal_status_display }}</td>
                         <td>{% if req.description %}
@@ -79,7 +80,7 @@
                                 <i class="fas fa-comment text-info"></i>
                             </button>{% endif %}</td>
                         <td>
-                            {% ifequal req.acceptance_status 'Acc' %}
+                            {% ifequal req.acceptance_status 'Paying' %}
                                 <a data-toggle="tooltip" title="هزینه سرویس را پرداخت کنید"
                                    class="btn btn-outline-primary {% if req.payment %}disabled"
                                    aria-disabled="true"{% else %}" {% endif %}
@@ -187,7 +188,8 @@
                 "columnDefs": [
                     {"orderable": false, "targets": 3},
                     {"orderable": false, "targets": 8},
-                    {"orderable": false, "targets": 9}
+                    {"orderable": false, "targets": 9},
+                    {"orderable": false, "targets": 10},
                 ]
             });
 
