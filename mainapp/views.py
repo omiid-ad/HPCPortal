@@ -165,12 +165,10 @@ def new_request(request):
             request.POST["cpu"]) <= 12 and request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
             request.POST["disk"]) <= 140 and request.POST.getlist('app_name') and request.POST[
             "days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and int(cost) > 0 and \
-                request.POST["cost_disc"] != "" and int(cost_disc) > 0:  # and "receipt" in request.FILES:
+                request.POST["cost_disc"] != "" and int(cost_disc) > 0:
             app_name_list = request.POST.getlist('app_name')
             app_name = ', '.join(app_name_list)
-            # receipt = request.FILES["receipt"]
-            # fs = FileSystemStorage()
-            # filename = fs.save(receipt.name, receipt)
+
             if profile.university.__contains__("چمران") or profile.university.__contains__(
                     "chamran") or profile.university.__contains__("chamraan"):
                 new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
