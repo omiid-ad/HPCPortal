@@ -1,5 +1,5 @@
 from django.contrib.auth.admin import UserAdmin
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.models import Group
 from .models import *
 
@@ -33,7 +33,7 @@ class RequestA(admin.ModelAdmin):
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
         'renewal_status', 'user_description', 'receipt', 'date_expired_admin_only')
     list_display = (
-        'get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'date_expired_admin_only',
+        'get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'date_expired',
         'receipt')
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
@@ -56,14 +56,23 @@ class RequestA(admin.ModelAdmin):
 
     def accept(self, request, queryset):
         for obj in queryset:
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
+                                  level=messages.ERROR)
             obj.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
             obj.acceptance_status = 'Acc'
+            obj.renewal_status = 'Ok'
             obj.save()
 
     accept.short_description = "تایید درخواست ها"
 
     def reject(self, request, queryset):
         for obj in queryset:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
             obj.date_expired = None
             obj.acceptance_status = 'Rej'
             obj.save()
@@ -77,6 +86,10 @@ class RequestA(admin.ModelAdmin):
 
     def cancel(self, request, queryset):
         for obj in queryset:
+            if obj.renewal_status == 'Can':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل لغو شده بودند و نمیتوانید دوباره آنهارا لغو کنید",
+                                  level=messages.ERROR)
             obj.date_expired = None
             obj.acceptance_status = "Rej"
             obj.renewal_status = 'Can'
@@ -86,6 +99,10 @@ class RequestA(admin.ModelAdmin):
 
     def suspend(self, request, queryset):
         for obj in queryset:
+            if obj.renewal_status == 'Sus':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تعلیق شده بودند و نمیتوانید دوباره آنهارا تعلیق کنید",
+                                  level=messages.ERROR)
             obj.date_expired = None
             obj.acceptance_status = "Rej"
             obj.renewal_status = 'Sus'
@@ -96,7 +113,7 @@ class RequestA(admin.ModelAdmin):
 
 class ExtendRequestA(admin.ModelAdmin):
     readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt', 'date_expired_admin_only')
-    list_display = ('request', 'days', 'date_expired_admin_only', 'acceptance_status', 'show_cost', 'receipt')
+    list_display = ('request', 'days', 'acceptance_status', 'show_cost', 'receipt')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
@@ -108,6 +125,10 @@ class ExtendRequestA(admin.ModelAdmin):
 
     def accept(self, request, queryset):
         for obj in queryset:
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
+                                  level=messages.ERROR)
             if obj.request.date_expired is not None:
                 obj.request.date_expired = obj.request.date_expired + datetime.timedelta(days=obj.days)
             else:
@@ -121,6 +142,10 @@ class ExtendRequestA(admin.ModelAdmin):
 
     def reject(self, request, queryset):
         for obj in queryset:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
             obj.acceptance_status = 'Rej'
             obj.request.acceptance_status = "Rej"
             obj.request.save()
@@ -143,6 +168,10 @@ class CancelRequestA(admin.ModelAdmin):
 
     def accept(self, request, queryset):
         for obj in queryset:
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
+                                  level=messages.ERROR)
             obj.request.renewal_status = "Can"
             obj.request.acceptance_status = "Acc"
             obj.acceptance_status = 'Acc'
@@ -154,6 +183,10 @@ class CancelRequestA(admin.ModelAdmin):
 
     def reject(self, request, queryset):
         for obj in queryset:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
             obj.acceptance_status = 'Rej'
             obj.request.acceptance_status = "Rej"
             obj.request.save()
