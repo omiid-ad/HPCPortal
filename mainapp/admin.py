@@ -52,7 +52,7 @@ class RequestA(admin.ModelAdmin):
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__last_name'
 
-    actions = ["accept", "reject", "normal", "cancel", "suspend"]
+    actions = ["accept", "reject", "normal", "suspend"]
 
     def accept(self, request, queryset):
         for obj in queryset:
@@ -89,20 +89,20 @@ class RequestA(admin.ModelAdmin):
 
     normal.short_description = "سرویس نرمال"
 
-    def cancel(self, request, queryset):
-        for obj in queryset:
-            if obj.renewal_status == 'Can':
-                self.message_user(request,
-                                  "یک یا چند درخواست انتخاب شده، از قبل لغو شده بودند و نمیتوانید دوباره آنهارا لغو کنید",
-                                  level=messages.ERROR)
-                return
-            obj.date_expired = None
-            obj.acceptance_status = "Rej"
-            obj.renewal_status = 'Can'
-            obj.save()
-        self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
-
-    cancel.short_description = "لغو سرویس ها"
+    # def cancel(self, request, queryset):
+    #     for obj in queryset:
+    #         if obj.renewal_status == 'Can':
+    #             self.message_user(request,
+    #                               "یک یا چند درخواست انتخاب شده، از قبل لغو شده بودند و نمیتوانید دوباره آنهارا لغو کنید",
+    #                               level=messages.ERROR)
+    #             return
+    #         obj.date_expired = None
+    #         obj.acceptance_status = "Rej"
+    #         obj.renewal_status = 'Can'
+    #         obj.save()
+    #     self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
+    #
+    # cancel.short_description = "لغو سرویس ها"
 
     def suspend(self, request, queryset):
         for obj in queryset:
@@ -145,6 +145,7 @@ class ExtendRequestA(admin.ModelAdmin):
                 obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
             obj.acceptance_status = 'Acc'
             obj.request.acceptance_status = 'Acc'
+            obj.request.renewal_status = 'Ok'
             obj.request.save()
             obj.save()
         self.message_user(request, "با موفقیت تمدید شدند", level=messages.SUCCESS)
