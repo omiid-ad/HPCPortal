@@ -53,6 +53,8 @@ class Request(models.Model):
 
     date_requested = models.DateField(default=timezone.now, verbose_name="تاریخ درخواست")
     date_expired = models.DateField(editable=False, verbose_name="تاریخ سررسید", null=True)
+    date_expired_admin_only = models.DateField(editable=False, verbose_name="تاریخ سررسید بعد از تایید",
+                                               null=True)  # just to show admin when date gonna expire
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name="کاربر", null=True)
     os = models.CharField(choices=OS, max_length=50, verbose_name="سیستم عامل")
     app_name = models.CharField(max_length=250, verbose_name="نام برنامه")
@@ -73,6 +75,14 @@ class Request(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
             self.serial_number = serial_generator()
+            if self.date_expired is not None:
+                self.date_expired_admin_only = self.date_expired + datetime.timedelta(days=self.days)
+            else:
+                self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
+        if self.date_expired is not None:
+            self.date_expired_admin_only = self.date_expired + datetime.timedelta(days=self.days)
+        else:
+            self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
         super().save()
 
     def __str__(self):
@@ -96,6 +106,8 @@ class ExtendRequest(models.Model):
 
     request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
     days = models.IntegerField(default=0, verbose_name="تعداد روزها")
+    date_expired_admin_only = models.DateField(editable=False, verbose_name="تاریخ سررسید بعد از تایید",
+                                               null=True)  # just to show admin when date gonna expire
     receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
@@ -106,6 +118,18 @@ class ExtendRequest(models.Model):
 
     def __str__(self):
         return self.request.serial_number
+
+    def save(self, *args, **kwargs):
+        if not self.id:  # occur just for creating object, not for Editing object
+            if self.request.date_expired is not None:
+                self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
+            else:
+                self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
+        if self.request.date_expired is not None:
+            self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
+        else:
+            self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
+        super().save()
 
 
 class CancelRequest(models.Model):

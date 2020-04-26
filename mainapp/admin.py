@@ -31,13 +31,15 @@ class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
-        'renewal_status', 'user_description', 'receipt')
-    list_display = ('get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'receipt')
+        'renewal_status', 'user_description', 'receipt', 'date_expired_admin_only')
+    list_display = (
+        'get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'date_expired_admin_only',
+        'receipt')
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
-        ('جزئیات زمانی درخواست', {'fields': ('date_requested', 'date_expired', 'days')}),
+        ('جزئیات زمانی درخواست', {'fields': ('date_requested', 'date_expired', 'days', 'date_expired_admin_only')}),
         ('جزئیات فنی درخواست', {'fields': ('cpu', 'ram', 'disk', 'app_name')}),
         ('جزئیات مالی درخواست', {'fields': ('show_cost', 'receipt')}),
         ('توضیحات', {'fields': ('user_description', 'description',)}),
@@ -76,9 +78,8 @@ class RequestA(admin.ModelAdmin):
     def cancel(self, request, queryset):
         for obj in queryset:
             obj.date_expired = None
-            obj.request.acceptance_status = "Rej"
+            obj.acceptance_status = "Rej"
             obj.renewal_status = 'Can'
-            obj.request.save()
             obj.save()
 
     cancel.short_description = "لغو سرویس ها"
@@ -86,22 +87,21 @@ class RequestA(admin.ModelAdmin):
     def suspend(self, request, queryset):
         for obj in queryset:
             obj.date_expired = None
-            obj.request.acceptance_status = "Rej"
+            obj.acceptance_status = "Rej"
             obj.renewal_status = 'Sus'
-            obj.request.save()
             obj.save()
 
     suspend.short_description = "تعلیق سرویس ها"
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt')
-    list_display = ('request', 'days', 'acceptance_status', 'show_cost', 'receipt')
+    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt', 'date_expired_admin_only')
+    list_display = ('request', 'days', 'date_expired_admin_only', 'acceptance_status', 'show_cost', 'receipt')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
-        ('بیشتر', {'fields': ('days', 'acceptance_status', 'show_cost', 'receipt')}),
+        ('بیشتر', {'fields': ('days', 'date_expired_admin_only', 'acceptance_status', 'show_cost', 'receipt')}),
     )
 
     actions = ["accept", "reject"]
