@@ -22,7 +22,7 @@
 
 {% block content %}
     <div class="box box-70">
-        <form dir="rtl" method="post" action="{% url 'new_request' %}" enctype="multipart/form-data">
+        <form dir="rtl" method="post" action="{% url 'new_request' %}">
             {% csrf_token %}
 
             {% if messages %}
@@ -127,15 +127,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mt-4">
-                <div class="form-group col-12">
-                    <div class="custom-file">
-                        <input required type="file" accept="image/*" class="custom-file-input" name="receipt"
-                               id="customFile">
-                        <label class="custom-file-label" for="customFile">عکس فیش‌واریزی خود را آپلود کنید...</label>
-                    </div>
-                </div>
-            </div>
+
             <div class="form-row mt-4">
                 <div class="form-group col-12">
                     <label class="label-right" for="user_desc">توضیحات بیشتر</label>
@@ -186,11 +178,5 @@
     </script>
     <script>
         $('#apps').selectpicker();
-    </script>
-    <script>
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
     </script>
 {% endblock %}

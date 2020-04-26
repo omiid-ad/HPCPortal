@@ -45,6 +45,7 @@
                     <th>وضعیت تایید</th>
                     <th>وضعیت سرویس</th>
                     <th>توضیحات</th>
+                    <th>پرداخت</th>
                     <th>تمدید سرویس</th>
                     <th>لغو سرویس</th>
                 </tr>
@@ -77,6 +78,16 @@
                                     data-target="#myModal{{ forloop.counter }}">
                                 <i class="fas fa-comment text-info"></i>
                             </button>{% endif %}</td>
+                        <td>
+                            {% ifequal req.acceptance_status 'Acc' %}
+                                <a data-toggle="tooltip" title="هزینه سرویس را پرداخت کنید"
+                                   class="btn btn-outline-primary {% if req.payment %}disabled"
+                                   aria-disabled="true"{% else %}" {% endif %}
+                                   href="{% url 'pay' req.pk %}">
+                                    پرداخت
+                                </a>
+                            {% endifequal %}
+                        </td>
                         <td>
                             <a data-toggle="tooltip" title="ارسال درخواست تمدید سرویس" class="extend-link"
                                href="{% url 'extend' req.pk %}">
