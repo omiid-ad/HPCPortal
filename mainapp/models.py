@@ -59,6 +59,7 @@ class Request(models.Model):
     ]
     ACCEPTANCE_STATUS = [
         ('Pen', 'در انتظار تایید'),
+        ('Paying', 'در انتظار پرداخت'),
         ('Acc', 'تایید شده'),
         ('Rej', 'رد شده'),
         ('Exting', 'در انتظار تمدید'),
