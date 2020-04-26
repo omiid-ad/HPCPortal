@@ -359,6 +359,7 @@ def pay(request, pk):
             'req': found_request,
         }
         return render(request, 'mainapp/payment.html', context)
+
     elif request.method == "POST":
 
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -374,7 +375,7 @@ def pay(request, pk):
             payment.save()
             found_request.payment = payment
             found_request.save()
-            messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر،اعمال خواهد شد")
+            messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
