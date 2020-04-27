@@ -46,7 +46,7 @@ class Payment(models.Model):
     cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
 
     def __str__(self):
-        return str(self.cost)
+        return str(self.pk) + " - " + str(self.cost)
 
     class Meta:
         verbose_name_plural = "پرداخت ها"
@@ -86,7 +86,7 @@ class Request(models.Model):
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     description = models.TextField(blank=True, verbose_name="توضیحات")
     user_description = models.TextField(blank=True, verbose_name="توضیحات کاربر")
-    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, null=True, verbose_name="پرداخت")
+    payment = models.ForeignKey(Payment, blank=True, on_delete=models.CASCADE, null=True, verbose_name="پرداخت")
     serial_number = models.CharField(max_length=16, editable=False, unique=True, verbose_name="شماره سریال")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
