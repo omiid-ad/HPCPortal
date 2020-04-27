@@ -82,10 +82,10 @@
                         <td>
                             {% ifequal req.acceptance_status 'Paying' %}
                                 <a data-toggle="tooltip" title="هزینه سرویس را پرداخت کنید"
-                                   class="btn btn-outline-primary {% if req.payment %}disabled"
+                                   class="btn btn-outline-info {% if req.payment %}disabled"
                                    aria-disabled="true"{% else %}" {% endif %}
-                                   href="{% url 'pay' req.pk %}">
-                                    پرداخت
+                                href="{% url 'pay' req.pk %}">
+                                پرداخت <i class="far fa-money-bill-alt"></i>
                                 </a>
                             {% endifequal %}
                         </td>

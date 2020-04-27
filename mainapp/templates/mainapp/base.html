@@ -2,8 +2,9 @@
 <!doctype html>
 <html lang="en">
 
-{% block head %}
-    <head>
+
+<head>
+    {% block head %}
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'mainapp/css/bootstrap.min.css' %}">
@@ -14,8 +15,10 @@
                 crossorigin="anonymous"></script>
         <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
         <title>{% block title %}{% endblock %}</title>
-    </head>
-{% endblock %}
+    {% endblock %}
+</head>
+
+
 <body>
 {% block nav %}
     <nav>
@@ -91,17 +94,12 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
             crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{% static 'mainapp/js/bootstrap.min.js' %}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="{% static 'mainapp/js/scripts.js' %}"></script>
     <script>
         document.getElementById("footer_current_year_fa").innerHTML = new Date().getFullYear();
         document.getElementById("footer_current_year_eng").innerHTML = new Date().getFullYear();
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
     </script>
 {% endblock %}
 
