@@ -221,6 +221,11 @@ class PaymentA(admin.ModelAdmin):
                                   "یک یا چند پرداخت انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
                                   level=messages.ERROR)
                 return
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند پرداخت انتخاب شده، از قبل  رد بودند و نمیتوانید آنهارا تایید کنید",
+                                  level=messages.ERROR)
+                return
             req = Request.objects.get(payment=obj)
             req.renewal_status = "Ok"
             req.acceptance_status = "Acc"
