@@ -103,7 +103,7 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt', 'date_expired_admin_only')
+    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt', 'date_expired_admin_only', 'request')
     list_display = ('request', 'days', 'acceptance_status', 'show_cost', 'receipt')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
@@ -151,7 +151,7 @@ class ExtendRequestA(admin.ModelAdmin):
 
 
 class CancelRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status',)
+    readonly_fields = ('acceptance_status', 'request')
     list_display = ('request', 'acceptance_status')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
