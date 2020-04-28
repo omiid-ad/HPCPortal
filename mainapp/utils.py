@@ -1,6 +1,5 @@
 import datetime
-
-from . import models
+from random import randint
 
 
 def serial_generator():
@@ -13,6 +12,7 @@ def serial_generator():
     if int(day) < 10:
         day = "0" + day
 
-    count = 1000000 + models.Request.objects.all().count()  # int
+    count = randint(1000000, 9999999)  # int
     serial = year + month + day + "-" + count.__str__()
+
     return serial
