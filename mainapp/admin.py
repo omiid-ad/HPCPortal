@@ -197,14 +197,21 @@ class CancelRequestA(admin.ModelAdmin):
 
 class PaymentA(admin.ModelAdmin):
     date_hierarchy = 'date_payed'
-    readonly_fields = ('date_payed', 'acceptance_status', 'receipt', 'description', 'cost')
-    list_display = ('get_payed_req', 'cost', 'acceptance_status', 'receipt')
+    readonly_fields = ('user', 'date_payed', 'acceptance_status', 'receipt', 'description', 'cost')
+    list_display = ('get_user_full_name', 'get_payed_req', 'cost', 'acceptance_status', 'receipt')
     list_filter = ('acceptance_status',)
+    search_fields = ['user__user__first_name', 'user__user__last_name']
 
     fieldsets = (
-        ('اطلاعات پرداخت', {'fields': ('date_payed', 'cost', 'receipt')}),
+        ('اطلاعات پرداخت', {'fields': ('user', 'date_payed', 'cost', 'receipt')}),
         ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
     )
+
+    def get_user_full_name(self, obj):
+        return obj.user.user.get_full_name()
+
+    get_user_full_name.short_description = 'پرداخت کننده'
+    get_user_full_name.admin_order_field = 'user__last_name'
 
     def get_payed_req(self, obj):
         req = Request.objects.get(payment=obj)

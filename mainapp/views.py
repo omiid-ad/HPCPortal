@@ -354,6 +354,11 @@ def pay(request, pk):
         found_request = Request.objects.get(pk=pk)
     except Request.DoesNotExist:
         raise Http404("request not found")
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+        return redirect('complete_profile')
     if request.method == "GET":
         context = {
             'req': found_request,
@@ -371,7 +376,7 @@ def pay(request, pk):
             filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
 
-            payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc)
+            payment = Payment.objects.create(user=profile, receipt=filename, cost=int(cost), description=desc)
             payment.save()
             found_request.payment = payment
             found_request.save()

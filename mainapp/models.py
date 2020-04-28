@@ -39,6 +39,7 @@ class Payment(models.Model):
         ('Rej', 'رد شده'),
     ]
     date_payed = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ پرداخت")
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name="کاربر", null=True)
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
     receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
@@ -46,7 +47,7 @@ class Payment(models.Model):
     cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
 
     def __str__(self):
-        return str(self.pk) + " - " + str(self.cost)
+        return str(self.pk) + " - " + str(self.user.user.get_full_name()) + " - " + str(self.cost)
 
     class Meta:
         verbose_name_plural = "پرداخت ها"
@@ -97,11 +98,11 @@ class Request(models.Model):
         if not self.id:  # occur just for creating object, not for Editing object
             self.serial_number = serial_generator()
             if self.date_expired is not None:
-                self.date_expired_admin_only = self.date_expired + datetime.timedelta(days=self.days)
+                self.date_expired_admin_only = None
             else:
                 self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
         if self.date_expired is not None:
-            self.date_expired_admin_only = self.date_expired + datetime.timedelta(days=self.days)
+            self.date_expired_admin_only = None
         else:
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
         super().save()
