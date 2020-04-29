@@ -64,12 +64,14 @@
             </div>
             <button type="submit" class="btn btn-success btn-block mt-4">ارسال پرداخت</button>
         </form>
-        <form action="{% url 'pay_online' %}" method="post">
+        <form id="online_form" action="{% url 'pay_online' %}" method="post">
             {% csrf_token %}
             <input name="cost" type="hidden" value="{{ req.show_cost }}">
             <input name="desc" type="hidden" id="hidden_desc" value="">
             <input name="id" type="hidden" id="id" value="{{ req.pk }}">
-            <button type="submit" class="btn btn-outline-info btn-block mt-4">پرداخت آنلاین</button>
+            <button type="submit" class="btn btn-outline-info btn-block mt-4 disabled">پرداخت
+                آنلاین
+            </button>
         </form>
     </div>
 
@@ -88,5 +90,10 @@
             let main_desc = $(this).val();
             $("#hidden_desc").val(main_desc);
         })
+    </script>
+    <script>
+        document.getElementById("online_form").addEventListener("submit", function (event) {
+            event.preventDefault()
+        });
     </script>
 {% endblock %}
