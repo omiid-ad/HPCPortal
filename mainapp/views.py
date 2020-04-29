@@ -1,7 +1,6 @@
 import locale
 import urllib
 import json
-from math import trunc
 
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
@@ -9,8 +8,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import Http404
 from django.shortcuts import render, redirect
+from math import trunc
+
+from django.urls import reverse
+from pardakht import handler
 
 from .models import *
+from .utils import call_back_payment
 from HPCPortal import settings
 
 
@@ -385,3 +389,26 @@ def pay(request, pk):
         else:
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('pay', pk=pk)
+
+
+@login_required(login_url='/login')
+def pay_online(request):
+    pk = int(request.POST.get('id'))
+
+    try:
+        found_req = Request.objects.get(pk=pk)
+    except Request.DoesNotExist:
+        raise Http404("request not found")
+
+    result = handler.create_payment(
+        price=request.POST.get('cost'),
+        description=request.POST.get('desc'),
+        return_function=call_back_payment,
+        return_url=reverse('login'),
+        login_required=True
+    )
+    obj = result.get('payment')
+    obj.user = request.user
+    obj.save()
+
+    return redirect(result.get('link'))
