@@ -1,5 +1,7 @@
 import datetime
+
 from random import randint
+# from .models import *
 
 
 def serial_generator():
@@ -16,3 +18,10 @@ def serial_generator():
     serial = year + month + day + "-" + count.__str__()
 
     return serial
+
+
+def call_back_payment(payment):
+    pass
+    # pay = Payment.objects.create(user=payment.user, acceptance_status="Acc", description=payment.description,
+    #                              cost=payment.price)
+    # pay.save()  # has bugs, need to set request payment and set it to Acc
