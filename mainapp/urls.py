@@ -13,6 +13,7 @@ urlpatterns = [
     path('edit_profile/', edit_profile, name="edit_profile"),
     path('extend/<int:pk>', extend, name="extend"),
     path('pay/<int:pk>', pay, name="pay"),
+    path('pay_online/', pay_online, name="pay_online"),
     path('cancel/', cancel, name="cancel"),
 
 ]
