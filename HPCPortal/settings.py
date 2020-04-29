@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mainapp.apps.MainappConfig',
     'django.contrib.humanize',
+    'pardakht',
 ]
 
 MIDDLEWARE = [
@@ -126,5 +127,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = data['recaptcha'][0]["GOOGLE_RECAPTCHA_SECRET_KEY"]
+
+SILENCED_SYSTEM_CHECKS = ['mysql.E001']  # to ignore mysql db error
+SAMAN_MERCHANT_ID = data['pardakht_saman'][0]["SAMAN_MERCHANT_ID"]
+LOGIN_URL = '/login'
 
 config.close()  # closing config file
