@@ -37,14 +37,14 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-sm-4">
+                <div class="form-group col-sm-2">
                     <label class="label-right" for="cost">هزینه قابل پرداخت</label>
                     <div class="input-group">
                         <input required name="cost" value="{{ req.show_cost|intcomma }}" readonly type="text"
-                               class="form-control"
+                               class="form-control border-0 bg-white"
                                id="cost">
                         <div class="input-group-prepend">
-                            <span class="input-group-text">تومان</span>
+                            <span class="input-group-text border-0 bg-white">تومان</span>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,14 @@
                     <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-block mt-4">ارسال درخواست</button>
+            <button type="submit" class="btn btn-success btn-block mt-4">ارسال پرداخت</button>
+        </form>
+        <form action="{% url 'pay_online' %}" method="post">
+            {% csrf_token %}
+            <input name="cost" type="hidden" value="{{ req.show_cost }}">
+            <input name="desc" type="hidden" id="hidden_desc" value="">
+            <input name="id" type="hidden" id="id" value="{{ req.pk }}">
+            <button type="submit" class="btn btn-outline-info btn-block mt-4">پرداخت آنلاین</button>
         </form>
     </div>
 
@@ -75,5 +82,11 @@
             var fileName = $(this).val().split("\\").pop();
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
+    </script>
+    <script>
+        $("#desc").on("change", function () {
+            let main_desc = $(this).val();
+            $("#hidden_desc").val(main_desc);
+        })
     </script>
 {% endblock %}
