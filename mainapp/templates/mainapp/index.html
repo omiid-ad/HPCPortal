@@ -5,6 +5,7 @@
 
 {% block head %}
     {{ block.super }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.css"/>
 {% endblock %}
@@ -140,23 +141,113 @@
                                 </div>
 
                                 <!-- Modal body -->
-                                <div class="modal-body text-center">
-                                    <p><strong>سیستم عامل : </strong></p>
-                                    <p>
-                                        {% ifequal req.os 'Lin' %}
-                                            <i class="fab fa-linux os-icon-linux"></i>
-                                        {% else %}
-                                            <i class="fab fa-windows os-icon-windows"></i>
-                                        {% endifequal %}
-                                    </p>
-                                    <p><strong>دیسک : </strong></p>
-                                    <p class="midnightblue">‌{{ req.disk|floatformat }} گیگابایت</p>
-                                    <p><strong>تعداد هسته های پردازشی : </strong></p>
-                                    <p class="midnightblue">{{ req.cpu|floatformat }} عدد</p>
-                                    <p><strong>رم : </strong></p>
-                                    <p class="midnightblue">{{ req.ram|floatformat }} گیگابایت</p>
-                                    <p><strong>نام برنامه‌ها : </strong></p>
-                                    <p class="midnightblue">{{ req.app_name }}</p>
+                                <div class="modal-body">
+                                    <div id="accordion{{ forloop.counter }}">
+                                        <div class="card">
+                                            <div class="card-header" id="headingOne">
+                                                <h5 class="mb-0 text-center">
+                                                    <button class="btn btn-link btn-block" data-toggle="collapse"
+                                                            data-target="#collapseOne{{ forloop.counter }}"
+                                                            aria-expanded="true"
+                                                            aria-controls="collapseOne">
+                                                        سیستم‌عامل
+                                                    </button>
+                                                </h5>
+                                            </div>
+
+                                            <div id="collapseOne{{ forloop.counter }}" class="collapse show"
+                                                 aria-labelledby="headingOne"
+                                                 data-parent="#accordion{{ forloop.counter }}">
+                                                <div class="card-body text-center">
+                                                    {% ifequal req.os 'Lin' %}
+                                                        <i class="fab fa-linux os-icon-linux"></i>
+                                                    {% else %}
+                                                        <i class="fab fa-windows os-icon-windows"></i>
+                                                    {% endifequal %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingTwo">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link btn-block collapsed"
+                                                            data-toggle="collapse"
+                                                            data-target="#collapseTwo{{ forloop.counter }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseTwo">
+                                                        دیسک
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseTwo{{ forloop.counter }}" class="collapse"
+                                                 aria-labelledby="headingTwo"
+                                                 data-parent="#accordion{{ forloop.counter }}">
+                                                <div class="card-body">
+                                                    ‌{{ req.disk|floatformat }} گیگابایت
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingThree">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link btn-block collapsed"
+                                                            data-toggle="collapse"
+                                                            data-target="#collapseThree{{ forloop.counter }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseThree">
+                                                        حافظه رم
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseThree{{ forloop.counter }}" class="collapse"
+                                                 aria-labelledby="headingThree"
+                                                 data-parent="#accordion{{ forloop.counter }}">
+                                                <div class="card-body">
+                                                    ‌{{ req.ram|floatformat }} گیگابایت
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingFour">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link btn-block collapsed"
+                                                            data-toggle="collapse"
+                                                            data-target="#collapseFour{{ forloop.counter }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseThree">
+                                                        هسته‌های پردازشی
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseFour{{ forloop.counter }}" class="collapse"
+                                                 aria-labelledby="headingThree"
+                                                 data-parent="#accordion{{ forloop.counter }}">
+                                                <div class="card-body">
+                                                    ‌{{ req.cpu|floatformat }} عدد
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header" id="headingFive">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link btn-block collapsed"
+                                                            data-toggle="collapse"
+                                                            data-target="#collapseFive{{ forloop.counter }}"
+                                                            aria-expanded="false"
+                                                            aria-controls="collapseThree">
+                                                        برنامه ها
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseFive{{ forloop.counter }}" class="collapse"
+                                                 aria-labelledby="headingThree"
+                                                 data-parent="#accordion{{ forloop.counter }}">
+                                                <div class="card-body">
+                                                    ‌{{ req.app_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Modal footer -->
@@ -177,7 +268,8 @@
 {% block scripts %}
     {{ block.super }}
     <script type="text/javascript"
-            src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.js"></script>
+            src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.20/datatables.min.js">
+    </script>
     <script>
         $(document).ready(function () {
             $('#example').DataTable({

@@ -260,6 +260,14 @@ th {
     cursor: pointer;
 }
 
+.card-body {
+    text-align: center;
+}
+
+button.btn.btn-link {
+    text-decoration: none;
+}
+
 /*mobile view*/
 @media (max-width: 575px) {
     label.custom-file-label {
