@@ -7,7 +7,7 @@ from django.contrib.auth import login as django_login, authenticate, logout as d
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from math import trunc
 
 from django.urls import reverse
@@ -28,7 +28,7 @@ def index(request):
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
         else:
-            all_requests = Request.objects.filter(user=profile).order_by('-date_requested')
+            all_requests = profile.request_set.all().order_by('-date_requested')
             for req in all_requests:
                 if req.is_expired() and req.renewal_status != 'Exp':
                     req.renewal_status = 'Exp'
@@ -231,9 +231,9 @@ def edit_profile(request):
         }
         return render(request, 'mainapp/edit_profile.html', context)
     elif request.method == "POST":
+        user = User.objects.get(pk=request.user.pk)
         try:
             profile = Profile.objects.get(user=request.user)
-            user = User.objects.get(pk=request.user.pk)
         except Profile.DoesNotExist:
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
@@ -268,14 +268,11 @@ def edit_profile(request):
 
 
 def extend(request, pk):
-    try:
-        extended_service = Request.objects.get(pk=pk)
-    except Request.DoesNotExist:
-        raise Http404("Not found")
+    extended_service = get_object_or_404(Request, pk=pk)
     if extended_service.acceptance_status != 'Acc':
         messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
         return redirect('index')
-    if extended_service.renewal_status == 'Can' or extended_service.renewal_status == 'Sus':
+    if extended_service.renewal_status in ['Can', 'Sus']:
         messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
         return redirect('index')
 
@@ -301,11 +298,14 @@ def extend(request, pk):
             if profile.university.__contains__("چمران") or profile.university.__contains__(
                     "chamran") or profile.university.__contains__("chamraan"):
                 ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
-                                                       show_cost=int(cost_disc), receipt=filename)
+                                                       show_cost=int(cost_disc))
             else:
                 ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
-                                                       show_cost=int(cost), receipt=filename)
+                                                       show_cost=int(cost))
             ext_req.save()
+            pay = Payment.objects.create(request=extended_service, extend=ext_req, receipt=filename,
+                                         cost=int(ext_req.show_cost))
+            pay.save()
             extended_service.acceptance_status = 'Exting'
             extended_service.save()
             messages.success(request,
@@ -319,10 +319,7 @@ def extend(request, pk):
 def cancel(request):
     if 'pk' in request.GET:
         pk = int(request.GET.get('pk'))
-        try:
-            canceled_service = Request.objects.get(pk=pk)
-        except Request.DoesNotExist:
-            raise Http404("Not found")
+        canceled_service = get_object_or_404(Request, pk=pk)
         if canceled_service.acceptance_status != 'Acc':
             messages.error(request, "امکان ارسال درخواست لغو برای سرویس موردنظر وجود ندارد")
             data = {
@@ -330,7 +327,7 @@ def cancel(request):
             }
             from django.http import JsonResponse
             return JsonResponse(data)
-        if canceled_service.renewal_status == 'Can' or canceled_service.renewal_status == 'Sus':
+        if canceled_service.renewal_status in ['Can', 'Sus']:
             messages.error(request, "امکان ارسال درخواست لغو برای سرویس موردنظر وجود ندارد")
             data = {
                 'status': 201,
@@ -354,12 +351,9 @@ def cancel(request):
 
 @login_required(login_url='/login')
 def pay(request, pk):
+    found_request = get_object_or_404(Request, pk=pk)
     try:
-        found_request = Request.objects.get(pk=pk)
-    except Request.DoesNotExist:
-        raise Http404("request not found")
-    try:
-        profile = Profile.objects.get(user=request.user)
+        Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
         messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
         return redirect('complete_profile')
@@ -380,9 +374,10 @@ def pay(request, pk):
             filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
 
-            payment = Payment.objects.create(user=profile, receipt=filename, cost=int(cost), description=desc)
+            payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, request=found_request)
             payment.save()
-            found_request.payment = payment
+            found_request.acceptance_status = "AccPaying"
+            # found_request.payment = payment
             found_request.save()
             messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
             return redirect('index')
@@ -393,22 +388,23 @@ def pay(request, pk):
 
 @login_required(login_url='/login')
 def pay_online(request):
-    pk = int(request.POST.get('id'))
-
-    try:
-        found_req = Request.objects.get(pk=pk)
-    except Request.DoesNotExist:
-        raise Http404("request not found")
-
-    result = handler.create_payment(
-        price=request.POST.get('cost'),
-        description=request.POST.get('desc'),
-        return_function=call_back_payment,
-        return_url=reverse('login'),
-        login_required=True
-    )
-    obj = result.get('payment')
-    obj.user = request.user
-    obj.save()
-
-    return redirect(result.get('link'))
+    pass
+    # pk = int(request.POST.get('id'))
+    #
+    # try:
+    #     found_req = Request.objects.get(pk=pk)
+    # except Request.DoesNotExist:
+    #     raise Http404("request not found")
+    #
+    # result = handler.create_payment(
+    #     price=request.POST.get('cost'),
+    #     description=request.POST.get('desc'),
+    #     return_function=call_back_payment,
+    #     return_url=reverse('login'),
+    #     login_required=True
+    # )
+    # obj = result.get('payment')
+    # obj.user = request.user
+    # obj.save()
+    #
+    # return redirect(result.get('link'))
