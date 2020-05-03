@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from pardakht.models import Payment as OnlinePayment
 
 from .serial_generator import serial_generator
 
@@ -32,27 +33,6 @@ class Profile(models.Model):
         return self.user.get_full_name()
 
 
-class Payment(models.Model):
-    ACCEPTANCE_STATUS = [
-        ('Pen', 'در انتظار تایید'),
-        ('Acc', 'تایید شده'),
-        ('Rej', 'رد شده'),
-    ]
-    date_payed = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ پرداخت")
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, verbose_name="کاربر", null=True)
-    acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
-                                         default='Pen')
-    receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
-    description = models.TextField(blank=True, verbose_name="توضیحات")
-    cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
-
-    def __str__(self):
-        return str(self.pk) + " - " + str(self.user.user.get_full_name()) + " - " + str(self.cost)
-
-    class Meta:
-        verbose_name_plural = "پرداخت ها"
-
-
 class Request(models.Model):
     OS = [
         ('Win', 'Windows'),
@@ -65,6 +45,7 @@ class Request(models.Model):
         ('Rej', 'رد شده'),
         ('Exting', 'در انتظار تمدید'),
         ('Caning', 'در انتظار لغو'),
+        ('AccPaying', 'در انتظار تایید پرداخت'),
     ]
     RENEWAL_STATUS = [
         ('Exp', 'منقضی'),
@@ -87,7 +68,6 @@ class Request(models.Model):
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     description = models.TextField(blank=True, verbose_name="توضیحات")
     user_description = models.TextField(blank=True, verbose_name="توضیحات کاربر")
-    payment = models.ForeignKey(Payment, blank=True, on_delete=models.CASCADE, null=True, verbose_name="پرداخت")
     serial_number = models.CharField(max_length=16, editable=False, unique=True, verbose_name="شماره سریال")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
@@ -130,7 +110,6 @@ class ExtendRequest(models.Model):
     days = models.IntegerField(default=0, verbose_name="تعداد روزها")
     date_expired_admin_only = models.DateField(editable=False, verbose_name="تاریخ سررسید بعد از تایید",
                                                null=True)  # just to show admin when date gonna expire
-    receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی")
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
@@ -154,6 +133,31 @@ class ExtendRequest(models.Model):
         super().save()
 
 
+class Payment(models.Model):
+    ACCEPTANCE_STATUS = [
+        ('Pen', 'در انتظار تایید'),
+        ('Acc', 'تایید شده'),
+        ('Rej', 'رد شده'),
+    ]
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, null=True, blank=True, verbose_name="سرویس")
+    extend = models.OneToOneField(ExtendRequest, on_delete=models.CASCADE, null=True, blank=True, verbose_name="تمدید")
+    online_pay = models.OneToOneField(OnlinePayment, on_delete=models.CASCADE, null=True, blank=True,
+                                      verbose_name="پرداخت آنلاین")
+    date_payed = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ پرداخت")
+    acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
+                                         default='Pen')
+    receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی", blank=True, null=True)
+    description = models.TextField(blank=True, verbose_name="توضیحات")
+    cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
+
+    def __str__(self):
+        return "مبلغ " + str(
+            self.cost) + " توسط " + self.request.user.get_user_full_name + " برای سرویس " + self.request.serial_number
+
+    class Meta:
+        verbose_name_plural = "پرداخت ها"
+
+
 class CancelRequest(models.Model):
     ACCEPTANCE_STATUS = [
         ('Pen', 'در انتظار تایید'),
@@ -161,7 +165,7 @@ class CancelRequest(models.Model):
         ('Rej', 'رد شده')
     ]
 
-    request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
+    request = models.OneToOneField(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
 
