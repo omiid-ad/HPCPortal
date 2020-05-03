@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
-from .utils import serial_generator
+from .serial_generator import serial_generator
 
 
 class CustomUser(User):
