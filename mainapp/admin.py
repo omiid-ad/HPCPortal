@@ -1,6 +1,7 @@
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin, messages
 from django.contrib.auth.models import Group
+
 from .models import *
 
 
@@ -14,6 +15,8 @@ class ProfileA(admin.ModelAdmin):
         ('اطلاعات دانشگاهی', {'fields': ('user', 'university', 'field')}),
         ('اطلاعات استاد راهنما', {'fields': ('guidance_master_full_name', 'guidance_master_email')}),
     )
+
+    actions = ['delete_selected', ]
 
     def get_user_full_name(self, obj):
         return obj.user.get_full_name()
@@ -32,14 +35,14 @@ class RequestA(admin.ModelAdmin):
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
         'renewal_status', 'user_description', 'date_expired_admin_only')
-    list_display = ('get_user_full_name', 'serial_number', 'acceptance_status', 'renewal_status', 'date_expired',)
+    list_display = ('serial_number', 'get_user_full_name', 'acceptance_status', 'renewal_status', 'date_expired',)
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
         ('جزئیات زمانی درخواست', {'fields': ('date_requested', 'date_expired', 'days', 'date_expired_admin_only')}),
         ('جزئیات فنی درخواست', {'fields': ('cpu', 'ram', 'disk', 'app_name')}),
-        ('جزئیات مالی درخواست', {'fields': ('show_cost', 'payment')}),
+        ('جزئیات مالی درخواست', {'fields': ('show_cost',)}),
         ('توضیحات', {'fields': ('user_description', 'description',)}),
         ('وضعیت درخواست', {'fields': ('acceptance_status', 'renewal_status')}),
     )
@@ -50,7 +53,7 @@ class RequestA(admin.ModelAdmin):
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__last_name'
 
-    actions = ["accept", "reject", "normal", "suspend"]
+    actions = ['delete_selected', "accept", "reject", "normal", "suspend"]
 
     def accept(self, request, queryset):
         for obj in queryset:
@@ -103,51 +106,14 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'receipt', 'date_expired_admin_only', 'request')
-    list_display = ('request', 'days', 'acceptance_status', 'show_cost', 'receipt')
+    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request')
+    list_display = ('request', 'days', 'acceptance_status', 'show_cost')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
-        ('بیشتر', {'fields': ('days', 'date_expired_admin_only', 'acceptance_status', 'show_cost', 'receipt')}),
+        ('بیشتر', {'fields': ('days', 'date_expired_admin_only', 'acceptance_status', 'show_cost')}),
     )
-
-    actions = ["accept", "reject"]
-
-    def accept(self, request, queryset):
-        for obj in queryset:
-            if obj.acceptance_status == 'Acc':
-                self.message_user(request,
-                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
-                                  level=messages.ERROR)
-                return
-            if obj.request.date_expired is not None:
-                obj.request.date_expired = obj.request.date_expired + datetime.timedelta(days=obj.days)
-            else:
-                obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.days)
-            obj.acceptance_status = 'Acc'
-            obj.request.acceptance_status = 'Acc'
-            obj.request.renewal_status = 'Ok'
-            obj.request.save()
-            obj.save()
-        self.message_user(request, "با موفقیت تمدید شدند", level=messages.SUCCESS)
-
-    accept.short_description = "تایید درخواست های تمدید"
-
-    def reject(self, request, queryset):
-        for obj in queryset:
-            if obj.acceptance_status == 'Rej':
-                self.message_user(request,
-                                  "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
-                                  level=messages.ERROR)
-                return
-            obj.acceptance_status = 'Rej'
-            obj.request.acceptance_status = "Rej"
-            obj.request.save()
-            obj.save()
-        self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
-
-    reject.short_description = "رد درخواست های تمدید"
 
 
 class CancelRequestA(admin.ModelAdmin):
@@ -197,27 +163,22 @@ class CancelRequestA(admin.ModelAdmin):
 
 class PaymentA(admin.ModelAdmin):
     date_hierarchy = 'date_payed'
-    readonly_fields = ('user', 'date_payed', 'acceptance_status', 'receipt', 'description', 'cost')
-    list_display = ('get_user_full_name', 'get_payed_req', 'cost', 'acceptance_status', 'receipt')
+    readonly_fields = (
+        'date_payed', 'acceptance_status', 'receipt', 'description', 'cost', 'request', 'extend', 'online_pay')
+    list_display = ('get_user_full_name', 'request', 'cost', 'acceptance_status', 'receipt')
     list_filter = ('acceptance_status',)
-    search_fields = ['user__user__first_name', 'user__user__last_name']
+    search_fields = ['request__user__user__first_name', 'request__user__user__last_name']
 
     fieldsets = (
-        ('اطلاعات پرداخت', {'fields': ('user', 'date_payed', 'cost', 'receipt')}),
+        ('اطلاعات پرداخت', {'fields': ('date_payed', 'cost', 'receipt', 'request', 'extend')}),
         ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
     )
 
     def get_user_full_name(self, obj):
-        return obj.user.user.get_full_name()
+        return obj.request.user.user.get_full_name()
 
     get_user_full_name.short_description = 'پرداخت کننده'
     get_user_full_name.admin_order_field = 'user__last_name'
-
-    def get_payed_req(self, obj):
-        req = Request.objects.get(payment=obj)
-        return req
-
-    get_payed_req.short_description = 'سرویس مربوطه'
 
     actions = ["accept", "reject"]
 
@@ -230,17 +191,24 @@ class PaymentA(admin.ModelAdmin):
                 return
             if obj.acceptance_status == 'Rej':
                 self.message_user(request,
-                                  "یک یا چند پرداخت انتخاب شده، از قبل  رد بودند و نمیتوانید آنهارا تایید کنید",
+                                  "یک یا چند پرداخت انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
                 return
-            req = Request.objects.get(payment=obj)
-            req.renewal_status = "Ok"
-            req.acceptance_status = "Acc"
-            req.payment = obj
             obj.acceptance_status = 'Acc'
-            req.date_expired = timezone.now() + datetime.timedelta(days=req.days)
-            req.save()
+            obj.request.acceptance_status = 'Acc'
+            if obj.extend:
+                obj.request.renewal_status = 'Ok'
+                obj.extend.acceptance_status = 'Acc'
+                if obj.request.date_expired is not None:
+                    obj.request.date_expired = obj.request.date_expired + datetime.timedelta(days=obj.extend.days)
+                else:
+                    obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.extend.days)
+                obj.extend.save()
+            else:
+                obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.request.days)
+            obj.request.save()
             obj.save()
+
         self.message_user(request, "با موفقیت تایید شدند", level=messages.SUCCESS)
 
     accept.short_description = "تایید پرداخت ها"
@@ -252,12 +220,20 @@ class PaymentA(admin.ModelAdmin):
                                   "یک یا چند پرداخت انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
                 return
-            req = Request.objects.get(payment=obj)
-            req.payment = None
-            req.acceptance_status = "Paying"
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند پرداخت انتخاب شده، از قبل تایید شده بودند و نمیتوانید آنهارا رد کنید",
+                                  level=messages.ERROR)
+                return
             obj.acceptance_status = 'Rej'
+            if obj.extend:
+                obj.extend.acceptance_status = 'Rej'
+                obj.request.acceptance_status = 'Rej'
+                obj.extend.save()
+            else:
+                obj.request.acceptance_status = 'Paying'
+            obj.request.save()
             obj.save()
-            req.save()
         self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد پرداخت ها"
@@ -280,6 +256,7 @@ admin.site.register(ExtendRequest, ExtendRequestA)
 admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
+admin.site.disable_action('delete_selected')
 
 admin.site.site_header = "پنل مدیریت پرتال"
 admin.site.site_title = "پرتال درخواست مرکز پردازش های سریع دانشگاه شهید چمران اهواز"
