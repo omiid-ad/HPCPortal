@@ -108,13 +108,19 @@ class RequestA(admin.ModelAdmin):
 
 class ExtendRequestA(admin.ModelAdmin):
     readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request')
-    list_display = ('request', 'days', 'acceptance_status', 'show_cost')
+    list_display = ('request', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
         ('بیشتر', {'fields': ('days', 'date_expired_admin_only', 'acceptance_status', 'show_cost')}),
     )
+
+    def get_user_full_name(self, obj):
+        return obj.request.user.user.get_full_name()
+
+    get_user_full_name.short_description = 'نام و نام خانوادگی'
+    get_user_full_name.admin_order_field = 'user__last_name'
 
 
 class CancelRequestA(admin.ModelAdmin):
