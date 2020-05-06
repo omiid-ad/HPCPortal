@@ -1,7 +1,6 @@
 from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin, messages
 from django.contrib.auth.models import Group
-from admin_interface.models import Theme
 from pardakht.admin import Payment as OnlinePayment
 
 from .models import *
@@ -316,7 +315,6 @@ admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 admin.site.unregister(OnlinePayment)
 admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
-admin.site.unregister(Theme)  # comment this if want to change admin site look and feel
 admin.site.disable_action('delete_selected')
 
 admin.site.site_header = "پنل مدیریت پرتال"
