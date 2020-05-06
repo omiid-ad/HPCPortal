@@ -14,6 +14,7 @@ class CustomUser(User):
         proxy = True
         app_label = 'auth'
         verbose_name_plural = "کاربران"
+        verbose_name = "کاربر"
 
 
 class Profile(models.Model):
@@ -24,7 +25,8 @@ class Profile(models.Model):
     guidance_master_email = models.EmailField(max_length=200, verbose_name="ایمیل استاد راهنما")
 
     class Meta:
-        verbose_name_plural = "پروفایل"
+        verbose_name_plural = "پروفایل‌ها"
+        verbose_name = "پروفایل"
 
     def __str__(self):
         return self.user.get_full_name() + " - " + self.user.username
@@ -92,7 +94,8 @@ class Request(models.Model):
         return self.serial_number
 
     class Meta:
-        verbose_name_plural = "درخواست سرویس"
+        verbose_name_plural = "درخواست سرویس‌ها"
+        verbose_name = "درخواست سرویس"
 
     def is_expired(self):
         if self.date_expired is not None:
@@ -117,6 +120,7 @@ class ExtendRequest(models.Model):
 
     class Meta:
         verbose_name_plural = "درخواست های تمدید"
+        verbose_name = "درخواست تمدید"
 
     def __str__(self):
         return self.request.serial_number
@@ -180,6 +184,7 @@ class Payment(models.Model):
 
     class Meta:
         verbose_name_plural = "پرداخت ها"
+        verbose_name = "پرداخت"
 
 
 class CancelRequest(models.Model):
