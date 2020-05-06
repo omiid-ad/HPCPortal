@@ -2,6 +2,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin, messages
 from django.contrib.auth.models import Group
 from admin_interface.models import Theme
+from pardakht.admin import Payment as OnlinePayment
 
 from .models import *
 
@@ -16,6 +17,9 @@ class ProfileA(admin.ModelAdmin):
         ('اطلاعات دانشگاهی', {'fields': ('user', 'university', 'field')}),
         ('اطلاعات استاد راهنما', {'fields': ('guidance_master_full_name', 'guidance_master_email')}),
     )
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
     actions = ['delete_selected', ]
 
@@ -47,6 +51,12 @@ class RequestA(admin.ModelAdmin):
         ('توضیحات', {'fields': ('user_description', 'description',)}),
         ('وضعیت درخواست', {'fields': ('acceptance_status', 'renewal_status')}),
     )
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def get_user_full_name(self, obj):
         return obj.user.user.get_full_name()
@@ -116,6 +126,12 @@ class ExtendRequestA(admin.ModelAdmin):
         ('بیشتر', {'fields': ('days', 'date_expired_admin_only', 'acceptance_status', 'show_cost')}),
     )
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     def get_user_full_name(self, obj):
         return obj.request.user.user.get_full_name()
 
@@ -133,8 +149,14 @@ class CancelRequestA(admin.ModelAdmin):
         ('بیشتر', {'fields': ('acceptance_status',)}),
     )
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
     def get_user_full_name(self, obj):
         return obj.request.user.user.get_full_name()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__last_name'
@@ -178,17 +200,23 @@ class PaymentA(admin.ModelAdmin):
     date_hierarchy = 'date_payed'
     readonly_fields = (
         'date_payed', 'acceptance_status', 'receipt', 'description', 'cost', 'request', 'extend', 'online_pay')
-    list_display = ('get_user_full_name', 'request', 'cost', 'acceptance_status', 'receipt')
+    list_display = ('get_user_full_name', 'request', 'cost', 'acceptance_status', 'linked_receipt_new_tab')
     list_filter = ('acceptance_status',)
     search_fields = ['request__user__user__first_name', 'request__user__user__last_name']
 
     fieldsets = (
-        ('اطلاعات پرداخت', {'fields': ('date_payed', 'cost', 'receipt', 'request', 'extend')}),
+        ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', 'cost', 'receipt', 'request', 'extend')}),
         ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
     )
 
+    def has_add_permission(self, request, obj=None):
+        return False
+
     def get_user_full_name(self, obj):
         return obj.request.user.user.get_full_name()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     get_user_full_name.short_description = 'پرداخت کننده'
     get_user_full_name.admin_order_field = 'user__last_name'
@@ -252,6 +280,23 @@ class PaymentA(admin.ModelAdmin):
     reject.short_description = "رد پرداخت ها"
 
 
+class OnlinePaymentA(admin.ModelAdmin):
+    list_display = ('user', 'price', 'gateway', 'state', 'payment_result')
+    date_hierarchy = 'created_at'
+    list_filter = ('state', 'payment_result')
+    readonly_fields = ('updated_at',)
+    fieldsets = (
+        ('پرداخت کننده', {'fields': ('user',)}),
+        ('جزئیات', {'fields': ('price', 'description', 'updated_at', 'verification_result', 'ref_number')}),
+    )
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
 UserAdmin.list_display = ('username', 'first_name', 'last_name', 'is_staff')
 UserAdmin.fieldsets = (
     ('None', {'fields': ('username', 'password')}),
@@ -269,6 +314,8 @@ admin.site.register(ExtendRequest, ExtendRequestA)
 admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
+admin.site.unregister(OnlinePayment)
+admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
 admin.site.unregister(Theme)  # comment this if want to change admin site look and feel
 admin.site.disable_action('delete_selected')
 
