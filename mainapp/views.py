@@ -14,7 +14,6 @@ from django.urls import reverse
 from pardakht import handler
 
 from .models import *
-from .utils import call_back_payment
 from HPCPortal import settings
 
 
@@ -377,7 +376,6 @@ def pay(request, pk):
             payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, request=found_request)
             payment.save()
             found_request.acceptance_status = "AccPaying"
-            # found_request.payment = payment
             found_request.save()
             messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
             return redirect('index')
@@ -388,7 +386,7 @@ def pay(request, pk):
 
 @login_required(login_url='/login')
 def pay_online(request):
-    pass
+    raise Http404
     # pk = int(request.POST.get('id'))
     #
     # try:
@@ -399,7 +397,7 @@ def pay_online(request):
     # result = handler.create_payment(
     #     price=request.POST.get('cost'),
     #     description=request.POST.get('desc'),
-    #     return_function=call_back_payment,
+    #     return_function=None,
     #     return_url=reverse('login'),
     #     login_required=True
     # )
