@@ -3,6 +3,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
+from django.utils.html import format_html
 from pardakht.models import Payment as OnlinePayment
 
 from .serial_generator import serial_generator
@@ -133,6 +134,17 @@ class ExtendRequest(models.Model):
         super().save()
 
 
+class OnlinePaymentProxy(OnlinePayment):
+    class Meta:
+        proxy = True
+        verbose_name_plural = "پرداخت‌های آنلاین"
+        verbose_name = "پرداخت‌ آنلاین"
+
+    def __str__(self):
+        return "مبلغ " + str(
+            self.price) + " توسط " + self.user.get_full_name() + " بصورت آنلاین "
+
+
 class Payment(models.Model):
     ACCEPTANCE_STATUS = [
         ('Pen', 'در انتظار تایید'),
@@ -149,6 +161,18 @@ class Payment(models.Model):
     receipt = models.ImageField(upload_to='receipts', verbose_name="عکس فیش‌واریزی", blank=True, null=True)
     description = models.TextField(blank=True, verbose_name="توضیحات")
     cost = models.IntegerField(default=0, verbose_name="هزینه پرداختی")
+
+    def linked_receipt_new_tab(self):
+        if self.receipt:
+            return format_html(
+                '<a href="/media/{}" target="_blank">مشاهده رسید</a>',
+                self.receipt.name,
+            )
+        else:
+            return format_html(
+                '<a href="#">رسید موجود نیست</a>',
+            )
+    linked_receipt_new_tab.short_description = "رسید"
 
     def __str__(self):
         return "مبلغ " + str(
