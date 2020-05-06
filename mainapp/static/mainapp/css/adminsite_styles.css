@@ -10,3 +10,10 @@
 div#content-related {
     display: none;
 }
+
+div.submit-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 1em 0 0!important;
+}

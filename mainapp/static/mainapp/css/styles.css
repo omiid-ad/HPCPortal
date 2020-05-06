@@ -220,6 +220,10 @@ div.swal-text {
     text-align: center;
 }
 
+.not-allowed {
+    cursor: not-allowed!important;
+}
+
 /*remove inc/dec arrows in input types*/
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

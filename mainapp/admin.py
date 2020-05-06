@@ -39,7 +39,7 @@ class RequestA(admin.ModelAdmin):
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
         'renewal_status', 'user_description', 'date_expired_admin_only')
-    list_display = ('serial_number', 'get_user_full_name', 'acceptance_status', 'renewal_status', 'date_expired',)
+    list_display = ('serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',)
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
