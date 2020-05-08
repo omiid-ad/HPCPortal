@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import json
 import os
 
-config = open('HPCPortal/config.json', )
-data = json.load(config)
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+config_file_path = os.path.join(BASE_DIR, 'HPCPortal/config.json')
+config = open(config_file_path, )
+data = json.load(config)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
