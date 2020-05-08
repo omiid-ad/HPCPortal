@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'mainapp.apps.MainappConfig',
     'django.contrib.humanize',
     'pardakht',
+    'kronos',
 ]
 
 MIDDLEWARE = [
