@@ -176,6 +176,7 @@ class Payment(models.Model):
             return format_html(
                 '<a href="#">رسید موجود نیست</a>',
             )
+
     linked_receipt_new_tab.short_description = "رسید"
 
     def __str__(self):

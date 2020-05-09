@@ -441,13 +441,19 @@ class OnlinePaymentA(admin.ModelAdmin):
 
 class UserAdminA(admin.ModelAdmin):
     list_display = ('username', 'first_name', 'last_name', 'is_active')
+    exclude = ('groups', 'user_permissions', 'is_staff', 'is_superuser')
     fieldsets = (
-        ('None', {'fields': ('username', 'password')}),
-        ('اطلاعات شخصی', {'fields': ('first_name', 'last_name', 'email')}),
-        ('دسترسی ها', {'fields': (('is_active', 'is_staff', 'is_superuser'), ('last_login', 'date_joined'))}),
+        ('', {'fields': (('username',),)}),
+        ('اطلاعات شخصی', {'fields': (('first_name', 'last_name', 'email'),)}),
+        ('دسترسی ها', {'fields': ('is_active',)}),
+        ('اطلاعات ورود', {'fields': (('last_login', 'date_joined'),)}),
     )
     list_filter = ('is_superuser', 'is_active')
+
     readonly_fields = ('last_login', 'date_joined')
+
+    def has_add_permission(self, request):
+        return False
 
     def response_change(self, request, obj):
         if "_deactivate-user" in request.POST:
