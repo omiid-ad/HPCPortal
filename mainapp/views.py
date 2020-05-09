@@ -59,7 +59,7 @@ def login(request):
             # result = json.loads(response.read().decode())
             if user is not None and user.is_active:  # and result['success']:
                 django_login(request, user)
-                messages.success(request, 'با موفقیت وارد شدید')
+                # messages.success(request, 'با موفقیت وارد شدید')
                 return redirect('index')
             elif user is None:
                 messages.error(request, "ایمیل یا رمز عبور اشتباه است")
@@ -145,7 +145,7 @@ def complete_profile(request):
 @login_required(login_url='/login')
 def logout(request):
     django_logout(request)
-    messages.success(request, "با موفقیت خارج شدید")
+    # messages.success(request, "با موفقیت خارج شدید")
     return redirect('index')
 
 
