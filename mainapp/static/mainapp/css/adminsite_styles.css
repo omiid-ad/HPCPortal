@@ -19,6 +19,23 @@ input[name="_addanother"] {
     display: none;
 }
 
+.reject {
+    background: #ba2121 !important;
+}
+
+.reject:link, .reject:visited {
+    background: #CC3434 !important;
+}
+
+.reject:hover {
+    background: #CC3434 !important;
+    text-decoration: none !important;
+}
+
+.reject:focus {
+    background: #721c24 !important;
+}
+
 /*div.submit-row {*/
 /*display: flex;*/
 /*justify-content: center;*/
