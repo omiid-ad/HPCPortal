@@ -1,4 +1,3 @@
-from django.contrib.auth.admin import UserAdmin
 from django.contrib import admin, messages
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
@@ -52,6 +51,37 @@ class RequestA(admin.ModelAdmin):
         ('وضعیت درخواست', {'fields': ('acceptance_status', 'renewal_status')}),
     )
 
+    def response_change(self, request, obj):
+        if "_accept-request" in request.POST:
+            if obj.acceptance_status == 'Pen':
+                obj.acceptance_status = 'Paying'
+                obj.renewal_status = 'Ok'
+                obj.save()
+                self.message_user(request, "با موفقیت تایید شد", level=messages.SUCCESS)
+                return HttpResponseRedirect(".")
+            elif obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "این درخواست قبلا رد شده بود و نمیتوان آنرا تایید کرد", level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            else:
+                self.message_user(request,
+                                  "این درخواست قبلا تایید شده بود", level=messages.ERROR)
+                return HttpResponseRedirect(".")
+        if "_reject-request" in request.POST:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request, "این درخواست قبلا رد شده بود", level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            elif obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "این درخواست قبلا تایید شده بود و نمیتوان آنرا رد کرد", level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.date_expired = None
+            obj.acceptance_status = 'Rej'
+            obj.save()
+            self.message_user(request, "با موفقیت رد شد", level=messages.SUCCESS)
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
+
     def has_add_permission(self, request, obj=None):
         return False
 
@@ -68,14 +98,20 @@ class RequestA(admin.ModelAdmin):
 
     def accept(self, request, queryset):
         for obj in queryset:
-            if obj.acceptance_status == 'Paying':
+            if obj.acceptance_status == 'Pen':
+                obj.acceptance_status = 'Paying'
+                obj.renewal_status = 'Ok'
+                obj.save()
+            elif obj.acceptance_status == 'Rej':
                 self.message_user(request,
-                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و در انتظار تایید پرداخت هستند",
+                                  "یک یا چند درخواست انتخاب شده، قبلا رد شده بود و نمیتوان آنرا تایید کرد",
                                   level=messages.ERROR)
                 return
-            obj.acceptance_status = 'Paying'
-            obj.renewal_status = 'Ok'
-            obj.save()
+            else:
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند",
+                                  level=messages.ERROR)
+                return
         self.message_user(request, "با موفقیت تایید شدند", level=messages.SUCCESS)
 
     accept.short_description = "تایید درخواست ها"
@@ -85,6 +121,11 @@ class RequestA(admin.ModelAdmin):
             if obj.acceptance_status == 'Rej':
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
+                return
+            elif obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
                 return
             obj.date_expired = None
@@ -163,11 +204,55 @@ class CancelRequestA(admin.ModelAdmin):
 
     actions = ["accept", "reject"]
 
+    def response_change(self, request, obj):
+        if "_accept-request" in request.POST:
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل تایید شده بود و نمیتوان دوباره آنرا تایید کرد",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل رد شده بود و نمیتوان دوباره آنرا تایید کرد",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.request.renewal_status = "Can"
+            obj.request.acceptance_status = "Acc"
+            obj.acceptance_status = 'Acc'
+            obj.request.date_expired = None
+            obj.request.save()
+            obj.save()
+            self.message_user(request, "درخواست با موفقیت لغو شد")
+            return HttpResponseRedirect(".")
+        if "_reject-request" in request.POST:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل رد شده بود و نمیتوان دوباره آنرا رد کرد",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل تایید شده بود و نمیتوان دوباره آنرا رد کرد",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.acceptance_status = 'Rej'
+            obj.request.acceptance_status = "Rej"
+            obj.request.save()
+            obj.save()
+            self.message_user(request, "درخواست با موفقیت رد شد")
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
+
     def accept(self, request, queryset):
         for obj in queryset:
             if obj.acceptance_status == 'Acc':
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
+                                  level=messages.ERROR)
+                return
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا تایید کنید",
                                   level=messages.ERROR)
                 return
             obj.request.renewal_status = "Can"
@@ -185,6 +270,11 @@ class CancelRequestA(admin.ModelAdmin):
             if obj.acceptance_status == 'Rej':
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
+                return
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا رد کنید",
                                   level=messages.ERROR)
                 return
             obj.acceptance_status = 'Rej'
@@ -222,6 +312,58 @@ class PaymentA(admin.ModelAdmin):
     get_user_full_name.admin_order_field = 'user__last_name'
 
     actions = ["accept", "reject"]
+
+    def response_change(self, request, obj):
+        if "_accept-request" in request.POST:
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "پرداخت انتخاب شده، از قبل تایید شده بود و نمیتوانید دوباره آنرا تایید کنید",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "پرداخت انتخاب شده، از قبل رد شده بود و نمیتوانید دوباره آنرا رد کنید",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.acceptance_status = 'Acc'
+            obj.request.acceptance_status = 'Acc'
+            if obj.extend:
+                obj.request.renewal_status = 'Ok'
+                obj.extend.acceptance_status = 'Acc'
+                if obj.request.date_expired is not None:
+                    obj.request.date_expired = obj.request.date_expired + datetime.timedelta(days=obj.extend.days)
+                else:
+                    obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.extend.days)
+                obj.extend.save()
+            else:
+                obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.request.days)
+            obj.request.save()
+            obj.save()
+            self.message_user(request, "پرداخت با موفقیت تایید شد")
+            return HttpResponseRedirect(".")
+        if "_reject-request" in request.POST:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "پرداخت انتخاب شده، از قبل رد شده بود و نمیتوانید دوباره آنرا رد کنید",
+                                  level=messages.ERROR)
+                return
+            if obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "پرداخت انتخاب شده، از قبل تایید شده بود و نمیتوانید دوباره آنرا رد کنید",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.acceptance_status = 'Rej'
+            if obj.extend:
+                obj.extend.acceptance_status = 'Rej'
+                obj.request.acceptance_status = 'Rej'
+                obj.extend.save()
+            else:
+                obj.request.acceptance_status = 'Paying'
+            obj.request.save()
+            obj.save()
+            self.message_user(request, "پرداخت با موفقیت رد شد")
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
 
     def accept(self, request, queryset):
         for obj in queryset:
