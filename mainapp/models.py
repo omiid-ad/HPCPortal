@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import format_html
 from pardakht.models import Payment as OnlinePayment
@@ -15,6 +16,22 @@ class CustomUser(User):
         app_label = 'auth'
         verbose_name_plural = "کاربران"
         verbose_name = "کاربر"
+
+    def __str__(self):
+        return self.get_full_name()
+
+    def linked_to_profile(self):
+        if self.profile:
+            return format_html(
+                '<a href="{}">مشاهده پروفایل</a>',
+                reverse("admin:mainapp_profile_change", args=(self.profile.id,)),
+            )
+        else:
+            return format_html(
+                '<a href="#">ندارد</a>',
+            )
+
+    linked_to_profile.short_description = "پروفایل"
 
 
 class Profile(models.Model):
@@ -30,6 +47,19 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.get_full_name() + " - " + self.user.username
+
+    def linked_to_user(self):
+        if self.user:
+            return format_html(
+                '<a href="{}">مشاهده کاربر</a>',
+                reverse("admin:auth_customuser_change", args=(self.user.id,)),
+            )
+        else:
+            return format_html(
+                '<a href="#">ندارد</a>',
+            )
+
+    linked_to_user.short_description = "اطلاعات کاربری"
 
     @property
     def get_user_full_name(self):

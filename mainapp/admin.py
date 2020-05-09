@@ -8,7 +8,8 @@ from .models import *
 
 class ProfileA(admin.ModelAdmin):
     date_hierarchy = 'user__date_joined'
-    list_display = ('get_user_full_name', 'get_user_email', 'university', 'field', 'guidance_master_full_name')
+    list_display = (
+        'get_user_full_name', 'get_user_email', 'university', 'field', 'guidance_master_full_name', 'linked_to_user')
     list_filter = ('field', 'university')
     readonly_fields = ('user', 'university', 'field', 'guidance_master_full_name', 'guidance_master_email')
     search_fields = ['user__first_name', 'user__last_name', 'user__email']
@@ -440,7 +441,7 @@ class OnlinePaymentA(admin.ModelAdmin):
 
 
 class UserAdminA(admin.ModelAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'is_active')
+    list_display = ('username', 'first_name', 'last_name', 'is_active', 'linked_to_profile')
     exclude = ('groups', 'user_permissions', 'is_staff', 'is_superuser')
     fieldsets = (
         ('', {'fields': (('username',),)}),
