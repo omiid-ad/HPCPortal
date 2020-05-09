@@ -13,8 +13,8 @@ class ProfileA(admin.ModelAdmin):
     readonly_fields = ('user', 'university', 'field', 'guidance_master_full_name', 'guidance_master_email')
     search_fields = ['user__first_name', 'user__last_name', 'user__email']
     fieldsets = (
-        ('اطلاعات دانشگاهی', {'fields': ('user', 'university', 'field')}),
-        ('اطلاعات استاد راهنما', {'fields': ('guidance_master_full_name', 'guidance_master_email')}),
+        ('اطلاعات دانشگاهی', {'fields': ('user', ('university', 'field'),)}),
+        ('اطلاعات استاد راهنما', {'fields': (('guidance_master_full_name', 'guidance_master_email'),)}),
     )
 
     def has_add_permission(self, request, obj=None):
@@ -44,11 +44,11 @@ class RequestA(admin.ModelAdmin):
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
-        ('جزئیات زمانی درخواست', {'fields': ('date_requested', 'date_expired', 'days', 'date_expired_admin_only')}),
-        ('جزئیات فنی درخواست', {'fields': ('cpu', 'ram', 'disk', 'app_name')}),
+        ('جزئیات زمانی درخواست', {'fields': (('date_requested', 'date_expired'), ('days', 'date_expired_admin_only'))}),
+        ('جزئیات فنی درخواست', {'fields': (('cpu', 'ram', 'disk'), 'app_name')}),
         ('جزئیات مالی درخواست', {'fields': ('show_cost',)}),
-        ('توضیحات', {'fields': ('user_description', 'description',)}),
-        ('وضعیت درخواست', {'fields': ('acceptance_status', 'renewal_status')}),
+        ('توضیحات', {'fields': (('user_description', 'description'),)}),
+        ('وضعیت درخواست', {'fields': (('acceptance_status', 'renewal_status'),)}),
     )
 
     def response_change(self, request, obj):
@@ -164,7 +164,7 @@ class ExtendRequestA(admin.ModelAdmin):
     search_fields = ['request__serial_number', ]
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
-        ('بیشتر', {'fields': ('days', 'date_expired_admin_only', 'acceptance_status', 'show_cost')}),
+        ('بیشتر', {'fields': (('days', 'date_expired_admin_only'), ('show_cost', 'acceptance_status'))}),
     )
 
     def has_add_permission(self, request, obj=None):
@@ -295,7 +295,7 @@ class PaymentA(admin.ModelAdmin):
     search_fields = ['request__user__user__first_name', 'request__user__user__last_name']
 
     fieldsets = (
-        ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', 'cost', 'receipt', 'request', 'extend')}),
+        ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', ('request', 'extend'), 'cost', 'receipt')}),
         ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
     )
 
