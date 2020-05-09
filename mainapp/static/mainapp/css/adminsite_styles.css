@@ -11,9 +11,17 @@ div#content-related {
     display: none;
 }
 
+input[name="_continue"] {
+    display: none;
+}
+
+input[name="_addanother"] {
+    display: none;
+}
+
 /*div.submit-row {*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*width: 100%;*/
-    /*padding: 1em 0 0!important;*/
+/*display: flex;*/
+/*justify-content: center;*/
+/*width: 100%;*/
+/*padding: 1em 0 0!important;*/
 /*}*/
