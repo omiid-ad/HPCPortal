@@ -200,6 +200,7 @@ class CancelRequest(models.Model):
 
     class Meta:
         verbose_name_plural = "درخواست های لغو"
+        verbose_name = "درخواست لغو"
 
     def __str__(self):
         return self.request.serial_number
