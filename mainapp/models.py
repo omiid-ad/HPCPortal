@@ -203,9 +203,7 @@ class Payment(models.Model):
                 self.receipt.name,
             )
         else:
-            return format_html(
-                '<a href="#">رسید موجود نیست</a>',
-            )
+            return 'رسید موجود نیست'
 
     linked_receipt_new_tab.short_description = "رسید"
 
