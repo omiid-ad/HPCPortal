@@ -57,7 +57,11 @@
                         <span class="input-group-text border-left-0"><i class="fas fa-key"></i></span>
                     </div>
                     <input name="password" required type="password" class="form-control border-right-0"
-                           id="exampleInputPassword1">
+                           id="exampleInputPassword1" aria-describedby="passHelp">
+                    <a class="d-block w-100 text-right mt-1" href="{% url 'password_reset' %}">
+                        <small id="passHelp" class="form-text text-muted">رمزعبور خود را فراموش کرده‌اید؟
+                        </small>
+                    </a>
                 </div>
             </div>
             {#            <div class="captcha g-recaptcha" data-sitekey="6LfBE-kUAAAAAJPkm3umVjcukTc5aRVysfYvlH7o"></div>#}
