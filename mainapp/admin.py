@@ -40,7 +40,9 @@ class RequestA(admin.ModelAdmin):
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'user', 'acceptance_status',
         'renewal_status', 'user_description', 'date_expired_admin_only')
-    list_display = ('serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',)
+    list_display = (
+        'serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',
+        'linked_to_payment')
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
@@ -160,7 +162,7 @@ class RequestA(admin.ModelAdmin):
 
 class ExtendRequestA(admin.ModelAdmin):
     readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request')
-    list_display = ('request', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost')
+    list_display = ('request', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
@@ -183,7 +185,7 @@ class ExtendRequestA(admin.ModelAdmin):
 
 class CancelRequestA(admin.ModelAdmin):
     readonly_fields = ('acceptance_status', 'request')
-    list_display = ('request', 'get_user_full_name', 'acceptance_status',)
+    list_display = ('request', 'get_user_full_name', 'acceptance_status', 'linked_to_request')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', ]
     fieldsets = (
@@ -291,9 +293,11 @@ class PaymentA(admin.ModelAdmin):
     date_hierarchy = 'date_payed'
     readonly_fields = (
         'date_payed', 'acceptance_status', 'receipt', 'description', 'cost', 'request', 'extend', 'online_pay')
-    list_display = ('get_user_full_name', 'request', 'cost', 'acceptance_status', 'linked_receipt_new_tab')
+    list_display = (
+        'get_user_full_name', 'request', 'cost', 'acceptance_status', 'linked_receipt_new_tab', 'linked_to_request',
+        'linked_to_extend')
     list_filter = ('acceptance_status',)
-    search_fields = ['request__user__user__first_name', 'request__user__user__last_name']
+    search_fields = ['request__user__user__first_name', 'request__user__user__last_name', 'request__serial_number']
 
     fieldsets = (
         ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', ('request', 'extend'), 'cost', 'receipt')}),

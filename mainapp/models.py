@@ -132,6 +132,18 @@ class Request(models.Model):
             if self.date_expired <= datetime.datetime.now().date():
                 return True
 
+    def linked_to_payment(self):
+        pay = Payment.objects.filter(request=self, extend=None)
+        if pay is not None and pay.count() == 1:
+            return format_html(
+                '<a href="{}">مشاهده پرداخت</a>',
+                reverse("admin:mainapp_payment_change", args=(pay.first().id,)),
+            )
+        else:
+            return None
+
+    linked_to_payment.short_description = "پرداخت"
+
 
 class ExtendRequest(models.Model):
     ACCEPTANCE_STATUS = [
@@ -166,6 +178,17 @@ class ExtendRequest(models.Model):
         else:
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
         super().save()
+
+    def linked_to_request(self):
+        if self.request:
+            return format_html(
+                '<a href="{}">مشاهده سرویس</a>',
+                reverse("admin:mainapp_request_change", args=(self.request.id,)),
+            )
+        else:
+            return None
+
+    linked_to_request.short_description = "سرویس"
 
 
 class OnlinePaymentProxy(OnlinePayment):
@@ -203,7 +226,7 @@ class Payment(models.Model):
                 self.receipt.name,
             )
         else:
-            return 'رسید موجود نیست'
+            return None
 
     linked_receipt_new_tab.short_description = "رسید"
 
@@ -214,6 +237,28 @@ class Payment(models.Model):
     class Meta:
         verbose_name_plural = "پرداخت ها"
         verbose_name = "پرداخت"
+
+    def linked_to_request(self):
+        if self.request:
+            return format_html(
+                '<a href="{}">مشاهده سرویس</a>',
+                reverse("admin:mainapp_request_change", args=(self.request.id,)),
+            )
+        else:
+            return None
+
+    linked_to_request.short_description = "سرویس"
+
+    def linked_to_extend(self):
+        if self.extend:
+            return format_html(
+                '<a href="{}">مشاهده تمدید</a>',
+                reverse("admin:mainapp_extendrequest_change", args=(self.extend.id,)),
+            )
+        else:
+            return None
+
+    linked_to_extend.short_description = "تمدید"
 
 
 class CancelRequest(models.Model):
@@ -233,3 +278,14 @@ class CancelRequest(models.Model):
 
     def __str__(self):
         return self.request.serial_number
+
+    def linked_to_request(self):
+        if self.request:
+            return format_html(
+                '<a href="{}">مشاهده سرویس</a>',
+                reverse("admin:mainapp_request_change", args=(self.request.id,)),
+            )
+        else:
+            return None
+
+    linked_to_request.short_description = "سرویس"
