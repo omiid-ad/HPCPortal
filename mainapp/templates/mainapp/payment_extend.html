@@ -17,7 +17,7 @@
 
 {% block content %}
     <div class="box box-70">
-        <form dir="rtl" method="post" action="{% url 'pay' req.serial_number %}" enctype="multipart/form-data">
+        <form dir="rtl" method="post" action="{% url 'pay_extend' ext.serial_number %}" enctype="multipart/form-data">
             {% csrf_token %}
 
             {% if messages %}
@@ -40,7 +40,7 @@
                 <div class="form-group col-sm-2">
                     <label class="label-right" for="cost">هزینه قابل پرداخت</label>
                     <div class="input-group">
-                        <input required name="cost" value="{{ req.show_cost|intcomma }}" readonly type="text"
+                        <input required name="cost" value="{{ ext.show_cost|intcomma }}" readonly type="text"
                                class="form-control border-0 bg-white"
                                id="cost">
                         <div class="input-group-prepend">
@@ -66,9 +66,9 @@
         </form>
         <form id="online_form" action="{% url 'pay_online' %}" method="post">
             {% csrf_token %}
-            <input name="cost" type="hidden" value="{{ req.show_cost }}">
+            <input name="cost" type="hidden" value="{{ ext.show_cost }}">
             <input name="desc" type="hidden" id="hidden_desc" value="">
-            <input name="id" type="hidden" id="id" value="{{ req.pk }}">
+            <input name="id" type="hidden" id="id" value="{{ ext.pk }}">
             <button type="submit" class="btn btn-outline-info btn-block mt-4 disabled not-allowed">پرداخت
                 آنلاین
             </button>
