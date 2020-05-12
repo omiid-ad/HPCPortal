@@ -161,13 +161,15 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request')
-    list_display = ('request', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request')
+    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
+    list_display = (
+        'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request')
     list_filter = ('acceptance_status',)
-    search_fields = ['request__serial_number', ]
+    search_fields = ['request__serial_number', 'serial_number']
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
-        ('بیشتر', {'fields': (('days', 'date_expired_admin_only'), ('show_cost', 'acceptance_status'))}),
+        ('بیشتر',
+         {'fields': (('serial_number', 'days', 'date_expired_admin_only'), ('show_cost', 'acceptance_status'))}),
     )
 
     def has_add_permission(self, request, obj=None):
@@ -181,6 +183,83 @@ class ExtendRequestA(admin.ModelAdmin):
 
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__last_name'
+
+    actions = ["accept", "reject"]
+
+    def response_change(self, request, obj):
+        if "_accept-request" in request.POST:
+            if obj.acceptance_status == 'Pen':
+                obj.acceptance_status = 'Paying'
+                obj.save()
+                self.message_user(request, "با موفقیت تایید شد", level=messages.SUCCESS)
+                return HttpResponseRedirect(".")
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل رد شده بود و نمیتوان دوباره آنرا تایید کرد",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            else:
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل تایید شده بود",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+        if "_reject-request" in request.POST:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل رد شده بود و نمیتوان آنرا رد کنید",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            elif obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "درخواست انتخاب شده، از قبل تایید شده بود و نمیتوان آنرا رد کنید",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+            obj.acceptance_status = 'Rej'
+            obj.request.acceptance_status = 'Rej'
+            obj.request.save()
+            obj.save()
+            self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
+
+    def accept(self, request, queryset):
+        for obj in queryset:
+            if obj.acceptance_status == 'Pen':
+                obj.acceptance_status = 'Paying'
+                obj.save()
+            elif obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، قبلا رد شده بود و نمیتوان آنرا تایید کرد",
+                                  level=messages.ERROR)
+                return
+            else:
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند",
+                                  level=messages.ERROR)
+                return
+        self.message_user(request, "با موفقیت تایید شدند", level=messages.SUCCESS)
+
+    accept.short_description = "تایید درخواست ها"
+
+    def reject(self, request, queryset):
+        for obj in queryset:
+            if obj.acceptance_status == 'Rej':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل رد شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
+                return
+            elif obj.acceptance_status == 'Acc':
+                self.message_user(request,
+                                  "یک یا چند درخواست انتخاب شده، از قبل تایید شده بودند و نمیتوانید دوباره آنهارا رد کنید",
+                                  level=messages.ERROR)
+                return
+            obj.acceptance_status = 'Rej'
+            obj.request.acceptance_status = 'Rej'
+            obj.request.save()
+            obj.save()
+        self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
+
+    reject.short_description = "رد درخواست ها"
 
 
 class CancelRequestA(admin.ModelAdmin):
@@ -415,7 +494,7 @@ class PaymentA(admin.ModelAdmin):
                 return
             obj.acceptance_status = 'Rej'
             if obj.extend:
-                obj.extend.acceptance_status = 'Rej'
+                obj.extend.acceptance_status = 'Paying'
                 obj.request.acceptance_status = 'Rej'
                 obj.extend.save()
             else:
