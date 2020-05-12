@@ -11,9 +11,12 @@ urlpatterns = [
     path('complete_profile/', complete_profile, name="complete_profile"),
     path('calc_cost/', calc_cost, name="calc_cost"),
     path('edit_profile/', edit_profile, name="edit_profile"),
-    path('extend/<int:pk>', extend, name="extend"),
-    path('pay/<int:pk>', pay, name="pay"),
+    path('extend/<slug:sn>', extend, name="extend"),
+    path('pay/<slug:sn>', pay, name="pay"),
+    path('pay_extend/<slug:sn>', pay_extend, name="pay_extend"),
     path('pay_online/', pay_online, name="pay_online"),
     path('cancel/', cancel, name="cancel"),
+    path('callback/', callback, name="callback"),
+    path('extend_requests/', extend_requests, name="extend_requests"),
 
 ]
