@@ -149,7 +149,9 @@ class ExtendRequest(models.Model):
     ACCEPTANCE_STATUS = [
         ('Pen', 'در انتظار تایید'),
         ('Acc', 'تایید شده'),
-        ('Rej', 'رد شده')
+        ('Rej', 'رد شده'),
+        ('Paying', 'در انتظار پرداخت'),
+        ('AccPaying', 'در انتظار تایید پرداخت'),
     ]
 
     request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
@@ -159,6 +161,7 @@ class ExtendRequest(models.Model):
     show_cost = models.IntegerField(default=0, verbose_name="هزینه")
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
+    serial_number = models.CharField(max_length=16, null=True, editable=False, unique=True, verbose_name="شماره سریال")
 
     class Meta:
         verbose_name_plural = "درخواست های تمدید"
@@ -169,6 +172,7 @@ class ExtendRequest(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
+            self.serial_number = serial_generator()
             if self.request.date_expired is not None:
                 self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
             else:
