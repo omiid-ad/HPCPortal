@@ -1,6 +1,7 @@
 import locale
 import urllib
 import json
+import requests
 
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
@@ -11,6 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from math import trunc
 
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from pardakht import handler
 
 from .models import *
@@ -37,6 +39,21 @@ def index(request):
                 'all_requests': all_requests,
             }
             return render(request, 'mainapp/index.html', context)
+
+
+@login_required(login_url='/login')
+def extend_requests(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+        return redirect('complete_profile')
+
+    all_ext_reqs = ExtendRequest.objects.filter(request__user=profile)
+    context = {
+        'all_ext_reqs': all_ext_reqs,
+    }
+    return render(request, 'mainapp/extend_requests.html', context)
 
 
 def login(request):
@@ -266,8 +283,8 @@ def edit_profile(request):
             return redirect('edit_profile')
 
 
-def extend(request, pk):
-    extended_service = get_object_or_404(Request, pk=pk)
+def extend(request, sn):
+    extended_service = get_object_or_404(Request, serial_number=sn)
     if extended_service.acceptance_status != 'Acc':
         messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
         return redirect('index')
@@ -290,10 +307,11 @@ def extend(request, pk):
         cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
         cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
         if request.POST["days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and \
-                int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0 and "receipt" in request.FILES:
-            receipt = request.FILES["receipt"]
-            fs = FileSystemStorage()
-            filename = fs.save(receipt.name, receipt)
+                int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0:
+            # and "receipt" in request.FILES:
+            # receipt = request.FILES["receipt"]
+            # fs = FileSystemStorage()
+            # filename = fs.save(receipt.name, receipt)
             if profile.university.__contains__("چمران") or profile.university.__contains__(
                     "chamran") or profile.university.__contains__("chamraan"):
                 ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
@@ -302,13 +320,13 @@ def extend(request, pk):
                 ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
                                                        show_cost=int(cost))
             ext_req.save()
-            pay = Payment.objects.create(request=extended_service, extend=ext_req, receipt=filename,
-                                         cost=int(ext_req.show_cost))
-            pay.save()
+            # pay = Payment.objects.create(request=extended_service, extend=ext_req, receipt=filename,
+            #                              cost=int(ext_req.show_cost))
+            # pay.save()
             extended_service.acceptance_status = 'Exting'
             extended_service.save()
             messages.success(request,
-                             "درخواست تمدید با موفقیت ارسال شد. درصورت تایید، تاریخ سررسید سرویس مورد نظر به روزرسانی میشود")
+                             "درخواست تمدید با موفقیت ارسال شد. برای پیگیری وضعیت، به بخش درخواست‌های تمدید مراجعه کنید")
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
@@ -349,8 +367,8 @@ def cancel(request):
 
 
 @login_required(login_url='/login')
-def pay(request, pk):
-    found_request = get_object_or_404(Request, pk=pk)
+def pay(request, sn):
+    found_request = get_object_or_404(Request, serial_number=sn)
     try:
         Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
@@ -381,28 +399,78 @@ def pay(request, pk):
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
-            return redirect('pay', pk=pk)
+            return redirect('pay', sn=sn)
+
+
+@login_required(login_url='/login')
+def pay_extend(request, sn):
+    found_extend = get_object_or_404(ExtendRequest, serial_number=sn)
+    try:
+        Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
+        return redirect('complete_profile')
+    if request.method == "GET":
+        context = {
+            'ext': found_extend,
+        }
+        return render(request, 'mainapp/payment_extend.html', context)
+
+    elif request.method == "POST":
+
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        cost = locale.atoi(request.POST["cost"])
+
+        if "receipt" in request.FILES and int(cost) == found_extend.show_cost:
+            receipt = request.FILES["receipt"]
+            fs = FileSystemStorage()
+            filename = fs.save(receipt.name, receipt)
+            desc = request.POST["desc"]
+
+            payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, extend=found_extend,
+                                             request=found_extend.request)
+            payment.save()
+            found_extend.acceptance_status = "AccPaying"
+            found_extend.save()
+            messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
+            return redirect('extend_requests')
+        else:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('pay_online', sn=sn)
 
 
 @login_required(login_url='/login')
 def pay_online(request):
     raise Http404
-    # pk = int(request.POST.get('id'))
-    #
-    # try:
-    #     found_req = Request.objects.get(pk=pk)
-    # except Request.DoesNotExist:
-    #     raise Http404("request not found")
-    #
-    # result = handler.create_payment(
-    #     price=request.POST.get('cost'),
-    #     description=request.POST.get('desc'),
-    #     return_function=None,
-    #     return_url=reverse('login'),
-    #     login_required=True
-    # )
-    # obj = result.get('payment')
-    # obj.user = request.user
-    # obj.save()
-    #
-    # return redirect(result.get('link'))
+    """
+    pk = int(request.POST.get('id'))
+    try:
+        found_req = Request.objects.get(pk=pk)
+    except Request.DoesNotExist:
+        raise Http404("request not found")
+
+    url = "https://api.idpay.ir/v1.1/payment"
+    headers = {
+        "X-API-KEY": "foo/bar",
+        "X-SANDBOX": "1",
+        "Content-Type": "application/json",
+    }
+    params = {
+        "order_id": found_req.serial_number,
+        "name": request.user.profile.get_user_full_name,
+        "mail": request.user.email,
+        "desc": request.POST.get("desc"),
+        "amount": int(found_req.show_cost) * 10,
+        "callback": "http://127.0.0.1:8000/callback/",
+    }
+    result = requests.post(url, data=json.dumps(params), headers=headers)
+    result = json.loads(result.text)
+    return redirect(result["link"])
+    """
+
+
+@csrf_exempt
+def callback(request):
+    if request.method == "POST":
+        from django.http import HttpResponse
+        return HttpResponse(request.POST.get("track_id"))
