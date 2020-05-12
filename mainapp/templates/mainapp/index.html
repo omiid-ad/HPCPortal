@@ -85,14 +85,14 @@
                             {% ifequal req.acceptance_status 'Paying' %}
                                 <a data-toggle="tooltip" title="هزینه سرویس را پرداخت کنید"
                                    class="btn btn-outline-info" aria-disabled="true"
-                                   href="{% url 'pay' req.pk %}">
+                                   href="{% url 'pay' req.serial_number %}">
                                     پرداخت <i class="far fa-money-bill-alt"></i>
                                 </a>
                             {% endifequal %}
                         </td>
                         <td>
                             <a data-toggle="tooltip" title="ارسال درخواست تمدید سرویس" class="extend-link"
-                               href="{% url 'extend' req.pk %}">
+                               href="{% url 'extend' req.serial_number %}">
                                 <i class="fas fa-calendar-plus"></i>
                             </a>
                         </td>

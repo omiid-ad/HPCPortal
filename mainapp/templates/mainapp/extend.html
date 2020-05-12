@@ -16,7 +16,7 @@
 
 {% block content %}
     <div class="box box-50">
-        <form dir="rtl" method="post" action="{% url 'extend' extended_service.pk %}" enctype="multipart/form-data">
+        <form dir="rtl" method="post" action="{% url 'extend' extended_service.serial_number %}">
             {% csrf_token %}
 
             {% ifequal message.tags 'error' %}
@@ -68,15 +68,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row mt-4">
-                <div class="form-group col-12">
-                    <div class="custom-file">
-                        <input required type="file" accept="image/*" class="custom-file-input" name="receipt"
-                               id="customFile">
-                        <label class="custom-file-label" for="customFile">عکس فیش‌واریزی خود را آپلود کنید...</label>
-                    </div>
-                </div>
-            </div>
+
             <button type="submit" class="btn btn-success btn-block mt-4">ارسال درخواست تمدید</button>
         </form>
     </div>
@@ -113,10 +105,5 @@
             });
         });
     </script>
-    <script>
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
-    </script>
+
 {% endblock %}
