@@ -143,5 +143,5 @@ EMAIL_HOST_USER = data['webmail'][0]["USER"]
 EMAIL_HOST_PASSWORD = data['webmail'][0]["PASSWORD"]
 EMAIL_USE_TLS = True
 # DEFAULT_FROM_EMAIL = 'ایمیل تست از طرف پرتال <noreply@example.com>'  uncomment to change email title
-
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 config.close()  # closing config file
