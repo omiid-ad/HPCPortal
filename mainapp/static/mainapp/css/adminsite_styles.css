@@ -36,6 +36,10 @@ input[name="_addanother"] {
     background: #721c24 !important;
 }
 
+tr.model-profile {
+    display: none;
+}
+
 /*div.submit-row {*/
 /*display: flex;*/
 /*justify-content: center;*/

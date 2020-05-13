@@ -555,7 +555,7 @@ class UserAdminA(admin.ModelAdmin):
 
 
 admin.site.unregister(User)
-# admin.site.register(CustomUser, UserAdminA)
+admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
 admin.site.register(Request, RequestA)
 admin.site.register(ExtendRequest, ExtendRequestA)
@@ -569,5 +569,5 @@ admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
 
 admin.site.site_header = "پنل مدیریت پرتال"
-admin.site.site_title = "پرتال درخواست مرکز پردازش های سریع دانشگاه شهید چمران اهواز"
+admin.site.site_title = "پرتال مرکز پردازش های سریع دانشگاه شهید چمران اهواز"
 admin.site.index_title = "پنل مدیریت"
