@@ -90,7 +90,7 @@ class RequestA(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     def get_user_full_name(self, obj):
         return obj.user.user.get_full_name()
@@ -177,7 +177,7 @@ class ExtendRequestA(admin.ModelAdmin):
         return False
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     def get_user_full_name(self, obj):
         return obj.request.user.user.get_full_name()
@@ -280,7 +280,7 @@ class CancelRequestA(admin.ModelAdmin):
         return obj.request.user.user.get_full_name()
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__last_name'
@@ -391,7 +391,7 @@ class PaymentA(admin.ModelAdmin):
         return obj.request.user.user.get_full_name()
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     get_user_full_name.short_description = 'پرداخت کننده'
     get_user_full_name.admin_order_field = 'user__last_name'
