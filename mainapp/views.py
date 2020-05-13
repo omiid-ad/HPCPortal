@@ -63,7 +63,7 @@ def login(request):
         return redirect('index')
     elif request.method == "POST":
         if request.POST['email'] != "" and request.POST['password'] != "":
-            user = authenticate(username=request.POST['email'], password=request.POST['password'])
+            user = authenticate(request=request, username=request.POST['email'], password=request.POST['password'])
             # recaptcha_response = request.POST.get('g-recaptcha-response')
             # url = 'https://www.google.com/recaptcha/api/siteverify'
             # values = {

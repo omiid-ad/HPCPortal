@@ -13,6 +13,8 @@ import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from datetime import timedelta
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 config_file_path = os.path.join(BASE_DIR, 'HPCPortal/config.json')
@@ -43,6 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'pardakht',
     'kronos',
+    'axes',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'HPCPortal.urls'
@@ -144,4 +153,6 @@ EMAIL_HOST_PASSWORD = data['webmail'][0]["PASSWORD"]
 EMAIL_USE_TLS = True
 # DEFAULT_FROM_EMAIL = 'ایمیل تست از طرف پرتال <noreply@example.com>'  uncomment to change email title
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+AXES_FAILURE_LIMIT = 5
+AXES_COOLOFF_TIME = timedelta(minutes=30)
 config.close()  # closing config file
