@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
+from axes.admin import AccessLog, AccessAttempt
 
 from .models import *
 
@@ -554,7 +555,7 @@ class UserAdminA(admin.ModelAdmin):
 
 
 admin.site.unregister(User)
-admin.site.register(CustomUser, UserAdminA)
+# admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
 admin.site.register(Request, RequestA)
 admin.site.register(ExtendRequest, ExtendRequestA)
@@ -563,6 +564,8 @@ admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 admin.site.unregister(OnlinePayment)
 admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
+admin.site.unregister(AccessLog)
+admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
 
 admin.site.site_header = "پنل مدیریت پرتال"
