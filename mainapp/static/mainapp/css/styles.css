@@ -63,6 +63,16 @@ label.custom-file-label {
     background-color: white;
 }
 
+#exampleInputEmail1 {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#exampleInputPassword1 {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
 .box-60 {
     width: 60% !important;
 }
@@ -221,7 +231,7 @@ div.swal-text {
 }
 
 .not-allowed {
-    cursor: not-allowed!important;
+    cursor: not-allowed !important;
 }
 
 /*remove inc/dec arrows in input types*/

@@ -49,7 +49,7 @@ def extend_requests(request):
         messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
         return redirect('complete_profile')
 
-    all_ext_reqs = ExtendRequest.objects.filter(request__user=profile)
+    all_ext_reqs = ExtendRequest.objects.filter(request__user=profile).order_by("-id")
     context = {
         'all_ext_reqs': all_ext_reqs,
     }
@@ -283,6 +283,7 @@ def edit_profile(request):
             return redirect('edit_profile')
 
 
+@login_required(login_url='/login')
 def extend(request, sn):
     extended_service = get_object_or_404(Request, serial_number=sn)
     if extended_service.acceptance_status != 'Acc':
