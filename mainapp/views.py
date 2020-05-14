@@ -133,7 +133,7 @@ def register(request):
             user.set_password(request.POST['password1'])
             user.save()
             messages.success(request, 'حساب با موفقیت ایجاد شد')
-            django_login(request, user)
+            django_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('complete_profile')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
