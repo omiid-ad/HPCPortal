@@ -154,6 +154,7 @@ class ExtendRequest(models.Model):
         ('AccPaying', 'در انتظار تایید پرداخت'),
     ]
 
+    date_requested = models.DateField(null=True, default=timezone.now, verbose_name="تاریخ درخواست")
     request = models.ForeignKey(Request, on_delete=models.CASCADE, verbose_name="سرویس", null=True)
     days = models.IntegerField(default=0, verbose_name="تعداد روزها")
     date_expired_admin_only = models.DateField(editable=False, verbose_name="تاریخ سررسید بعد از تایید",
