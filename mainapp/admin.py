@@ -300,7 +300,7 @@ class CancelRequestA(admin.ModelAdmin):
                                   level=messages.ERROR)
                 return HttpResponseRedirect(".")
             obj.request.renewal_status = "Can"
-            obj.request.acceptance_status = "Acc"
+            obj.request.acceptance_status = "Rej"
             obj.acceptance_status = 'Acc'
             obj.request.date_expired = None
             obj.request.save()
@@ -339,7 +339,7 @@ class CancelRequestA(admin.ModelAdmin):
                                   level=messages.ERROR)
                 return
             obj.request.renewal_status = "Can"
-            obj.request.acceptance_status = "Acc"
+            obj.request.acceptance_status = "Rej"
             obj.acceptance_status = 'Acc'
             obj.request.date_expired = None
             obj.request.save()
