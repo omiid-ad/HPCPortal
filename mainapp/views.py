@@ -202,7 +202,7 @@ def new_request(request):
                                                      app_name=app_name, days=int(request.POST["days"]),
                                                      show_cost=int(cost), user_description=request.POST["user_desc"])
             new_request.save()
-            messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
+            # messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
@@ -326,8 +326,8 @@ def extend(request, sn):
             # pay.save()
             extended_service.acceptance_status = 'Exting'
             extended_service.save()
-            messages.success(request,
-                             "درخواست تمدید با موفقیت ارسال شد. برای پیگیری وضعیت، به بخش درخواست‌های تمدید مراجعه کنید")
+            # messages.success(request,
+            #                  "درخواست تمدید با موفقیت ارسال شد. برای پیگیری وضعیت، به بخش درخواست‌های تمدید مراجعه کنید")
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
@@ -357,8 +357,8 @@ def cancel(request):
         can_req.save()
         canceled_service.acceptance_status = 'Caning'
         canceled_service.save()
-        messages.success(request,
-                         "درخواست لغو با موفقیت ارسال شد. درصورت تایید، وضعیت سرویس مورد نظر به روزرسانی میشود")
+        # messages.success(request,
+        #                  "درخواست لغو با موفقیت ارسال شد. درصورت تایید، وضعیت سرویس مورد نظر به روزرسانی میشود")
 
         data = {
             'status': 200,
@@ -396,7 +396,7 @@ def pay(request, sn):
             payment.save()
             found_request.acceptance_status = "AccPaying"
             found_request.save()
-            messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
+            # messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
@@ -433,7 +433,7 @@ def pay_extend(request, sn):
             payment.save()
             found_extend.acceptance_status = "AccPaying"
             found_extend.save()
-            messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
+            # messages.success(request, "پرداخت با موفقیت ارسال شد و پس از تایید مدیر اعمال خواهد شد")
             return redirect('extend_requests')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
