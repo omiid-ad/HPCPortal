@@ -155,4 +155,16 @@ EMAIL_USE_TLS = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=30)
+
+# SECURITY SETTING
+CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
+SESSION_COOKIE_SECURE = True  # to avoid transmitting the session cookie over HTTP accidentally.
+SECURE_BROWSER_XSS_FILTER = True  # the browser will prevent rendering of the page if an XSS attack is detected
+SECURE_CONTENT_TYPE_NOSNIFF = True  # the browser will prevent rendering of the page if an XSS attack is detected
+SECURE_SSL_REDIRECT = True  # force Django redirect all non-HTTPS requests to HTTPS
+""" browsers will refuse to connect to your site for the given time period if you’re not properly serving ...
+HTTPS resources, or if your certificate expires"""
+SECURE_HSTS_SECONDS = 1800  # 30 min
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 config.close()  # closing config file
