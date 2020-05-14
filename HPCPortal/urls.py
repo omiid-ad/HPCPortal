@@ -9,7 +9,7 @@ from . import settings
 
 admin.autodiscover()
 urlpatterns = [
-                  path('admin/', admin.site.urls),
+                  path('panel/admin-site/', admin.site.urls),
                   path('', include('mainapp.urls')),
                   path('pay/online/', include(pardakht_urls)),
                   path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
