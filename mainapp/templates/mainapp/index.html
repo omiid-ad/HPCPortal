@@ -41,7 +41,7 @@
                     <th>#</th>
                     <th>شماره سریال</th>
                     <th>تاریخ انقضا</th>
-                    <th>مشخضات فنی سرویس</th>
+                    <th>مشخصات فنی سرویس</th>
                     <th>هزینه</th>
                     <th>وضعیت تایید</th>
                     <th>وضعیت سرویس</th>
@@ -63,17 +63,17 @@
                                 <i class="fas fa-chevron-circle-down"></i>
                             </button>
                         </td>
-                        <td>{{ req.show_cost|intcomma }} تومان</td>
+                        <td>{{ req.show_cost|intcomma:False }} تومان</td>
                         <td>
                             {% ifequal req.acceptance_status 'Acc' %}
                                 <i class="far fa-check-circle accept-icon"></i>{% endifequal %}
                             {% ifequal req.acceptance_status 'Rej' %}
                                 <i class="far fa-times-circle reject-icon"></i>{% endifequal %}
-                            {% ifequal req.acceptance_status 'Pen' %}درانتظارتایید{% endifequal %}
-                            {% ifequal req.acceptance_status 'Exting' %}درانتظارتمدید{% endifequal %}
-                            {% ifequal req.acceptance_status 'Caning' %}درانتظارلغو{% endifequal %}
-                            {% ifequal req.acceptance_status 'Paying' %}درانتظارپرداخت{% endifequal %}
-                            {% ifequal req.acceptance_status 'AccPaying' %}درانتظارتاییدپرداخت{% endifequal %}
+                            {% ifequal req.acceptance_status 'Pen' %}در انتظار تایید{% endifequal %}
+                            {% ifequal req.acceptance_status 'Exting' %}در انتظار تمدید{% endifequal %}
+                            {% ifequal req.acceptance_status 'Caning' %}در انتظار لغو{% endifequal %}
+                            {% ifequal req.acceptance_status 'Paying' %}در انتظار پرداخت{% endifequal %}
+                            {% ifequal req.acceptance_status 'AccPaying' %}در انتظار تایید پرداخت{% endifequal %}
                         </td>
                         <td>{{ req.get_renewal_status_display }}</td>
                         <td>{% if req.description %}
@@ -142,7 +142,7 @@
 
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                                        <button type="button" class="btn btn-info" data-dismiss="modal">خب</button>
                                     </div>
 
                                 </div>
@@ -170,7 +170,7 @@
                                                             data-target="#collapseOne{{ forloop.counter }}"
                                                             aria-expanded="true"
                                                             aria-controls="collapseOne">
-                                                        سیستم‌عامل
+                                                        سیستم‌‌عامل / برنامه‌ها
                                                     </button>
                                                 </h5>
                                             </div>
@@ -184,6 +184,7 @@
                                                     {% else %}
                                                         <i class="fab fa-windows os-icon-windows"></i>
                                                     {% endifequal %}
+                                                / ‌{{ req.app_name }}
                                                 </div>
                                             </div>
                                         </div>
@@ -247,32 +248,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card">
-                                            <div class="card-header" id="headingFive">
-                                                <h5 class="mb-0">
-                                                    <button class="btn btn-link btn-block collapsed"
-                                                            data-toggle="collapse"
-                                                            data-target="#collapseFive{{ forloop.counter }}"
-                                                            aria-expanded="false"
-                                                            aria-controls="collapseThree">
-                                                        برنامه ها
-                                                    </button>
-                                                </h5>
-                                            </div>
-                                            <div id="collapseFive{{ forloop.counter }}" class="collapse"
-                                                 aria-labelledby="headingThree"
-                                                 data-parent="#accordion{{ forloop.counter }}">
-                                                <div class="card-body">
-                                                    ‌{{ req.app_name }}
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Modal footer -->
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+                                    <button type="button" class="btn btn-info" data-dismiss="modal">خب</button>
                                 </div>
 
                             </div>

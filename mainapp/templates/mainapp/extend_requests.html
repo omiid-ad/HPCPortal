@@ -58,15 +58,15 @@
                                 -
                             {% endif %}
                         </td>
-                        <td>{{ ext.show_cost|intcomma }} تومان</td>
+                        <td>{{ ext.show_cost|intcomma:False }} تومان</td>
                         <td>
                             {% ifequal ext.acceptance_status 'Acc' %}
                                 <i class="far fa-check-circle accept-icon"></i>{% endifequal %}
                             {% ifequal ext.acceptance_status 'Rej' %}
                                 <i class="far fa-times-circle reject-icon"></i>{% endifequal %}
-                            {% ifequal ext.acceptance_status 'Pen' %}درانتظارتایید{% endifequal %}
-                            {% ifequal ext.acceptance_status 'Paying' %}درانتظارپرداخت{% endifequal %}
-                            {% ifequal ext.acceptance_status 'AccPaying' %}درانتظارتاییدپرداخت{% endifequal %}
+                            {% ifequal ext.acceptance_status 'Pen' %}در انتظار تایید{% endifequal %}
+                            {% ifequal ext.acceptance_status 'Paying' %}در انتظار پرداخت{% endifequal %}
+                            {% ifequal ext.acceptance_status 'AccPaying' %}در انتظار تایید پرداخت{% endifequal %}
                         </td>
                         <td>
                             {% ifequal ext.acceptance_status 'Paying' %}

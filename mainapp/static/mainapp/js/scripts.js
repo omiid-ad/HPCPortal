@@ -17,7 +17,7 @@ function cancelYN(pk) {
         title: "توجه!",
         text: msg,
         icon: "warning",
-        buttons: ["بیخیال", "لغو کن"],
+        buttons: ["خیر", "بله"],
         dangerMode: true,
     })
         .then(value => {

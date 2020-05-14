@@ -173,13 +173,21 @@ th {
 }
 
 .os-icon-linux {
-    font-size: 35px;
+    font-size: 25px;
     color: #6b6854;
 }
 
 .os-icon-windows {
-    font-size: 35px;
+    font-size: 25px;
     color: #07c9f5;
+}
+
+#footer-fa {
+    font-size: 70%!important;
+}
+
+#footer-en {
+    font-size: 70%!important;
 }
 
 .accept-icon {

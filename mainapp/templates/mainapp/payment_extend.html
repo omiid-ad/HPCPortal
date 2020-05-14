@@ -52,7 +52,7 @@
                     <div class="custom-file">
                         <input required type="file" accept="image/*" class="custom-file-input" name="receipt"
                                id="customFile">
-                        <label class="custom-file-label" for="customFile">عکس فیش‌واریزی خود را آپلود کنید...</label>
+                        <label class="custom-file-label" for="customFile">عکس فیش‌ واریزی را آپلود کنید...</label>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                     <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-block mt-4">ارسال پرداخت</button>
+            <button type="submit" class="btn btn-success btn-block mt-4">پرداخت</button>
         </form>
         <form id="online_form" action="{% url 'pay_online' %}" method="post">
             {% csrf_token %}

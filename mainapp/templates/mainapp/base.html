@@ -35,7 +35,7 @@
                                         {{ user.first_name }} {{ user.last_name }}
                                     </a>
                                     <div onmouseleave="profileHover()" class="dropdown-menu">
-                                        <a class=" my-link" href="{% url 'index' %}">درخواست ها</a>
+                                        <a class=" my-link" href="{% url 'index' %}">درخواست‌ها</a>
                                         <a class=" my-link" href="{% url 'extend_requests' %}">درخواست‌های تمدید</a>
                                         <a class=" my-link" href="{% url 'edit_profile' %}">ویرایش پروفایل</a>
                                         <div class="dropdown-divider"></div>
@@ -78,13 +78,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6 col-sm-12 text-sm-center text-md-left">
-                    <p class="small m-3">Shahid Chamran University of Ahvaz, All rights reserved - <span
-                            id="footer_current_year_eng"></span>
+                    <p id="footer-en" class="small m-3">Shahid Chamran University of Ahvaz, All rights reserved ( <span
+                            id="footer_current_year_eng"></span> ).
                     </p>
                 </div>
                 <div class="col-md-6 col-sm-12 text-sm-center text-md-right">
-                    <p class="small m-3"> تمام حقوق مادی و معنوی این وب‌سایت متعلق به دانشگاه شهید چمران اهواز می باشد -
-                        <span id="footer_current_year_fa"></span></p>
+                    <p id="footer-fa" dir="rtl" class="small m-3"> تمام حقوق مادی و معنوی این وب‌سایت متعلق به مرکز پردازش‌های سریع دانشگاه شهید چمران اهواز است (
+                        <span id="footer_current_year_fa"></span> ).
+                    </p>
                 </div>
             </div>
         </div>
