@@ -169,7 +169,9 @@ class ExtendRequest(models.Model):
         verbose_name = "درخواست تمدید"
 
     def __str__(self):
-        return self.serial_number
+        if self.serial_number:
+            return self.serial_number
+        return str(self.id)
 
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
