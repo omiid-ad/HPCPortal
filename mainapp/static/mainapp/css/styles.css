@@ -182,12 +182,16 @@ th {
     color: #07c9f5;
 }
 
+.fs-100 {
+    font-size: 100% !important;
+}
+
 #footer-fa {
-    font-size: 70%!important;
+    font-size: 70% !important;
 }
 
 #footer-en {
-    font-size: 70%!important;
+    font-size: 70% !important;
 }
 
 .accept-icon {
