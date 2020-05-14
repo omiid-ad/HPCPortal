@@ -91,16 +91,36 @@
                             {% endifequal %}
                         </td>
                         <td>
-                            <a data-toggle="tooltip" title="ارسال درخواست تمدید سرویس" class="extend-link"
-                               href="{% url 'extend' req.serial_number %}">
-                                <i class="fas fa-calendar-plus"></i>
-                            </a>
+                            {% if req.acceptance_status in "Acc" %}
+                                {% if req.renewal_status in "Exp" %}
+                                    <a data-toggle="tooltip"
+                                       title="ارسال درخواست تمدید سرویس"
+                                       class="extend-link"
+                                       href="{% url 'extend' req.serial_number %}">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </a>
+                                {% endif %}
+                                {% if req.renewal_status in "Ok" %}
+                                    <a data-toggle="tooltip"
+                                       title="ارسال درخواست تمدید سرویس"
+                                       class="extend-link"
+                                       href="{% url 'extend' req.serial_number %}">
+                                        <i class="fas fa-calendar-plus"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         </td>
                         <td>
-                            <a data-toggle="tooltip" title="ارسال درخواست لغو سرویس" onclick="cancelYN({{ req.pk }})"
-                               class="cancel-link" href="#">
-                                <i class="fas fa-power-off"></i>
-                            </a>
+                            {% if req.acceptance_status in "Acc" %}
+                                {% if req.renewal_status in "Ok" %}
+                                    <a data-toggle="tooltip" title="ارسال درخواست لغو سرویس"
+                                       onclick="cancelYN({{ req.pk }})"
+                                       class="cancel-link"
+                                       href="#">
+                                        <i class="fas fa-power-off"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         </td>
                     </tr>
                     {% if req.description %}
