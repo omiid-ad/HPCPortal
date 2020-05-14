@@ -164,7 +164,8 @@ class RequestA(admin.ModelAdmin):
 class ExtendRequestA(admin.ModelAdmin):
     readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
     list_display = (
-        'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request')
+        'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',
+        'linked_to_payment')
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', 'serial_number']
     fieldsets = (

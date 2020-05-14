@@ -194,6 +194,18 @@ class ExtendRequest(models.Model):
 
     linked_to_request.short_description = "سرویس"
 
+    def linked_to_payment(self):
+        pay = Payment.objects.get(extend=self)
+        if pay:
+            return format_html(
+                '<a href="{}">مشاهده پرداخت</a>',
+                reverse("admin:mainapp_payment_change", args=(pay.id,)),
+            )
+        else:
+            return None
+
+    linked_to_payment.short_description = "پرداخت"
+
 
 class OnlinePaymentProxy(OnlinePayment):
     class Meta:
