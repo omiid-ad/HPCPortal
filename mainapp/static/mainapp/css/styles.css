@@ -296,6 +296,15 @@ button.btn.btn-link {
 
 /*mobile view*/
 @media (max-width: 575px) {
+
+    #footer-fa {
+        font-size: 60% !important;
+    }
+
+    #footer-en {
+        font-size: 60% !important;
+    }
+
     label.custom-file-label {
         text-align: left;
         font-size: 13px;
