@@ -30,7 +30,10 @@ SECRET_KEY = data['secret_key'][0]["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['www.hpc.scu.ac.ir', 'hpc.scu.ac.ir']
+ALLOWED_HOSTS = [
+    data['allowed_hosts'][0]["HOST1"],
+    data['allowed_hosts'][0]["HOST2"],
+]
 
 # Application definition
 
