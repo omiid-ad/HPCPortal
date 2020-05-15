@@ -145,12 +145,12 @@ SAMAN_MERCHANT_ID = data['pardakht_saman'][0]["SAMAN_MERCHANT_ID"]
 LOGIN_URL = '/login'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.scu.ac.ir'  # BUGGGGGG : CANT CONNECT TO SMTP SERVER
 EMAIL_PORT = 465
 EMAIL_HOST_USER = data['webmail'][0]["USER"]
 EMAIL_HOST_PASSWORD = data['webmail'][0]["PASSWORD"]
-EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 # DEFAULT_FROM_EMAIL = 'ایمیل تست از طرف پرتال <noreply@example.com>'  uncomment to change email title
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AXES_FAILURE_LIMIT = 5
