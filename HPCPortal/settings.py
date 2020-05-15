@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'pardakht',
     'kronos',
     'axes',
-    'django_log_to_telegram',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -117,32 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# logging configs
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'telegram_log': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django_log_to_telegram.log.AdminTelegramHandler',
-            'bot_token': data['telegram_logger_bot'][0]["API_TOKEN"],
-        }
-    },
-    'loggers': {
-        'django.request': {
-            'handlers': ['telegram_log'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -183,17 +156,15 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=30)
 
-LOG_TO_TELEGRAM_BOT_TOKEN = data['telegram_logger_bot'][0]["API_TOKEN"]
-
 # SECURITY SETTING
-# CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
-# SESSION_COOKIE_SECURE = True  # to avoid transmitting the session cookie over HTTP accidentally.
-# SECURE_BROWSER_XSS_FILTER = True  # the browser will prevent rendering of the page if an XSS attack is detected
-# SECURE_CONTENT_TYPE_NOSNIFF = True  # the browser will prevent rendering of the page if an XSS attack is detected
-# SECURE_SSL_REDIRECT = True  # force Django redirect all non-HTTPS requests to HTTPS
-# """ browsers will refuse to connect to your site for the given time period if you’re not properly serving ...
-# HTTPS resources, or if your certificate expires"""
-# SECURE_HSTS_SECONDS = 1800  # 30 min
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
+CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
+SESSION_COOKIE_SECURE = True  # to avoid transmitting the session cookie over HTTP accidentally.
+SECURE_BROWSER_XSS_FILTER = True  # the browser will prevent rendering of the page if an XSS attack is detected
+SECURE_CONTENT_TYPE_NOSNIFF = True  # the browser will prevent rendering of the page if an XSS attack is detected
+SECURE_SSL_REDIRECT = True  # force Django redirect all non-HTTPS requests to HTTPS
+""" browsers will refuse to connect to your site for the given time period if you’re not properly serving ...
+HTTPS resources, or if your certificate expires"""
+SECURE_HSTS_SECONDS = 1800  # 30 min
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 config.close()  # closing config file
