@@ -214,6 +214,14 @@ def calc_cost(request):
     ram = int(request.GET.get('ram'))
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
+    if cpu > 12 or ram > 30 or disk > 140 or days > 365:
+        data = {
+            'status': 400,
+            'reason': "one or more of the inputs are out of range"
+        }
+        from django.http import JsonResponse
+        return JsonResponse(data)
+
     total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
     total_disc = (70 * total) / 100
 
