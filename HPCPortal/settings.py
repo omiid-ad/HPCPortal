@@ -28,9 +28,9 @@ data = json.load(config)
 SECRET_KEY = data['secret_key'][0]["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['www.hpc.scu.ac.ir', 'hpc.scu.ac.ir']
 
 # Application definition
 
@@ -167,4 +167,5 @@ HTTPS resources, or if your certificate expires"""
 SECURE_HSTS_SECONDS = 1800  # 30 min
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
 config.close()  # closing config file
