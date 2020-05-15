@@ -19,6 +19,7 @@ django-flat-theme==1.1.4
 django-ipware==2.1.0
 django-jet==1.0.8
 django-kronos==1.0
+django-log-to-telegram==2020.1.23
 django-pardakht==1.4.2
 idna==2.9
 importlib-metadata==1.6.0
