@@ -294,8 +294,12 @@ button.btn.btn-link {
     text-decoration: none;
 }
 
+
 /*mobile view*/
 @media (max-width: 575px) {
+    .pay-info {
+        font-size: 12px !important;
+    }
 
     #footer-fa {
         font-size: 60% !important;
