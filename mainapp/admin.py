@@ -534,7 +534,7 @@ class UserAdminA(admin.ModelAdmin):
         ('دسترسی ها', {'fields': ('is_active',)}),
         ('اطلاعات ورود', {'fields': (('last_login', 'date_joined'),)}),
     )
-    list_filter = ('is_superuser', 'is_active')
+    list_filter = ('is_active',)
 
     readonly_fields = ('last_login', 'date_joined')
 
