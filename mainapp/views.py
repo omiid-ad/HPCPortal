@@ -490,3 +490,15 @@ def callback(request):
 
 class PasswordResetView(prw):
     form_class = PasswordResetForm
+
+
+def mail(request):
+    from django.core.mail import send_mail
+    send_mail(
+        "subject",
+        "bodyyyy",
+        "hpc.scu.ac.ir",
+        ["akbar.adibfar@yahoo.com"]
+    )
+    from django.http import HttpResponse
+    return HttpResponse("SENT")

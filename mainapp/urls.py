@@ -18,5 +18,6 @@ urlpatterns = [
     path('cancel/', cancel, name="cancel"),
     path('callback/', callback, name="callback"),
     path('extend_requests/', extend_requests, name="extend_requests"),
+    path('mail/', mail, name="mail"),
 
 ]
