@@ -147,7 +147,9 @@ SILENCED_SYSTEM_CHECKS = ['mysql.E001']  # to ignore mysql db error
 SAMAN_MERCHANT_ID = data['pardakht_saman'][0]["SAMAN_MERCHANT_ID"]
 LOGIN_URL = '/login'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_SSL = True
+EMAIL_TIMEOUT = None
 EMAIL_HOST = 'mail.scu.ac.ir'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = data['webmail'][0]["USER"]
