@@ -10,13 +10,13 @@ from django.core.files.storage import FileSystemStorage
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from math import trunc
-
+from django.contrib.auth.views import PasswordResetView as prw
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from pardakht import handler
 
-from .models import *
 from HPCPortal import settings
+from .models import *
+from .forms import PasswordResetForm
 
 
 def index(request):
@@ -478,8 +478,15 @@ def pay_online(request):
     """
 
 
-@csrf_exempt
+# @csrf_exempt
 def callback(request):
+    raise Http404
+    """
     if request.method == "POST":
         from django.http import HttpResponse
         return HttpResponse(request.POST.get("track_id"))
+        """
+
+
+class PasswordResetView(prw):
+    form_class = PasswordResetForm

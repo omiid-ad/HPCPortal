@@ -6,13 +6,14 @@ from pardakht import urls as pardakht_urls
 from django.contrib.auth import views as auth_views
 
 from . import settings
+from mainapp.views import PasswordResetView
 
 admin.autodiscover()
 urlpatterns = [
                   path('panel/admin-site/', admin.site.urls),
                   path('', include('mainapp.urls')),
                   path('pay/online/', include(pardakht_urls)),
-                  path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+                  path('password_reset/', PasswordResetView.as_view(), name='password_reset'),
                   path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
                   path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(),
                        name='password_reset_confirm'),
