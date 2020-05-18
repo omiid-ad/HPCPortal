@@ -195,12 +195,14 @@ def new_request(request):
                                                      cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                                      app_name=app_name, days=int(request.POST["days"]),
                                                      show_cost=int(cost_disc),
-                                                     user_description=request.POST["user_desc"])
+                                                     user_description=request.POST["user_desc"],
+                                                     show_cost_for_admin_only=int(cost))
             else:
                 new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
                                                      cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
                                                      app_name=app_name, days=int(request.POST["days"]),
-                                                     show_cost=int(cost), user_description=request.POST["user_desc"])
+                                                     show_cost=int(cost), user_description=request.POST["user_desc"],
+                                                     show_cost_for_admin_only=int(cost_disc))
             new_request.save()
             # messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
             return redirect('index')
