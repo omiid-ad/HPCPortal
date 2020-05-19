@@ -1,6 +1,7 @@
 import datetime
 
 from random import randint
+from . import utils
 
 
 def serial_generator():
@@ -15,5 +16,7 @@ def serial_generator():
 
     count = randint(1000000, 9999999)  # int
     serial = year + month + day + "-" + count.__str__()
-
-    return serial
+    if utils.is_unique(serial):
+        return serial
+    else:
+        serial_generator()

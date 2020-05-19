@@ -1,5 +1,4 @@
 from math import trunc
-
 from django.http import JsonResponse
 
 
@@ -26,3 +25,12 @@ def calc_cost(cpu, ram, disk, days):
         'status': 200
     }
     return JsonResponse(data)
+
+
+def is_unique(sn):
+    from .models import Request, ExtendRequest
+    if Request.objects.filter(serial_number=sn).count() != 0:
+        return False
+    if ExtendRequest.objects.filter(serial_number=sn).count() != 0:
+        return False
+    return True
