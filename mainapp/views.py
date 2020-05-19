@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from math import trunc
 from django.contrib.auth.views import PasswordResetView as prw
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
@@ -17,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from HPCPortal import settings
 from .models import *
 from .forms import PasswordResetForm
+from . import utils
 
 
 def index(request):
@@ -180,6 +180,17 @@ def new_request(request):
         cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
         cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
 
+        res = utils.calc_cost(int(request.POST["cpu"]), int(request.POST["ram"]), int(request.POST["disk"]),
+                              int(request.POST["days"]))
+        res = json.loads(res.content)
+        if res["status"] == 400:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('new_request')
+        if res["status"] == 200:
+            if cost != locale.atoi(res["total"]) or cost_disc != locale.atoi(res["total_disc"]):
+                messages.error(request, "فرم را به درستی پر کنید")
+                return redirect('new_request')
+
         if request.POST["os"] != "" and request.POST["ram"] != "" and int(request.POST["ram"]) >= 4 and int(
                 request.POST["ram"]) <= 30 and request.POST["cpu"] != "" and int(request.POST["cpu"]) >= 1 and int(
             request.POST["cpu"]) <= 12 and request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
@@ -216,30 +227,9 @@ def calc_cost(request):
     ram = int(request.GET.get('ram'))
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
-    if cpu > 12 or ram > 30 or disk > 140 or days > 365:
-        data = {
-            'status': 400,
-            'reason': "one or more of the inputs are out of range"
-        }
-        from django.http import JsonResponse
-        return JsonResponse(data)
 
-    total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
-    total_disc = (70 * total) / 100
-
-    total_disc = trunc(round(total_disc) / 1000) * 1000
-    total_disc = f'{total_disc:,d}'
-
-    total = trunc(round(total) / 1000) * 1000
-    total = f'{total:,d}'
-
-    data = {
-        'total': total,
-        'total_disc': total_disc,
-        'status': 200
-    }
-    from django.http import JsonResponse
-    return JsonResponse(data)
+    res = utils.calc_cost(cpu, ram, disk, days)
+    return res
 
 
 @login_required(login_url='/login')
