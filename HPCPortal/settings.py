@@ -162,6 +162,13 @@ AXES_COOLOFF_TIME = timedelta(minutes=30)
 
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
+# bank stuff
+SAMAN2_MERCHANT_ID = data['saman_payment'][0]["SAMAN2_MERCHANT_ID"]
+SAMAN2_TERMINAL_ID = data['saman_payment'][0]["SAMAN2_TERMINAL_ID"]
+SAMAN2_USERNAME = data['saman_payment'][0]["SAMAN2_USERNAME"]
+SAMAN2_PASSWORD = data['saman_payment'][0]["SAMAN2_PASSWORD"]
+SAMAN2_PRIVATE_KEY_PATH = ""
+
 # SECURITY SETTING
 CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
 SESSION_COOKIE_SECURE = True  # to avoid transmitting the session cookie over HTTP accidentally.
