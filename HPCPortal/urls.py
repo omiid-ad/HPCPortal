@@ -6,7 +6,6 @@ from pardakht import urls as pardakht_urls
 from django.contrib.auth import views as auth_views
 
 from . import settings
-from mainapp.views import PasswordResetView
 
 admin.autodiscover()
 urlpatterns = [

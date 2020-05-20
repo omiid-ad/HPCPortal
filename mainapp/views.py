@@ -6,16 +6,19 @@ import requests
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import PasswordResetView as prw
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
 
 from HPCPortal import settings
 from .models import *
-from .forms import PasswordResetForm
 from . import utils
 
 
@@ -134,6 +137,28 @@ def register(request):
             user.save()
             messages.success(request, 'حساب با موفقیت ایجاد شد')
             django_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            subject = 'حساب کاربری شما ایجاد شد'
+            current_site = get_current_site(request)
+            site_name = current_site.name
+            domain = current_site.domain
+            protocol = request.scheme
+            context = {
+                'site_name': site_name,
+                'domain': domain,
+                'protocol': protocol,
+                'name': user.get_full_name(),
+            }
+            html_message = render_to_string('mainapp/register_confirm_email.html', context)
+            plain_message = strip_tags(html_message)
+            to = request.POST['email']
+            send_mail(
+                subject,
+                plain_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [to],
+                html_message=html_message,
+                fail_silently=True
+            )
             return redirect('complete_profile')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
@@ -478,7 +503,3 @@ def callback(request):
         from django.http import HttpResponse
         return HttpResponse(request.POST.get("track_id"))
         """
-
-
-class PasswordResetView(prw):
-    form_class = PasswordResetForm
