@@ -3,7 +3,7 @@ from django.http import JsonResponse
 
 
 def calc_cost(cpu, ram, disk, days):
-    if cpu > 12 or ram > 30 or disk > 140 or days > 365:
+    if cpu > 16 or ram > 30 or disk > 140 or days > 365:
         data = {
             'status': 400,
             'reason': "one or more of the inputs are out of range"

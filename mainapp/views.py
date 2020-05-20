@@ -216,9 +216,16 @@ def new_request(request):
                 messages.error(request, "فرم را به درستی پر کنید")
                 return redirect('new_request')
 
+        if request.POST["os"] == "Win" and int(request.POST["cpu"]) > 12:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('new_request')
+        if request.POST["os"] == "Lin" and int(request.POST["cpu"]) > 16:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('new_request')
+
         if request.POST["os"] != "" and request.POST["ram"] != "" and int(request.POST["ram"]) >= 4 and int(
-                request.POST["ram"]) <= 30 and request.POST["cpu"] != "" and int(request.POST["cpu"]) >= 1 and int(
-            request.POST["cpu"]) <= 12 and request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
+                request.POST["ram"]) <= 30 and request.POST["cpu"] != "" and int(request.POST["cpu"]) >= 1 and \
+                request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
             request.POST["disk"]) <= 140 and request.POST.getlist('app_name') and request.POST[
             "days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and int(cost) > 0 and \
                 request.POST["cost_disc"] != "" and int(cost_disc) > 0:
