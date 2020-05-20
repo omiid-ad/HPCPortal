@@ -96,7 +96,7 @@ class RequestA(admin.ModelAdmin):
         return obj.user.user.get_full_name()
 
     get_user_full_name.short_description = 'نام و نام خانوادگی'
-    get_user_full_name.admin_order_field = 'user__last_name'
+    get_user_full_name.admin_order_field = 'user__user__last_name'
 
     actions = ["accept", "reject", "normal", "suspend"]
 
