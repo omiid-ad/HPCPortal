@@ -160,6 +160,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=30)
 
+PASSWORD_RESET_TIMEOUT_DAYS = 1
+
 # SECURITY SETTING
 CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
 SESSION_COOKIE_SECURE = True  # to avoid transmitting the session cookie over HTTP accidentally.
