@@ -474,16 +474,16 @@ def pay_extend(request, sn):
 
 @login_required(login_url='/login')
 def pay_online(request):
-    # raise Http404
-    from pardakht import handler
-    price = request.POST.get('cost')
-    description = request.POST.get('desc')
-    result = handler.create_payment(
-        price,
-        description,
-        utils.call_back,
-        reverse('index'),
-        login_required=True
-    )
-    result['payment'].user = request.user
-    return redirect(result['link'])
+    raise Http404
+    # from pardakht import handler
+    # price = request.POST.get('cost')
+    # description = request.POST.get('desc')
+    # result = handler.create_payment(
+    #     price,
+    #     description,
+    #     utils.call_back,
+    #     reverse('index'),
+    #     login_required=True
+    # )
+    # result['payment'].user = request.user
+    # return redirect(result['link'])

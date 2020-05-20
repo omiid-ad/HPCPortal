@@ -37,4 +37,6 @@ def is_unique(sn):
 
 
 def call_back(payment):
-    pass
+    if payment.successful():
+        pass
+
