@@ -16,7 +16,6 @@ urlpatterns = [
     path('pay_extend/<slug:sn>', pay_extend, name="pay_extend"),
     path('pay_online/', pay_online, name="pay_online"),
     path('cancel/', cancel, name="cancel"),
-    path('callback/', callback, name="callback"),
     path('extend_requests/', extend_requests, name="extend_requests"),
 
 ]

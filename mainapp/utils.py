@@ -34,3 +34,7 @@ def is_unique(sn):
     if ExtendRequest.objects.filter(serial_number=sn).count() != 0:
         return False
     return True
+
+
+def call_back(payment):
+    pass

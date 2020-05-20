@@ -474,39 +474,16 @@ def pay_extend(request, sn):
 
 @login_required(login_url='/login')
 def pay_online(request):
-    raise Http404
-    """
-    pk = int(request.POST.get('id'))
-    try:
-        found_req = Request.objects.get(pk=pk)
-    except Request.DoesNotExist:
-        raise Http404("request not found")
-
-    url = "https://api.idpay.ir/v1.1/payment"
-    headers = {
-        "X-API-KEY": "foo/bar",
-        "X-SANDBOX": "1",
-        "Content-Type": "application/json",
-    }
-    params = {
-        "order_id": found_req.serial_number,
-        "name": request.user.profile.get_user_full_name,
-        "mail": request.user.email,
-        "desc": request.POST.get("desc"),
-        "amount": int(found_req.show_cost) * 10,
-        "callback": "http://127.0.0.1:8000/callback/",
-    }
-    result = requests.post(url, data=json.dumps(params), headers=headers)
-    result = json.loads(result.text)
-    return redirect(result["link"])
-    """
-
-
-# @csrf_exempt
-def callback(request):
-    raise Http404
-    """
-    if request.method == "POST":
-        from django.http import HttpResponse
-        return HttpResponse(request.POST.get("track_id"))
-        """
+    # raise Http404
+    from pardakht import handler
+    price = request.POST.get('cost')
+    description = request.POST.get('desc')
+    result = handler.create_payment(
+        price,
+        description,
+        utils.call_back,
+        reverse('index'),
+        login_required=True
+    )
+    result['payment'].user = request.user
+    return redirect(result['link'])
