@@ -28,7 +28,6 @@ kombu==4.6.8
 lxml==4.5.0
 mysqlclient==1.4.6
 Pillow==7.1.1
-pkg-resources==0.0.0
 pycryptodome==3.9.7
 python-crontab==2.4.2
 python-dateutil==2.8.1
