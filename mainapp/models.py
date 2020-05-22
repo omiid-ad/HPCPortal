@@ -212,8 +212,11 @@ class ExtendRequest(models.Model):
 
 
 class OnlinePaymentProxy(OnlinePayment):
+    request = models.ForeignKey(Request, on_delete=models.CASCADE, null=True, blank=True, verbose_name="سرویس")
+    extend = models.OneToOneField(ExtendRequest, on_delete=models.CASCADE, null=True, blank=True, verbose_name="تمدید")
+
     class Meta:
-        proxy = True
+        # proxy = True
         verbose_name_plural = "پرداخت‌های آنلاین"
         verbose_name = "پرداخت‌ آنلاین"
 
