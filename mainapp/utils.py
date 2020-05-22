@@ -39,7 +39,9 @@ def is_unique(sn):
 def call_back(payment):
     if payment.successful():
         payment.description = "i was success"
+        payment.save()
         return payment
     payment.description = "i am not success"
+    payment.save()
     return payment
 
