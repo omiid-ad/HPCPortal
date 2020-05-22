@@ -37,14 +37,15 @@ def is_unique(sn):
 
 
 def call_back(payment):
-    from .models import Request
-    if payment.successful():
+    from .models import Request, OnlinePaymentProxy
+    op = OnlinePaymentProxy.objects.create(payment=payment)
+    if op.successful():
         req = Request.objects.get(serial_number="20200522-6758844")
-        payment.request = req
-        payment.description = "i was success"
-        payment.save()
-        return payment
-    payment.description = "i am not success"
-    payment.save()
-    return payment
+        op.request = req
+        op.description = "i was success"
+        op.save()
+        return op
+    op.description = "i am not success"
+    op.save()
+    return op
 
