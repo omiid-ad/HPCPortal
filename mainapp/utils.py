@@ -39,15 +39,14 @@ def is_unique(sn):
 def call_back(payment):
     from .models import Request, MyPayment
     my = MyPayment.objects.create(django_pardakht=payment)
-    if my.django_pardakht.successful():
-        req = Request.objects.get(serial_number="20200522-6758844")
-        my.request = req
-        payment.description = "i was success"
-        payment.save()
-        my.save()
-        # return op
-    payment.description = "i am not success"
+    # if my.django_pardakht.successful():
+    req = Request.objects.get(serial_number=payment.description)
+    my.request = req
+    req.acceptance_status = "Acc"
+    from django.utils import timezone
+    import datetime
+    req.date_expired = timezone.now() + datetime.timedelta(days=req.days)
+    req.save()
     payment.save()
     my.save()
     # return op
-
