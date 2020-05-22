@@ -17,5 +17,6 @@ urlpatterns = [
     path('pay_online/', pay_online, name="pay_online"),
     path('cancel/', cancel, name="cancel"),
     path('extend_requests/', extend_requests, name="extend_requests"),
+    path('pay_test/', pay_test, name="pay_test"),
 
 ]
