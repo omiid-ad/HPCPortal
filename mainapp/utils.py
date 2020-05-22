@@ -37,15 +37,17 @@ def is_unique(sn):
 
 
 def call_back(payment):
-    from .models import Request, OnlinePaymentProxy
-    op = OnlinePaymentProxy.objects.create(payment_ptr=payment)
-    if op.successful():
+    from .models import Request, MyPayment
+    my = MyPayment.objects.create(django_pardakht=payment)
+    if my.django_pardakht.successful():
         req = Request.objects.get(serial_number="20200522-6758844")
-        op.request = req
-        op.description = "i was success"
-        op.save()
-        return op
-    op.description = "i am not success"
-    op.save()
-    return op
+        my.request = req
+        payment.description = "i was success"
+        payment.save()
+        my.save()
+        # return op
+    payment.description = "i am not success"
+    payment.save()
+    my.save()
+    # return op
 

@@ -211,18 +211,14 @@ class ExtendRequest(models.Model):
     linked_to_payment.short_description = "پرداخت"
 
 
-class OnlinePaymentProxy(OnlinePayment):
+class MyPayment(models.Model):
+    django_pardakht = models.OneToOneField(OnlinePayment, on_delete=models.CASCADE)
     request = models.ForeignKey(Request, on_delete=models.CASCADE, null=True, blank=True, verbose_name="سرویس")
     extend = models.OneToOneField(ExtendRequest, on_delete=models.CASCADE, null=True, blank=True, verbose_name="تمدید")
 
     class Meta:
-        # proxy = True
-        verbose_name_plural = "پرداخت‌های آنلاین"
-        verbose_name = "پرداخت‌ آنلاین"
-
-    # def __str__(self):
-    #     return "مبلغ " + str(
-    #         self.price) + " توسط " + self.user.get_full_name() + " بصورت آنلاین "
+        verbose_name_plural = "پرداخت های من"
+        verbose_name = "پرداخت من"
 
 
 class Payment(models.Model):
