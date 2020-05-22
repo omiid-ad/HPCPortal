@@ -479,8 +479,8 @@ def pay_online(request):
 
 def pay_test(request):
     from pardakht import handler
-    price = 5000
-    description = "20200522-2368203"
+    price = 1000
+    description = "20200522-8871528"
     result = handler.create_payment(
         price,
         description,
