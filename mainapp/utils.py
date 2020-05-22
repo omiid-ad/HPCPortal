@@ -38,7 +38,7 @@ def is_unique(sn):
 
 def call_back(payment):
     from .models import Request, OnlinePaymentProxy
-    op = OnlinePaymentProxy.objects.create(payment=payment)
+    op = OnlinePaymentProxy.objects.create(payment_ptr=payment)
     if op.successful():
         req = Request.objects.get(serial_number="20200522-6758844")
         op.request = req
