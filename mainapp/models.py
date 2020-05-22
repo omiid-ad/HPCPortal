@@ -217,9 +217,9 @@ class OnlinePaymentProxy(OnlinePayment):
         verbose_name_plural = "پرداخت‌های آنلاین"
         verbose_name = "پرداخت‌ آنلاین"
 
-    def __str__(self):
-        return "مبلغ " + str(
-            self.price) + " توسط " + self.user.get_full_name() + " بصورت آنلاین "
+    # def __str__(self):
+    #     return "مبلغ " + str(
+    #         self.price) + " توسط " + self.user.get_full_name() + " بصورت آنلاین "
 
 
 class Payment(models.Model):

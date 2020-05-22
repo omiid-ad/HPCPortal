@@ -508,21 +508,21 @@ class PaymentA(admin.ModelAdmin):
     reject.short_description = "رد پرداخت ها"
 
 
-class OnlinePaymentA(admin.ModelAdmin):
-    list_display = ('user', 'price', 'gateway', 'state', 'payment_result')
-    date_hierarchy = 'created_at'
-    list_filter = ('state', 'payment_result')
-    readonly_fields = ('updated_at',)
-    fieldsets = (
-        ('پرداخت کننده', {'fields': ('user',)}),
-        ('جزئیات', {'fields': ('price', 'description', 'updated_at', 'verification_result', 'ref_number')}),
-    )
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
+# class OnlinePaymentA(admin.ModelAdmin):
+#     list_display = ('user', 'price', 'gateway', 'state', 'payment_result')
+#     date_hierarchy = 'created_at'
+#     list_filter = ('state', 'payment_result')
+#     readonly_fields = ('updated_at',)
+#     fieldsets = (
+#         ('پرداخت کننده', {'fields': ('user',)}),
+#         ('جزئیات', {'fields': ('price', 'description', 'updated_at', 'verification_result', 'ref_number')}),
+#     )
+#
+#     def has_add_permission(self, request, obj=None):
+#         return False
+#
+#     def has_delete_permission(self, request, obj=None):
+#         return False
 
 
 class UserAdminA(admin.ModelAdmin):
@@ -564,7 +564,7 @@ admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 admin.site.unregister(OnlinePayment)
-admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
+admin.site.register(OnlinePaymentProxy)
 admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
