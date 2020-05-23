@@ -144,7 +144,6 @@ GOOGLE_RECAPTCHA_SECRET_KEY = data['recaptcha'][0]["GOOGLE_RECAPTCHA_SECRET_KEY"
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 SILENCED_SYSTEM_CHECKS = ['mysql.E001']  # to ignore mysql db error
-SAMAN_MERCHANT_ID = data['pardakht_saman'][0]["SAMAN_MERCHANT_ID"]
 LOGIN_URL = '/login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
