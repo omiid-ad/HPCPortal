@@ -1,5 +1,12 @@
 from math import trunc
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
 from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
+from HPCPortal import settings
 
 
 def calc_cost(cpu, ram, disk, days):
@@ -49,3 +56,26 @@ def call_back(payment):
         req.save()
         payment.save()
         my.save()
+
+
+def send_update_status_email(request, user, email_template="mainapp/update_status_email.html"):
+    current_site = get_current_site(request)
+    site_name = current_site.name
+    domain = current_site.domain
+    protocol = request.scheme
+    context = {
+        'site_name': site_name,
+        'domain': domain,
+        'protocol': protocol,
+        'name': user.get_full_name(),
+    }
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+    send_mail(
+        "تغییر وضعیت سرویس",
+        plain_message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        html_message=html_message,
+        fail_silently=True
+    )

@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
 from axes.admin import AccessLog, AccessAttempt
 
+from mainapp.utils import send_update_status_email
 from .models import *
 
 
@@ -62,6 +63,7 @@ class RequestA(admin.ModelAdmin):
                 obj.renewal_status = 'Ok'
                 obj.save()
                 self.message_user(request, "با موفقیت تایید شد", level=messages.SUCCESS)
+                send_update_status_email(request, obj.user.user)
                 return HttpResponseRedirect(".")
             elif obj.acceptance_status == 'Rej':
                 self.message_user(request,
@@ -83,6 +85,7 @@ class RequestA(admin.ModelAdmin):
             obj.acceptance_status = 'Rej'
             obj.save()
             self.message_user(request, "با موفقیت رد شد", level=messages.SUCCESS)
+            send_update_status_email(request, obj.user.user)
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
 
@@ -106,6 +109,7 @@ class RequestA(admin.ModelAdmin):
                 obj.acceptance_status = 'Paying'
                 obj.renewal_status = 'Ok'
                 obj.save()
+                send_update_status_email(request, obj.user.user)
             elif obj.acceptance_status == 'Rej':
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، قبلا رد شده بود و نمیتوان آنرا تایید کرد",
@@ -135,6 +139,7 @@ class RequestA(admin.ModelAdmin):
             obj.date_expired = None
             obj.acceptance_status = 'Rej'
             obj.save()
+            send_update_status_email(request, obj.user.user)
         self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد درخواست ها"
@@ -156,6 +161,7 @@ class RequestA(admin.ModelAdmin):
             obj.acceptance_status = "Rej"
             obj.renewal_status = 'Sus'
             obj.save()
+            send_update_status_email(request, obj.user.user)
         self.message_user(request, "با موفقیت تعلیق شدند", level=messages.SUCCESS)
 
     suspend.short_description = "تعلیق سرویس ها"
@@ -194,6 +200,7 @@ class ExtendRequestA(admin.ModelAdmin):
                 obj.acceptance_status = 'Paying'
                 obj.save()
                 self.message_user(request, "با موفقیت تایید شد", level=messages.SUCCESS)
+                send_update_status_email(request, obj.request.user.user)
                 return HttpResponseRedirect(".")
             if obj.acceptance_status == 'Rej':
                 self.message_user(request,
@@ -221,6 +228,7 @@ class ExtendRequestA(admin.ModelAdmin):
             obj.request.save()
             obj.save()
             self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
+            send_update_status_email(request, obj.request.user.user)
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
 
@@ -229,6 +237,7 @@ class ExtendRequestA(admin.ModelAdmin):
             if obj.acceptance_status == 'Pen':
                 obj.acceptance_status = 'Paying'
                 obj.save()
+                send_update_status_email(request, obj.request.user.user)
             elif obj.acceptance_status == 'Rej':
                 self.message_user(request,
                                   "یک یا چند درخواست انتخاب شده، قبلا رد شده بود و نمیتوان آنرا تایید کرد",
@@ -259,6 +268,7 @@ class ExtendRequestA(admin.ModelAdmin):
             obj.request.acceptance_status = 'Rej'
             obj.request.save()
             obj.save()
+            send_update_status_email(request, obj.request.user.user)
         self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد درخواست ها"
@@ -307,6 +317,7 @@ class CancelRequestA(admin.ModelAdmin):
             obj.request.save()
             obj.save()
             self.message_user(request, "درخواست با موفقیت لغو شد")
+            send_update_status_email(request, obj.request.user.user)
             return HttpResponseRedirect(".")
         if "_reject-request" in request.POST:
             if obj.acceptance_status == 'Rej':
@@ -324,6 +335,7 @@ class CancelRequestA(admin.ModelAdmin):
             obj.request.save()
             obj.save()
             self.message_user(request, "درخواست با موفقیت رد شد")
+            send_update_status_email(request, obj.request.user.user)
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
 
@@ -345,6 +357,7 @@ class CancelRequestA(admin.ModelAdmin):
             obj.request.date_expired = None
             obj.request.save()
             obj.save()
+            send_update_status_email(request, obj.request.user.user)
         self.message_user(request, "با موفقیت لغو شدند", level=messages.SUCCESS)
 
     accept.short_description = "تایید درخواست های لغو"
@@ -365,6 +378,7 @@ class CancelRequestA(admin.ModelAdmin):
             obj.request.acceptance_status = "Rej"
             obj.request.save()
             obj.save()
+            send_update_status_email(request, obj.request.user.user)
         self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد درخواست های لغو"
@@ -426,6 +440,7 @@ class PaymentA(admin.ModelAdmin):
             obj.request.save()
             obj.save()
             self.message_user(request, "پرداخت با موفقیت تایید شد")
+            send_update_status_email(request, obj.request.user.user)
             return HttpResponseRedirect(".")
         if "_reject-request" in request.POST:
             if obj.acceptance_status == 'Rej':
@@ -448,6 +463,7 @@ class PaymentA(admin.ModelAdmin):
             obj.request.save()
             obj.save()
             self.message_user(request, "پرداخت با موفقیت رد شد")
+            send_update_status_email(request, obj.request.user.user)
             return HttpResponseRedirect(".")
         return super().response_change(request, obj)
 
@@ -477,6 +493,7 @@ class PaymentA(admin.ModelAdmin):
                 obj.request.date_expired = timezone.now() + datetime.timedelta(days=obj.request.days)
             obj.request.save()
             obj.save()
+            send_update_status_email(request, obj.request.user.user)
 
         self.message_user(request, "با موفقیت تایید شدند", level=messages.SUCCESS)
 
@@ -503,6 +520,7 @@ class PaymentA(admin.ModelAdmin):
                 obj.request.acceptance_status = 'Paying'
             obj.request.save()
             obj.save()
+            send_update_status_email(request, obj.request.user.user)
         self.message_user(request, "با موفقیت رد شدند", level=messages.SUCCESS)
 
     reject.short_description = "رد پرداخت ها"
