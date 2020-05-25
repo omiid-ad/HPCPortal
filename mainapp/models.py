@@ -145,6 +145,12 @@ class Request(models.Model):
 
     linked_to_payment.short_description = "پرداخت"
 
+    def is_request_n_days_to_expire(self, n_days):
+        future = datetime.date.today() + datetime.timedelta(days=n_days)
+        if future >= self.date_expired:
+            return True
+        return False
+
 
 class ExtendRequest(models.Model):
     ACCEPTANCE_STATUS = [

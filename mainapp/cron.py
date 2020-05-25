@@ -2,6 +2,7 @@ import datetime
 
 import kronos
 
+from mainapp.utils import send_before_expire_email
 from .models import Request, ExtendRequest
 
 
@@ -12,6 +13,7 @@ def expire_outdated_requests():
             _.renewal_status = 'Exp'
             _.date_expired = None
             _.save()
+
 
 # @kronos.register('55 23 * * *')
 # def reject_requests_not_payed_by_3_days():
@@ -38,3 +40,9 @@ def expire_outdated_requests():
 #             _.request.description += "| تمدید شما بدلیل عدم پرداخت هزینه در مدت معین، رد شد"
 #             _.save()
 #             _.request.save()
+
+@kronos.register('49 23 * * *')
+def remember_email_to_extend_expire_requests():
+    for _ in Request.objects.filter(acceptance_status="Acc", renewal_status="Ok"):
+        if _.is_request_n_days_to_expire(3):
+            send_before_expire_email(_.user.user, _)

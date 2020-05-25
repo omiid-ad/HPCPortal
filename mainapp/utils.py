@@ -79,3 +79,20 @@ def send_update_status_email(request, user, email_template="mainapp/update_statu
         html_message=html_message,
         fail_silently=True
     )
+
+
+def send_before_expire_email(user, user_request, email_template="mainapp/before_expire_email.html"):
+    context = {
+        'name': user.get_full_name(),
+        'user_request': user_request,
+    }
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+    send_mail(
+        "یادآوری برای تمدید سرویس",
+        plain_message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        html_message=html_message,
+        fail_silently=True
+    )
