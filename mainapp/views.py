@@ -422,6 +422,11 @@ def pay(request, sn):
             receipt = request.FILES["receipt"]
             fs = FileSystemStorage()
             filename = fs.save(receipt.name, receipt)
+            extension = filename.split(".")
+            extension = extension[1]
+            if not utils.file_extension_validator(extension):
+                messages.error(request, "فایل ارسالی مجاز نمی‌باشد")
+                return redirect('pay', sn=sn)
             desc = request.POST["desc"]
 
             payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, request=found_request)

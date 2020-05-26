@@ -99,3 +99,10 @@ def send_before_expire_email(user, user_request, email_template="mainapp/before_
         html_message=html_message,
         fail_silently=True
     )
+
+
+def file_extension_validator(ext):
+    valid_exts = ["jpeg", "jpg", "png", "bmp", "pdf", "rar", "zip"]
+    if ext.upper() in (name.upper() for name in valid_exts):
+        return True
+    return False
