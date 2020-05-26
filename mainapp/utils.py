@@ -1,3 +1,4 @@
+import datetime
 from math import trunc
 
 from django.contrib.sites.shortcuts import get_current_site
@@ -68,6 +69,8 @@ def send_update_status_email(request, user, email_template="mainapp/update_statu
         'domain': domain,
         'protocol': protocol,
         'name': user.get_full_name(),
+        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'time': datetime.datetime.now().strftime("%H:%M"),
     }
     html_message = render_to_string(email_template, context)
     plain_message = strip_tags(html_message)
