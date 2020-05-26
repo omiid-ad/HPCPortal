@@ -420,13 +420,13 @@ def pay(request, sn):
 
         if "receipt" in request.FILES and int(cost) == found_request.show_cost:
             receipt = request.FILES["receipt"]
-            fs = FileSystemStorage()
-            filename = fs.save(receipt.name, receipt)
-            extension = filename.split(".")
+            extension = receipt.name.split(".")
             extension = extension[1]
             if not utils.file_extension_validator(extension):
                 messages.error(request, "فایل ارسالی مجاز نمی‌باشد")
                 return redirect('pay', sn=sn)
+            fs = FileSystemStorage()
+            filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
 
             payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, request=found_request)
@@ -461,6 +461,12 @@ def pay_extend(request, sn):
 
         if "receipt" in request.FILES and int(cost) == found_extend.show_cost:
             receipt = request.FILES["receipt"]
+            extension = receipt.name.split(".")
+            extension = extension[1]
+            if not utils.file_extension_validator(extension):
+                messages.error(request, "فایل ارسالی مجاز نمی‌باشد")
+                return redirect('pay', sn=sn)
+
             fs = FileSystemStorage()
             filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
