@@ -153,7 +153,7 @@ EMAIL_HOST = 'mail.scu.ac.ir'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = data['webmail'][0]["USER"]
 EMAIL_HOST_PASSWORD = data['webmail'][0]["PASSWORD"]
-DEFAULT_FROM_EMAIL = data['webmail'][0]["USER"]
+DEFAULT_FROM_EMAIL = "SCU HPCC <{}>".format(data['webmail'][0]["USER"])
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 AXES_FAILURE_LIMIT = 5
