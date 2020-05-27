@@ -1,6 +1,9 @@
 import locale
+import sys
 import urllib
 import json
+from importlib import reload
+
 import requests
 
 from django.contrib import messages
@@ -16,7 +19,6 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
-from pytz import unicode
 
 from HPCPortal import settings
 from .models import *
@@ -402,6 +404,8 @@ def cancel(request):
 
 @login_required(login_url='/login')
 def pay(request, sn):
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
     found_request = get_object_or_404(Request, serial_number=sn)
     try:
         Profile.objects.get(user=request.user)
@@ -427,7 +431,7 @@ def pay(request, sn):
                 messages.error(request, "فایل ارسالی مجاز نمی‌باشد")
                 return redirect('pay', sn=sn)
             fs = FileSystemStorage()
-            filename = fs.save(unicode(receipt.name), receipt)
+            filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
 
             payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, request=found_request)
