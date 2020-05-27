@@ -1,9 +1,6 @@
 import locale
-import sys
 import urllib
 import json
-from importlib import reload
-
 import requests
 
 from django.contrib import messages
@@ -404,8 +401,6 @@ def cancel(request):
 
 @login_required(login_url='/login')
 def pay(request, sn):
-    reload(sys)
-    sys.setdefaultencoding("utf-8")
     found_request = get_object_or_404(Request, serial_number=sn)
     try:
         Profile.objects.get(user=request.user)
@@ -431,6 +426,8 @@ def pay(request, sn):
                 messages.error(request, "فایل ارسالی مجاز نمی‌باشد")
                 return redirect('pay', sn=sn)
             fs = FileSystemStorage()
+            receipt.name = found_request.serial_number + "(" + datetime.date.today().strftime(
+                "%Y-%m-%d") + ")" + "." + extension
             filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
 
@@ -473,6 +470,8 @@ def pay_extend(request, sn):
                 return redirect('pay', sn=sn)
 
             fs = FileSystemStorage()
+            receipt.name = found_extend.serial_number + "(" + datetime.date.today().strftime(
+                "%Y-%m-%d") + ")" + "." + extension
             filename = fs.save(receipt.name, receipt)
             desc = request.POST["desc"]
 
