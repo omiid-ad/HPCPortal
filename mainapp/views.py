@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.views.decorators.csrf import csrf_exempt
+from pytz import unicode
 
 from HPCPortal import settings
 from .models import *
@@ -426,7 +427,7 @@ def pay(request, sn):
                 messages.error(request, "فایل ارسالی مجاز نمی‌باشد")
                 return redirect('pay', sn=sn)
             fs = FileSystemStorage()
-            filename = fs.save(receipt.name, receipt)
+            filename = fs.save(unicode(receipt.name), receipt)
             desc = request.POST["desc"]
 
             payment = Payment.objects.create(receipt=filename, cost=int(cost), description=desc, request=found_request)
