@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
 from axes.admin import AccessLog, AccessAttempt
 
-from mainapp.utils import send_update_status_email
+from mainapp.utils import send_update_status_email, send_extend_date_email
 from .models import *
 
 
@@ -56,6 +56,29 @@ class RequestA(admin.ModelAdmin):
         ('وضعیت درخواست', {'fields': (('acceptance_status', 'renewal_status'),)}),
     )
 
+    def extend_date(self, request, queryset):
+        from django.shortcuts import render
+        for q in queryset:
+            if q.extend(1) is None:
+                self.message_user(request, "امکان تمدید یک یا چند درخواست انتخاب شده، وجود ندارد",
+                                  level=messages.ERROR)
+                return HttpResponseRedirect(".")
+        if 'apply' in request.POST:
+            days = int(request.POST.get("days"))
+            for obj in queryset:
+                if obj.extend(days) is True:
+                    obj.save()
+                    send_extend_date_email(obj.user.user, obj)
+                else:
+                    self.message_user(request, "امکان تمدید یک یا چند درخواست انتخاب شده، وجود ندارد",
+                                      level=messages.ERROR)
+                    return HttpResponseRedirect(".")
+            self.message_user(request, "با موفقیت تمدید شدند", level=messages.SUCCESS)
+            return HttpResponseRedirect(".")
+        return render(request, 'admin/mainapp/request/extend_confirm.html', {'orders': queryset})
+
+    extend_date.short_description = "تمدید"
+
     def response_change(self, request, obj):
         if "_accept-request" in request.POST:
             if obj.acceptance_status == 'Pen':
@@ -101,7 +124,7 @@ class RequestA(admin.ModelAdmin):
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__user__last_name'
 
-    actions = ["accept", "reject", "normal", "suspend"]
+    actions = ["accept", "reject", "normal", "suspend", "extend_date"]
 
     def accept(self, request, queryset):
         for obj in queryset:
