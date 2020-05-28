@@ -106,3 +106,22 @@ def file_extension_validator(ext):
     if ext.upper() in (name.upper() for name in valid_exts):
         return True
     return False
+
+
+def send_extend_date_email(user, user_request, email_template="mainapp/extend_date_email.html"):
+    context = {
+        'name': user.get_full_name(),
+        'user_request': user_request,
+        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'time': datetime.datetime.now().strftime("%H:%M"),
+    }
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+    send_mail(
+        "تمدید سرویس",
+        plain_message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        html_message=html_message,
+        fail_silently=True
+    )
