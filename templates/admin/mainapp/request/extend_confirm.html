@@ -1,0 +1,20 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <p>درخواست های زیر تمدید خواهند شد:</p>
+        {% for order in orders %}
+            <ul>
+                <li>
+                    {{ order }}
+                </li>
+            </ul>
+            <input type="hidden" name="_selected_action" value="{{ order.pk }}"/>
+        {% endfor %}
+        <label for="days">تعداد روزها</label>
+        <input type="number" value="0" min="1" name="days" id="days">
+        <input type="hidden" name="action" value="extend_date">
+        <input id="days" name="apply" type="submit" value="تمدید">
+    </form>
+{% endblock %}
