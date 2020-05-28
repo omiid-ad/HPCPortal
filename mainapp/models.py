@@ -128,6 +128,14 @@ class Request(models.Model):
         verbose_name_plural = "درخواست سرویس‌ها"
         verbose_name = "درخواست سرویس"
 
+    def extend(self, days):
+        if days > 0:
+            if self.acceptance_status == "Acc":
+                if self.renewal_status == "Ok":
+                    if self.date_expired is not None:
+                        self.date_expired = self.date_expired + datetime.timedelta(days=days)
+                        return True
+
     def is_expired(self):
         if self.date_expired is not None:
             if self.date_expired <= datetime.datetime.now().date():
