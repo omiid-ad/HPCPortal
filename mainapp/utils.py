@@ -10,29 +10,32 @@ from django.utils.html import strip_tags
 from HPCPortal import settings
 
 
-def calc_cost(cpu, ram, disk, days):
-    if cpu > 16 or ram > 30 or disk > 140 or days > 365:
+def calc_cost(os, cpu, ram, disk, days):
+    from .models import ResourceLimit
+    rm = ResourceLimit.objects.get(os__exact=os)
+    if int(rm.cpu_min) <= cpu <= int(rm.cpu_max) and int(rm.ram_min) <= ram <= int(rm.ram_max) and int(
+            rm.disk_min) <= disk <= int(rm.disk_max) and int(rm.days_min) <= days <= int(rm.days_max):
+        total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
+        total_disc = (70 * total) / 100
+
+        total_disc = trunc(round(total_disc) / 1000) * 1000
+        total_disc = f'{total_disc:,d}'
+
+        total = trunc(round(total) / 1000) * 1000
+        total = f'{total:,d}'
+
+        data = {
+            'total': total,
+            'total_disc': total_disc,
+            'status': 200
+        }
+        return JsonResponse(data)
+    else:
         data = {
             'status': 400,
             'reason': "one or more of the inputs are out of range"
         }
         return JsonResponse(data)
-
-    total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
-    total_disc = (70 * total) / 100
-
-    total_disc = trunc(round(total_disc) / 1000) * 1000
-    total_disc = f'{total_disc:,d}'
-
-    total = trunc(round(total) / 1000) * 1000
-    total = f'{total:,d}'
-
-    data = {
-        'total': total,
-        'total_disc': total_disc,
-        'status': 200
-    }
-    return JsonResponse(data)
 
 
 def is_unique(sn):
