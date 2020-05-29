@@ -596,6 +596,30 @@ class UserAdminA(admin.ModelAdmin):
         return super().response_change(request, obj)
 
 
+class ResourceLimitA(admin.ModelAdmin):
+    list_display = ('os',)
+    fieldsets = (
+        ('', {'fields': (('os',),)}),
+        ('پردازنده', {'fields': (('cpu_min', 'cpu_max'),)}),
+        ('رم', {'fields': (('ram_min', 'ram_max'),)}),
+        ('دیسک', {'fields': (('disk_min', 'disk_max'),)}),
+        ('روزها', {'fields': (('days_min', 'days_max'),)}),
+    )
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields + ('os',)
+        return self.readonly_fields
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        if ResourceLimit.objects.count() >= 2:
+            return False
+        return True
+
+
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
@@ -610,6 +634,7 @@ admin.site.unregister(AccessLog)
 admin.site.unregister(OnlinePayment)
 admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
+admin.site.register(ResourceLimit, ResourceLimitA)
 
 admin.site.site_header = "پنل مدیریت پرتال"
 admin.site.site_title = "پرتال مرکز پردازش های سریع دانشگاه شهید چمران اهواز"
