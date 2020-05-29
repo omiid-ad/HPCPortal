@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -322,3 +323,30 @@ class CancelRequest(models.Model):
             return None
 
     linked_to_request.short_description = "سرویس"
+
+
+req = Request()  # to access OS variable
+
+
+class ResourceLimit(models.Model):
+    os = models.CharField(choices=req.OS, max_length=50, verbose_name="برای سیستم عامل")
+    cpu_min = models.IntegerField(default=0, verbose_name="حداقل پردازنده")
+    cpu_max = models.IntegerField(default=0, verbose_name="حداکثر پردازنده")
+    ram_min = models.IntegerField(default=0, verbose_name="حداقل رم")
+    ram_max = models.IntegerField(default=0, verbose_name="حداکثر رم")
+    disk_min = models.IntegerField(default=0, verbose_name="حداقل دیسک")
+    disk_max = models.IntegerField(default=0, verbose_name="حداکثر دیسک")
+    days_min = models.IntegerField(default=0, verbose_name="حداقل تعداد روزها")
+    days_max = models.IntegerField(default=0, verbose_name="حداکثر تعداد روزها")
+
+    def save(self, *args, **kwargs):
+        if not self.pk and ResourceLimit.objects.count() >= 2:
+            raise ValidationError("Can only create 2 instances")
+        return super(ResourceLimit, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.os
+
+    class Meta:
+        verbose_name_plural = "محدودیت های منابع"
+        verbose_name = "محدودیت منابع"
