@@ -11,11 +11,8 @@ from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.views import PasswordResetView as prw
 from django.template.loader import render_to_string
-from django.urls import reverse
 from django.utils.html import strip_tags
-from django.views.decorators.csrf import csrf_exempt
 
 from HPCPortal import settings
 from .models import *
@@ -201,11 +198,17 @@ def new_request(request):
         except Profile.DoesNotExist:
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
-        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-        cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
-        cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
 
-        res = utils.calc_cost(int(request.POST["cpu"]), int(request.POST["ram"]), int(request.POST["disk"]),
+        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+        try:
+            cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
+            cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
+        except ValueError:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('new_request')
+
+        res = utils.calc_cost(request.POST.get("os"), int(request.POST["cpu"]), int(request.POST["ram"]),
+                              int(request.POST["disk"]),
                               int(request.POST["days"]))
         res = json.loads(res.content)
         if res["status"] == 400:
@@ -216,19 +219,19 @@ def new_request(request):
                 messages.error(request, "فرم را به درستی پر کنید")
                 return redirect('new_request')
 
-        if request.POST["os"] == "Win" and int(request.POST["cpu"]) > 12:
-            messages.error(request, "فرم را به درستی پر کنید")
-            return redirect('new_request')
-        if request.POST["os"] == "Lin" and int(request.POST["cpu"]) > 16:
+        rm = ResourceLimit.objects.get(os__exact=request.POST.get("os"))
+        if int(request.POST["cpu"]) > int(rm.cpu_max) or int(request.POST["cpu"]) < int(rm.cpu_min) or int(
+                request.POST["ram"]) > int(rm.ram_max) or int(request.POST["ram"]) < int(rm.ram_min) or int(
+            request.POST["disk"]) > int(rm.disk_max) or int(request.POST["disk"]) < int(rm.disk_min) or int(
+            request.POST["days"]) > int(rm.days_max) or int(request.POST["days"]) < int(rm.days_min):
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('new_request')
 
-        if request.POST["os"] != "" and request.POST["ram"] != "" and int(request.POST["ram"]) >= 4 and int(
-                request.POST["ram"]) <= 30 and request.POST["cpu"] != "" and int(request.POST["cpu"]) >= 1 and \
-                request.POST["disk"] != "" and int(request.POST["disk"]) >= 30 and int(
-            request.POST["disk"]) <= 140 and request.POST.getlist('app_name') and request.POST[
-            "days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and int(cost) > 0 and \
-                request.POST["cost_disc"] != "" and int(cost_disc) > 0:
+        if request.POST["os"] != "" and request.POST["ram"] != "" and request.POST["cpu"] != "" and request.POST[
+            "disk"] != "" and request.POST.getlist('app_name') and request.POST[
+            "days"] != "" and request.POST["cost"] != "" and int(cost) > 0 and request.POST["cost_disc"] != "" and int(
+            cost_disc) > 0:
+
             app_name_list = request.POST.getlist('app_name')
             app_name = ', '.join(app_name_list)
 
@@ -255,12 +258,13 @@ def new_request(request):
 
 
 def calc_cost(request):
+    os = request.GET.get('os')
     cpu = int(request.GET.get('cpu'))
     ram = int(request.GET.get('ram'))
     disk = int(request.GET.get('disk'))
     days = int(request.GET.get('days'))
 
-    res = utils.calc_cost(cpu, ram, disk, days)
+    res = utils.calc_cost(os, cpu, ram, disk, days)
     return res
 
 
@@ -318,6 +322,7 @@ def edit_profile(request):
 @login_required(login_url='/login')
 def extend(request, sn):
     extended_service = get_object_or_404(Request, serial_number=sn)
+    rm = get_object_or_404(ResourceLimit, os__exact=extended_service.os)
     if extended_service.acceptance_status != 'Acc':
         messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
         return redirect('index')
@@ -328,6 +333,7 @@ def extend(request, sn):
     if request.method == "GET":
         context = {
             'extended_service': extended_service,
+            'rm': rm,
         }
         return render(request, "mainapp/extend.html", context)
     elif request.method == "POST":
@@ -337,14 +343,17 @@ def extend(request, sn):
             messages.error(request, "ابتدا پروفایل خود را تکمیل کنید")
             return redirect('complete_profile')
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-        cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
-        cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
-        if request.POST["days"] != "" and int(request.POST["days"]) >= 15 and request.POST["cost"] != "" and \
+        try:
+            cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
+            cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
+        except ValueError:
+            messages.error(request, "فرم را به درستی پر کنید")
+            return redirect('extend', sn=extended_service.serial_number)
+        rm = ResourceLimit.objects.get(os__exact=extended_service.os)
+        if request.POST["days"] != "" and int(rm.days_min) <= int(request.POST["days"]) <= int(rm.days_max) and \
+                request.POST["cost"] != "" and \
                 int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0:
-            # and "receipt" in request.FILES:
-            # receipt = request.FILES["receipt"]
-            # fs = FileSystemStorage()
-            # filename = fs.save(receipt.name, receipt)
+
             if profile.university.__contains__("چمران") or profile.university.__contains__(
                     "chamran") or profile.university.__contains__("chamraan"):
                 ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
@@ -353,9 +362,6 @@ def extend(request, sn):
                 ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
                                                        show_cost=int(cost))
             ext_req.save()
-            # pay = Payment.objects.create(request=extended_service, extend=ext_req, receipt=filename,
-            #                              cost=int(ext_req.show_cost))
-            # pay.save()
             extended_service.acceptance_status = 'Exting'
             extended_service.save()
             # messages.success(request,
@@ -363,7 +369,7 @@ def extend(request, sn):
             return redirect('index')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
-            return redirect('extend')
+            return redirect('extend', sn=extended_service.serial_number)
 
 
 def cancel(request):
