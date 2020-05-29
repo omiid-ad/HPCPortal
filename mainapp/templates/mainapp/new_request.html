@@ -54,9 +54,7 @@
                 <div class="form-group col-12 col-sm-2">
                     <label class="label-right" for="cpu">هسته پردازشی</label>
                     <div class="input-group">
-                        <input name="cpu" required value="1" type="number" class="form-control" min="1"
-                               max="16"
-                               id="cpu">
+                        <input name="cpu" required type="number" class="form-control" id="cpu">
                         <div class="input-group-prepend ">
                             <span class="input-group-text">عدد</span>
                         </div>
@@ -65,7 +63,7 @@
                 <div class="form-group col-6 col-sm-2">
                     <label class="label-right" for="ram">حافظه رم</label>
                     <div class="input-group">
-                        <input name="ram" required value="4" type="number" id="ram" min="4" max="30"
+                        <input name="ram" required type="number" id="ram"
                                class="form-control">
                         <div class="input-group-prepend">
                             <span class="input-group-text">GB</span>
@@ -75,7 +73,7 @@
                 <div class="form-group col-6 col-sm-2">
                     <label class="label-right" for="disk">دیسک</label>
                     <div class="input-group">
-                        <input name="disk" required value="30" type="number" id="disk" min="30" max="140"
+                        <input name="disk" required type="number" id="disk"
                                class="form-control">
                         <div class="input-group-prepend">
                             <span class="input-group-text">GB</span>
@@ -102,7 +100,7 @@
             <div class="form-row mt-4">
                 <div class="form-group col-sm-2">
                     <label class="label-right" for="days">تعداد روزها</label>
-                    <input name="days" value="15" required type="number" class="form-control" min="15"
+                    <input name="days" required type="number" class="form-control"
                            id="days">
                 </div>
                 <div class="form-group col-sm-5">
@@ -145,25 +143,112 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            let cpu = $("#cpu").val();
-            let ram = $("#ram").val();
-            let disk = $("#disk").val();
-            let days = $("#days").val();
-            $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
-                if (result.status === 200) {
-                    $("#cost").val(result.total);
-                    $("#cost_disc").val(result.total_disc);
-                } else {
-                    $("#cost").val("NaN");
-                    $("#cost_disc").val("NaN");
+            $("#os").change(function () {
+                setTimeout(function () {
+                    let os = $("#os").val();
+                    let cpu = $("#cpu").val();
+                    let ram = $("#ram").val();
+                    let disk = $("#disk").val();
+                    let days = $("#days").val();
+                    $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                        if (result.status === 200) {
+                            $("#cost").val(result.total);
+                            $("#cost_disc").val(result.total_disc);
+                        } else {
+                            $("#cost").val("NaN");
+                            $("#cost_disc").val("NaN");
+                        }
+                    });
+                }, 700);
+            })
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            let os = $("#os").val();
+            $.getJSON("/get_limits_based_on_os?os=" + os, function (result) {
+                    let res = $.parseJSON(result);
+                    // set initial values
+                    $("#cpu").val(res[0].fields["cpu_min"]);
+                    $("#ram").val(res[0].fields["ram_min"]);
+                    $("#disk").val(res[0].fields["disk_min"]);
+                    $("#days").val(res[0].fields["days_min"]);
+                    //set limits
+                    $("#cpu").attr(
+                        {
+                            "min": res[0].fields["cpu_min"],
+                            "max": res[0].fields["cpu_max"]
+                        }
+                    );
+                    $("#ram").attr(
+                        {
+                            "min": res[0].fields["ram_min"],
+                            "max": res[0].fields["ram_max"]
+                        }
+                    );
+                    $("#disk").attr(
+                        {
+                            "min": res[0].fields["disk_min"],
+                            "max": res[0].fields["disk_max"]
+                        }
+                    );
+                    $("#days").attr(
+                        {
+                            "min": res[0].fields["days_min"],
+                            "max": res[0].fields["days_max"]
+                        }
+                    );
                 }
-            });
-            $("input").keyup(function () {
-                cpu = $("#cpu").val();
-                ram = $("#ram").val();
-                disk = $("#disk").val();
-                days = $("#days").val();
-                $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+            );
+            $("#os").change(function () {
+                let os = $("#os").val();
+                $.getJSON("/get_limits_based_on_os?os=" + os, function (result) {
+                    let res = $.parseJSON(result);
+                    // set initial values
+                    $("#cpu").val(res[0].fields["cpu_min"]);
+                    $("#ram").val(res[0].fields["ram_min"]);
+                    $("#disk").val(res[0].fields["disk_min"]);
+                    $("#days").val(res[0].fields["days_min"]);
+
+                    //set limits
+                    $("#cpu").attr(
+                        {
+                            "min": res[0].fields["cpu_min"],
+                            "max": res[0].fields["cpu_max"],
+                        }
+                    );
+                    $("#ram").attr(
+                        {
+                            "min": res[0].fields["ram_min"],
+                            "max": res[0].fields["ram_max"]
+                        }
+                    );
+                    $("#disk").attr(
+                        {
+                            "min": res[0].fields["disk_min"],
+                            "max": res[0].fields["disk_max"]
+                        }
+                    );
+                    $("#days").attr(
+                        {
+                            "min": res[0].fields["days_min"],
+                            "max": res[0].fields["days_max"]
+                        }
+                    );
+                })
+            })
+        });
+
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setTimeout(function () {
+                let os = $("#os").val();
+                let cpu = $("#cpu").val();
+                let ram = $("#ram").val();
+                let disk = $("#disk").val();
+                let days = $("#days").val();
+                $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
                     if (result.status === 200) {
                         $("#cost").val(result.total);
                         $("#cost_disc").val(result.total_disc);
@@ -172,29 +257,28 @@
                         $("#cost_disc").val("NaN");
                     }
                 });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function (e) {
-            $("#os").on('change', function (e) {
-                let selectedVal = this.value;
-                if (selectedVal === "Win") {
-                    $("#cpu").attr(
-                        {
-                            "max": 12,
-                        }
-                    );
-                } else {
-                    $("#cpu").attr(
-                        {
-                            "max": 16,
-                        }
-                    );
-                }
-            });
-        });
+            }, 1000);
 
+            setTimeout(function () {
+                $("input").keyup(function () {
+                    os = $("#os").val();
+                    cpu = $("#cpu").val();
+                    ram = $("#ram").val();
+                    disk = $("#disk").val();
+                    days = $("#days").val();
+                    $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                        if (result.status === 200) {
+                            $("#cost").val(result.total);
+                            $("#cost_disc").val(result.total_disc);
+                        } else {
+                            $("#cost").val("NaN");
+                            $("#cost_disc").val("NaN");
+                        }
+                    });
+                });
+            }, 1000);
+
+        });
     </script>
     <script>
         $('#apps').selectpicker();

@@ -45,7 +45,8 @@
             <div class="form-row mt-4">
                 <div class="form-group col-sm-4">
                     <label class="label-right" for="days">تعداد روزها</label>
-                    <input name="days" value="15" required type="number" class="form-control" id="days" min="15">
+                    <input name="days" value="{{ rm.days_min }}" required type="number" class="form-control" id="days"
+                           min="{{ rm.days_min }}" max="{{ rm.days_max }}">
                 </div>
                 <div class="form-group col-sm-4">
                     <label class="label-right" for="cost">هزینه کاربران سایر دانشگاه‌ها</label>
@@ -78,11 +79,12 @@
     {{ block.super }}
     <script type="text/javascript">
         $(document).ready(function () {
+            let os = "{{ extended_service.os }}";
             let cpu = {{ extended_service.cpu }};
             let ram = {{ extended_service.ram }};
             let disk = {{ extended_service.disk }};
             let days = $("#days").val();
-            $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+            $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
                 if (result.status === 200) {
                     $("#cost").val(result.total);
                     $("#cost_disc").val(result.total_disc);
@@ -91,9 +93,9 @@
                     $("#cost_disc").val("NaN");
                 }
             });
-            $("#days").change(function () {
+            $("#days").keyup(function () {
                 days = $("#days").val();
-                $.getJSON("/calc_cost?cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
+                $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
                     if (result.status === 200) {
                         $("#cost").val(result.total);
                         $("#cost_disc").val(result.total_disc);
