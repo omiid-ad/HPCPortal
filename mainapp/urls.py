@@ -18,5 +18,6 @@ urlpatterns = [
     path('cancel/', cancel, name="cancel"),
     path('extend_requests/', extend_requests, name="extend_requests"),
     path('pay_test/', pay_test, name="pay_test"),
+    path('get_limits_based_on_os/', get_limits_based_on_os, name="get_limits_based_on_os"),
 
 ]

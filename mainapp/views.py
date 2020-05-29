@@ -510,3 +510,12 @@ def pay_test(request):
         login_required=True
     )
     return redirect(result['link'])
+
+
+def get_limits_based_on_os(request):
+    if request.method == "GET":
+        rm = ResourceLimit.objects.get(os__exact=request.GET.get("os"))
+        from django.core import serializers
+        rm_json = serializers.serialize('json', [rm, ])
+        from django.http import JsonResponse
+        return JsonResponse(rm_json, safe=False)
