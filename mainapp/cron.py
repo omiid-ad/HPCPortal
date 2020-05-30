@@ -6,7 +6,7 @@ from mainapp.utils import send_before_expire_email
 from .models import Request, ExtendRequest
 
 
-@kronos.register('58 23 * * *')
+@kronos.register('10 0 * * *')
 def expire_outdated_requests():
     for _ in Request.objects.all():
         if _.is_expired():
@@ -41,7 +41,7 @@ def expire_outdated_requests():
 #             _.save()
 #             _.request.save()
 
-@kronos.register('49 23 * * *')
+@kronos.register('5 0 * * *')
 def remember_email_to_extend_expire_requests():
     for _ in Request.objects.filter(acceptance_status="Acc", renewal_status="Ok"):
         if _.is_request_n_days_to_expire(3):
