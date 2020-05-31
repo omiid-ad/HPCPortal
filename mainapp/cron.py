@@ -11,7 +11,8 @@ def notify_admins_how_many_requests_expire_today():
     for _ in Request.objects.all():
         if _.gonna_expire_today():
             expire_list.append(_)
-    send_expire_notify_to_admins(expire_list, email_template="mainapp/notify_admins_expire_requests_email.html")
+    if len(expire_list) > 0:
+        send_expire_notify_to_admins(expire_list, email_template="mainapp/notify_admins_expire_requests_email.html")
 
 
 @kronos.register('10 0 * * *')
