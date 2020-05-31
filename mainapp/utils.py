@@ -128,3 +128,46 @@ def send_extend_date_email(user, user_request, email_template="mainapp/extend_da
         html_message=html_message,
         fail_silently=True
     )
+
+
+def send_generic_email(user, user_request, subject, email_template):
+    context = {
+        'name': user.get_full_name(),
+        'user_request': user_request,
+        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'time': datetime.datetime.now().strftime("%H:%M"),
+    }
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+    send_mail(
+        subject,
+        plain_message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        html_message=html_message,
+        fail_silently=True
+    )
+
+
+def send_expire_notify_to_admins(expire_list, email_template):
+    from .models import User
+    admins = User.objects.filter(is_staff=True, is_superuser=True, is_active=True)
+    email_list = list()
+    for i in admins:
+        if i.email:
+            email_list.append(i.email)
+    context = {
+        'expire_list': expire_list,
+        'date': datetime.date.today().strftime("%Y/%m/%d"),
+    }
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+    for email in email_list:
+        send_mail(
+            "یادآوری انقضای درخواست ها",
+            plain_message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            html_message=html_message,
+            fail_silently=True
+        )
