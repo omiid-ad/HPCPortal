@@ -124,7 +124,7 @@ class RequestA(admin.ModelAdmin):
     get_user_full_name.short_description = 'نام و نام خانوادگی'
     get_user_full_name.admin_order_field = 'user__user__last_name'
 
-    actions = ["accept", "reject", "normal", "suspend", "extend_date"]
+    actions = ["accept", "reject", "normal", "suspend", "extend_date", "delete_selected"]
 
     def accept(self, request, queryset):
         for obj in queryset:
