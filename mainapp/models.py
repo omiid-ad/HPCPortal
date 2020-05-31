@@ -137,6 +137,9 @@ class Request(models.Model):
                         self.date_expired = self.date_expired + datetime.timedelta(days=days)
                         return True
 
+    def gonna_expire_today(self):
+        return self.date_expired == datetime.datetime.now().date()
+
     def is_expired(self):
         if self.date_expired is not None:
             if self.date_expired <= datetime.datetime.now().date():
