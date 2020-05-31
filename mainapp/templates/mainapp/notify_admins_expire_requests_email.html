@@ -1,0 +1,31 @@
+<body>
+<div dir="rtl" style="text-align: right; font-family: IranSans,Roboto,sans-serif;">
+    <p>مدیر محترم پرتال،</p>
+    <p>سرویس‌های زیر امروز در تاریخ
+        <span dir="rtl">{{ date }}</span>
+        منقضی خواهند شد. این ایمیل جهت یادآوری و انجام اقدامات لازم ارسال شده است.
+    </p>
+    {% if expire_list %}
+        {% for exp in expire_list %}
+            <div dir="rtl">
+                <ul dir="rtl">
+                    <li>{{ exp.serial_number }}</li>
+                </ul>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <br>
+    ـــــــــــــــــــــــــــــــ
+    <p>باتشکر,</p>
+    <p>مرکز پردازش های سریع دانشگاه شهید چمران اهواز</p>
+    <p>آدرس: اهواز،بلوار گلستان، دانشگاه شهید چمران اهواز،دانشکده مهندسی، دفتر گروه مهندسی کامپیوتر</p>
+    <br>
+    <p>وبسایت مرکز: </p>
+    <p><a href="http://scu.ac.ir/web/hpc/main">http://scu.ac.ir/web/hpc/main</a></p>
+    <p>کانال اطلاع رسانی مرکز:</p>
+    <p><a href="https://t.me/scuhpcc">https://t.me/scuhpcc</a></p>
+    <p>ایمیل پشتیبانی:</p>
+    <p><a href="mailto:hpc@scu.ac.ir">hpc@scu.ac.ir</a></p>
+</div>
+</body>
