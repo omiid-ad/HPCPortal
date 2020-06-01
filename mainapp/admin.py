@@ -633,11 +633,6 @@ class MyPaymentA(admin.ModelAdmin):
     list_display = ('django_pardakht', 'request', 'extend')
     list_filter = ('django_pardakht__state',)
 
-    fieldsets = (
-        ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', ('request', 'extend'), 'cost', 'receipt')}),
-        ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
-    )
-
     def has_delete_permission(self, request, obj=None):
         return False
 
