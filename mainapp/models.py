@@ -241,14 +241,22 @@ class MyPayment(models.Model):
     def __str__(self):
         if self.extend:
             return "مبلغ " + str(
-                self.extend.show_cost) + " توسط " + self.request.user.get_user_full_name + " برای تمدید " + \
+                self.django_pardakht.price) + " توسط " + self.request.user.get_user_full_name + " برای تمدید " + \
                    self.extend.serial_number
         elif self.request:
             return "مبلغ " + str(
-                self.request.show_cost) + " توسط " + self.request.user.get_user_full_name + " برای سرویس " + \
+                self.django_pardakht.price) + " توسط " + self.request.user.get_user_full_name + " برای سرویس " + \
                    self.request.serial_number
         else:
             return "Invalid payment"
+
+    def linked_to_django_pardakht(self):
+        return format_html(
+            '<a href="{}">مشاهده جزئیات</a>',
+            reverse("admin:pardakht_payment_change", args=(self.django_pardakht.id,)),
+        )
+
+    linked_to_django_pardakht.short_description = "پرداخت"
 
 
 class Payment(models.Model):
