@@ -634,7 +634,7 @@ class MyPaymentA(admin.ModelAdmin):
     list_filter = ('django_pardakht__state',)
 
     def has_delete_permission(self, request, obj=None):
-        if obj.request is None:
+        if obj:
             return True
         return False
 
