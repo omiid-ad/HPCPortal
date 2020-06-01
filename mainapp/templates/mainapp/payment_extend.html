@@ -74,14 +74,14 @@
                     </ul>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success btn-block mt-4">پرداخت</button>
+{#            <button type="submit" class="btn btn-success btn-block mt-4">پرداخت</button>#}
         </form>
-        <form id="online_form" action="{% url 'pay_online' %}" method="post">
+        <form id="online_form" action="{% url 'pay_online_extend' %}" method="post">
             {% csrf_token %}
             <input name="cost" type="hidden" value="{{ ext.show_cost }}">
-            <input name="desc" type="hidden" id="hidden_desc" value="">
+{#            <input name="desc" type="hidden" id="hidden_desc" value="">#}
             <input name="id" type="hidden" id="id" value="{{ ext.pk }}">
-            <button type="submit" class="btn btn-outline-info btn-block mt-4 disabled not-allowed">پرداخت
+            <button type="submit" class="btn btn-outline-info btn-block mt-4">پرداخت
                 آنلاین
             </button>
         </form>
@@ -97,15 +97,15 @@
             $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
         });
     </script>
-    <script>
-        $("#desc").on("change", function () {
-            let main_desc = $(this).val();
-            $("#hidden_desc").val(main_desc);
-        })
-    </script>
-    <script>
-        document.getElementById("online_form").addEventListener("submit", function (event) {
-            event.preventDefault()
-        });
-    </script>
+{#    <script>#}
+    {#        $("#desc").on("change", function () {#}
+    {#            let main_desc = $(this).val();#}
+    {#            $("#hidden_desc").val(main_desc);#}
+    {#        })#}
+    {#    </script>#}
+{#    <script>#}
+    {#        document.getElementById("online_form").addEventListener("submit", function (event) {#}
+    {#            event.preventDefault()#}
+    {#        });#}
+    {#    </script>#}
 {% endblock %}

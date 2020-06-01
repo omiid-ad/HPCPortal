@@ -495,13 +495,16 @@ def pay_extend(request, sn):
 
 @login_required(login_url='/login')
 def pay_online(request):
-    raise Http404
-
-
-def pay_test(request):
     from pardakht import handler
-    price = 1000
-    description = "20200522-8871528"
+    try:
+        service = Request.objects.get(pk=int(request.POST.get('id')))
+    except Request.DoesNotExist:
+        raise Http404("service does not found")
+    description = service.serial_number
+    price = int(request.POST.get("cost"))
+    if price != service.show_cost:
+        messages.error(request, "خطایی رخ داد، دوباره امتحان کنید")
+        return redirect('pay', sn=service.serial_number)
     result = handler.create_payment(
         price,
         description,
@@ -510,6 +513,42 @@ def pay_test(request):
         login_required=True
     )
     return redirect(result['link'])
+
+
+@login_required(login_url='/login')
+def pay_online_extend(request):
+    from pardakht import handler
+    try:
+        extended_service = ExtendRequest.objects.get(pk=int(request.POST.get('id')))
+    except ExtendRequest.DoesNotExist:
+        raise Http404("extend service does not found")
+    description = extended_service.serial_number
+    price = int(request.POST.get("cost"))
+    if price != extended_service.show_cost:
+        messages.error(request, "خطایی رخ داد، دوباره امتحان کنید")
+        return redirect('pay_extend', sn=extended_service.serial_number)
+    result = handler.create_payment(
+        price,
+        description,
+        utils.call_back_extend,
+        reverse('index'),
+        login_required=True
+    )
+    return redirect(result['link'])
+
+
+# def pay_test(request):
+#     from pardakht import handler
+#     price = 1000
+#     description = "20200522-8871528"
+#     result = handler.create_payment(
+#         price,
+#         description,
+#         utils.call_back,
+#         reverse('index'),
+#         login_required=True
+#     )
+#     return redirect(result['link'])
 
 
 def get_limits_based_on_os(request):

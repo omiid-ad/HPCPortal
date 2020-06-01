@@ -40,7 +40,7 @@ class ProfileA(admin.ModelAdmin):
 class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
     readonly_fields = (
-        'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'show_cost_for_admin_only', 'user',
+        'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost_for_admin_only', 'user',
         'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
     list_display = (
         'serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',
@@ -191,7 +191,7 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
+    readonly_fields = ('acceptance_status', 'days', 'date_expired_admin_only', 'request', 'serial_number')
     list_display = (
         'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',
         'linked_to_payment')

@@ -1,6 +1,6 @@
-import datetime
 from math import trunc
 
+import datetime
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -49,15 +49,45 @@ def is_unique(sn):
 
 def call_back(payment):
     from .models import Request, MyPayment
+    from django.utils import timezone
     my = MyPayment.objects.create(django_pardakht=payment)
+    my.save()
     if my.django_pardakht.successful():
-        req = Request.objects.get(serial_number=payment.description)
+        try:
+            req = Request.objects.get(serial_number=payment.description)
+        except Request.DoesNotExist:
+            from django.http import Http404
+            raise Http404("service not found")
         my.request = req
         req.acceptance_status = "Acc"
-        from django.utils import timezone
-        import datetime
         req.date_expired = timezone.now() + datetime.timedelta(days=req.days)
         req.save()
+        payment.save()
+        my.save()
+
+
+def call_back_extend(payment):
+    from django.utils import timezone
+    from .models import ExtendRequest, MyPayment
+    my = MyPayment.objects.create(django_pardakht=payment)
+    my.save()
+    if my.django_pardakht.successful():
+        try:
+            ext = ExtendRequest.objects.get(serial_number=payment.description)
+        except ExtendRequest.DoesNotExist:
+            from django.http import Http404
+            raise Http404("extend service not found")
+        my.request = ext.request
+        my.extend = ext
+        ext.request.renewal_status = 'Ok'
+        ext.request.acceptance_status = 'Acc'
+        ext.acceptance_status = 'Acc'
+        if ext.request.date_expired is not None:
+            ext.request.date_expired = ext.request.date_expired + datetime.timedelta(days=ext.days)
+        else:
+            ext.request.date_expired = timezone.now() + datetime.timedelta(days=ext.days)
+        ext.request.save()
+        ext.save()
         payment.save()
         my.save()
 

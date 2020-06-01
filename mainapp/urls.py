@@ -15,9 +15,10 @@ urlpatterns = [
     path('pay/<slug:sn>', pay, name="pay"),
     path('pay_extend/<slug:sn>', pay_extend, name="pay_extend"),
     path('pay_online/', pay_online, name="pay_online"),
+    path('pay_online_extend/', pay_online_extend, name="pay_online_extend"),
     path('cancel/', cancel, name="cancel"),
     path('extend_requests/', extend_requests, name="extend_requests"),
-    path('pay_test/', pay_test, name="pay_test"),
+    # path('pay_test/', pay_test, name="pay_test"),
     path('get_limits_based_on_os/', get_limits_based_on_os, name="get_limits_based_on_os"),
 
 ]
