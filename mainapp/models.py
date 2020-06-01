@@ -243,10 +243,12 @@ class MyPayment(models.Model):
             return "مبلغ " + str(
                 self.extend.show_cost) + " توسط " + self.request.user.get_user_full_name + " برای تمدید " + \
                    self.extend.serial_number
-        else:
+        elif self.request:
             return "مبلغ " + str(
                 self.request.show_cost) + " توسط " + self.request.user.get_user_full_name + " برای سرویس " + \
                    self.request.serial_number
+        else:
+            return "Invalid payment"
 
 
 class Payment(models.Model):
