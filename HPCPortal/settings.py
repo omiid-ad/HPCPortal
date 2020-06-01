@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'pardakht',
     'kronos',
     'axes',
+    'import_export',
 ]
 
 AUTHENTICATION_BACKENDS = [

@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
 from axes.admin import AccessLog, AccessAttempt
+from import_export.admin import ExportActionMixin
 
 from mainapp.utils import send_update_status_email, send_extend_date_email
 from .models import *
@@ -629,10 +630,13 @@ class ResourceLimitA(admin.ModelAdmin):
         return True
 
 
-class OnlinePaymentA(admin.ModelAdmin):
+class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
+    date_hierarchy = 'created_at'
     list_display = (
         'get_user_full_name', 'created_at', 'price', 'trace_number', 'state', 'linked_to_request',
         'linked_to_extend')
+
+    list_filter = ('state',)
 
     def get_user_full_name(self, obj):
         if obj.user:
@@ -643,15 +647,13 @@ class OnlinePaymentA(admin.ModelAdmin):
     get_user_full_name.short_description = "نام و نام خانوادگی"
 
     def has_delete_permission(self, request, obj=None):
-        return True
+        return False
 
     def has_add_permission(self, request):
         return False
 
     def has_change_permission(self, request, obj=None):
         return False
-
-    actions = ['delete_selected', ]
 
 
 admin.site.unregister(User)
