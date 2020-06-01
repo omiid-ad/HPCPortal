@@ -250,14 +250,6 @@ class MyPayment(models.Model):
         else:
             return "Invalid payment"
 
-    def linked_to_django_pardakht(self):
-        return format_html(
-            '<a href="{}">مشاهده جزئیات</a>',
-            reverse("admin:pardakht_payment_change", args=(self.django_pardakht.id,)),
-        )
-
-    linked_to_django_pardakht.short_description = "پرداخت"
-
 
 class Payment(models.Model):
     ACCEPTANCE_STATUS = [

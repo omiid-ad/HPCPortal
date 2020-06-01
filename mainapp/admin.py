@@ -630,10 +630,12 @@ class ResourceLimitA(admin.ModelAdmin):
 
 
 class MyPaymentA(admin.ModelAdmin):
-    list_display = ('get_django_pardakht_object', 'linked_to_django_pardakht')
+    # list_display = ('get_django_pardakht_object', 'linked_to_django_pardakht')
     list_filter = ('django_pardakht__state',)
 
     def has_delete_permission(self, request, obj=None):
+        if obj.request is None:
+            return True
         return False
 
     def has_add_permission(self, request):
@@ -641,9 +643,6 @@ class MyPaymentA(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
-
-    def get_django_pardakht_object(self, obj):
-        return obj.django_pardakht
 
 
 admin.site.unregister(User)
