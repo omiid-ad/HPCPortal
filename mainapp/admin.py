@@ -630,7 +630,7 @@ class ResourceLimitA(admin.ModelAdmin):
 
 
 class MyPaymentA(admin.ModelAdmin):
-    list_display = ('django_pardakht__user')
+    # list_display = ('django_pardakht__user')
     list_filter = ('django_pardakht__state',)
 
     def has_delete_permission(self, request, obj=None):
