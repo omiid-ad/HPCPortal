@@ -235,8 +235,18 @@ class MyPayment(models.Model):
     extend = models.OneToOneField(ExtendRequest, on_delete=models.CASCADE, null=True, blank=True, verbose_name="تمدید")
 
     class Meta:
-        verbose_name_plural = "پرداخت های من"
-        verbose_name = "پرداخت من"
+        verbose_name_plural = "پرداخت های آنلاین"
+        verbose_name = "پرداخت آنلاین"
+
+    def __str__(self):
+        if self.extend:
+            return "مبلغ " + str(
+                self.extend.show_cost) + " توسط " + self.request.user.get_user_full_name + " برای تمدید " + \
+                   self.extend.serial_number
+        else:
+            return "مبلغ " + str(
+                self.request.show_cost) + " توسط " + self.request.user.get_user_full_name + " برای سرویس " + \
+                   self.request.serial_number
 
 
 class Payment(models.Model):

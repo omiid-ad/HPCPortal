@@ -40,7 +40,7 @@ class ProfileA(admin.ModelAdmin):
 class RequestA(admin.ModelAdmin):
     date_hierarchy = 'date_requested'
     readonly_fields = (
-        'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost_for_admin_only', 'user',
+        'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'show_cost_for_admin_only', 'user',
         'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
     list_display = (
         'serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',
@@ -191,7 +191,7 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
-    readonly_fields = ('acceptance_status', 'days', 'date_expired_admin_only', 'request', 'serial_number')
+    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
     list_display = (
         'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',
         'linked_to_payment')
@@ -208,6 +208,9 @@ class ExtendRequestA(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return True
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
     def get_user_full_name(self, obj):
         return obj.request.user.user.get_full_name()
@@ -308,6 +311,9 @@ class CancelRequestA(admin.ModelAdmin):
     )
 
     def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
         return False
 
     def get_user_full_name(self, obj):
@@ -430,6 +436,9 @@ class PaymentA(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return True
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
     get_user_full_name.short_description = 'پرداخت کننده'
     get_user_full_name.admin_order_field = 'user__last_name'
@@ -620,6 +629,25 @@ class ResourceLimitA(admin.ModelAdmin):
         return True
 
 
+class MyPaymentA(admin.ModelAdmin):
+    list_display = ('django_pardakht', 'request', 'extend')
+    list_filter = ('django_pardakht__state',)
+
+    fieldsets = (
+        ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', ('request', 'extend'), 'cost', 'receipt')}),
+        ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
@@ -628,8 +656,8 @@ admin.site.register(ExtendRequest, ExtendRequestA)
 admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
-# admin.site.unregister(OnlinePayment)
-admin.site.register(MyPayment)
+admin.site.unregister(OnlinePayment)
+admin.site.register(MyPayment, MyPaymentA)
 admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
