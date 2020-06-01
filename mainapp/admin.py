@@ -631,7 +631,7 @@ class ResourceLimitA(admin.ModelAdmin):
 
 class OnlinePaymentA(admin.ModelAdmin):
     list_display = (
-        'get_user_full_name', 'created_at', 'price', 'trace_number', 'payment_result', 'linked_to_request',
+        'get_user_full_name', 'created_at', 'price', 'trace_number', 'state', 'linked_to_request',
         'linked_to_extend')
 
     def get_user_full_name(self, obj):
