@@ -365,3 +365,29 @@ class ResourceLimit(models.Model):
     class Meta:
         verbose_name_plural = "محدودیت های منابع"
         verbose_name = "محدودیت منابع"
+
+
+class OnlinePaymentProxy(OnlinePayment):
+    class Meta:
+        proxy = True
+        app_label = 'pardakht'
+        verbose_name_plural = "پرداخت های آنلاین"
+        verbose_name = "پرداخت آنلاین"
+
+    def __str__(self):
+        if self.user:
+            return "مبلغ " + str(
+                self.price) + " توسط " + self.user.get_full_name()
+        return ""
+
+    def linked_to_mypayment(self):
+        try:
+            mp = MyPayment.objects.get(django_pardakht=self)
+        except MyPayment.DoesNotExist:
+            return None
+        return format_html(
+            '<a href="{}">مشاهده جزئیات</a>',
+            reverse("admin:mainapp_mypayment_change", args=(mp.id,)),
+        )
+
+    linked_to_mypayment.short_description = "جزئیات"

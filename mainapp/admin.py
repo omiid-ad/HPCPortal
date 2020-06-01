@@ -645,6 +645,29 @@ class MyPaymentA(admin.ModelAdmin):
         return False
 
 
+class OnlinePaymentA(admin.ModelAdmin):
+    list_display = ('get_user_full_name', 'created_at', 'price', 'trace_number', 'linked_to_mypayment')
+
+    def get_user_full_name(self, obj):
+        if obj.user:
+            return obj.user.get_full_name()
+        else:
+            return "Invalid"
+
+    get_user_full_name.short_description = "نام و نام خانوادگی"
+
+    def has_delete_permission(self, request, obj=None):
+        if obj:
+            return True
+        return False
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
@@ -654,6 +677,7 @@ admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 admin.site.unregister(OnlinePayment)
+admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
 admin.site.register(MyPayment, MyPaymentA)
 admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
