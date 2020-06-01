@@ -643,13 +643,15 @@ class OnlinePaymentA(admin.ModelAdmin):
     get_user_full_name.short_description = "نام و نام خانوادگی"
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
     def has_add_permission(self, request):
         return False
 
     def has_change_permission(self, request, obj=None):
         return False
+
+    actions = ['delete_selected', ]
 
 
 admin.site.unregister(User)
