@@ -18,7 +18,6 @@
 {% block content %}
     <div class="box box-50">
         <form dir="rtl" method="post" action="{% url 'pay_extend' ext.serial_number %}" enctype="multipart/form-data">
-            {% csrf_token %}
 
             {% if messages %}
                 <div class="messages">
