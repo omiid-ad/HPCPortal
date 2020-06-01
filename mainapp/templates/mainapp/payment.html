@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="box box-70">
+    <div class="box box-50">
         <form dir="rtl" method="post" action="{% url 'pay' req.serial_number %}" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group col-sm-2">
+                <div class="form-group col-sm-3">
                     <label class="label-right" for="cost">هزینه قابل پرداخت</label>
                     <div class="input-group">
                         <input required name="cost" value="{{ req.show_cost|intcomma }}" readonly type="text"
@@ -48,33 +48,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12">
-                    <div class="custom-file">
-                        <input required type="file" accept="image/*, .pdf, .rar, .zip" class="custom-file-input"
-                               name="receipt"
-                               id="customFile">
-                        <label class="custom-file-label" for="customFile">فایل فیش‌ واریزی را آپلود کنید...</label>
-                        <small class="small-tip form-text text-muted text-right mt-2">پسوندهای مجاز: تصویر، pdf، rar،
-                            zip
-                        </small>
-                    </div>
-                </div>
+                {#                <div class="form-group col-12">#}
+                {#                    <div class="custom-file">#}
+                {#                        <input required type="file" accept="image/*, .pdf, .rar, .zip" class="custom-file-input"#}
+                {#                               name="receipt"#}
+                {#                               id="customFile">#}
+                {#                        <label class="custom-file-label" for="customFile">فایل فیش‌ واریزی را آپلود کنید...</label>#}
+                {#                        <small class="small-tip form-text text-muted text-right mt-2">پسوندهای مجاز: تصویر، pdf، rar،#}
+                {#                            zip#}
+                {#                        </small>#}
+                {#                    </div>#}
+                {#                </div>#}
             </div>
-            <div class="form-row mt-4">
-                <div class="form-group col-12 col-md-6">
-                    <label class="label-right" for="desc">توضیحات</label>
-                    <textarea class="form-control" id="desc" name="desc" rows="5"></textarea>
-                </div>
-                <div class="form-group col-12 col-md-6">
-                    <label class="label-right" for="desc">اطلاعات پرداخت</label>
-                    <ul class="text-center mt-4 mb-4 list-unstyled pr-0 text-black-50 pay-info">
-                        <li class="mb-1 mt-1">شماره شبا: IR960100004001072703022624</li>
-                        <li class="mb-1 mt-1">بنام: دانشگاه شهید چمران اهواز</li>
-                        <li class="mb-1 mt-1">شناسه واریز: 328072757117000000000000000139</li>
-                    </ul>
-                </div>
-            </div>
-{#            <button type="submit" class="btn btn-success btn-block mt-4">پرداخت</button>#}
+            {#            <div class="form-row mt-4">#}
+            {#                <div class="form-group col-12 col-md-6">#}
+            {#                    <label class="label-right" for="desc">توضیحات</label>#}
+            {#                    <textarea class="form-control" id="desc" name="desc" rows="5"></textarea>#}
+            {#                </div>#}
+            {#                <div class="form-group col-12 col-md-6">#}
+            {#                    <label class="label-right" for="desc">اطلاعات پرداخت</label>#}
+            {#                    <ul class="text-center mt-4 mb-4 list-unstyled pr-0 text-black-50 pay-info">#}
+            {#                        <li class="mb-1 mt-1">شماره شبا: IR960100004001072703022624</li>#}
+            {#                        <li class="mb-1 mt-1">بنام: دانشگاه شهید چمران اهواز</li>#}
+            {#                        <li class="mb-1 mt-1">شناسه واریز: 328072757117000000000000000139</li>#}
+            {#                    </ul>#}
+            {#                </div>#}
+            {#            </div>#}
+            {#            <button type="submit" class="btn btn-success btn-block mt-4">پرداخت</button>#}
         </form>
         <form id="online_form" action="{% url 'pay_online' %}" method="post">
             {% csrf_token %}
@@ -87,25 +87,4 @@
         </form>
     </div>
 
-{% endblock %}
-
-{% block scripts %}
-    {{ block.super }}
-    <script>
-        $(".custom-file-input").on("change", function () {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-        });
-    </script>
-    {#    <script>#}
-    {#        $("#desc").on("change", function () {#}
-    {#            let main_desc = $(this).val();#}
-    {#            $("#hidden_desc").val(main_desc);#}
-    {#        })#}
-    {#    </script>#}
-    {#    <script>#}
-    {#        document.getElementById("online_form").addEventListener("submit", function (event) {#}
-    {#            event.preventDefault()#}
-    {#        });#}
-    {#    </script>#}
 {% endblock %}
