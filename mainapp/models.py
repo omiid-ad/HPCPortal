@@ -370,7 +370,7 @@ class ResourceLimit(models.Model):
 class OnlinePaymentProxy(OnlinePayment):
     class Meta:
         proxy = True
-        app_label = 'pardakht'
+        app_label = 'mainapp'
         verbose_name_plural = "پرداخت های آنلاین"
         verbose_name = "پرداخت آنلاین"
 
@@ -380,14 +380,28 @@ class OnlinePaymentProxy(OnlinePayment):
                 self.price) + " توسط " + self.user.get_full_name()
         return ""
 
-    def linked_to_mypayment(self):
+    def linked_to_request(self):
         try:
             mp = MyPayment.objects.get(django_pardakht=self)
         except MyPayment.DoesNotExist:
             return None
-        return format_html(
-            '<a href="{}">مشاهده جزئیات</a>',
-            reverse("admin:mainapp_mypayment_change", args=(mp.id,)),
-        )
+        if mp.request:
+            return format_html(
+                '<a href="{}">مشاهده سرویس</a>',
+                reverse("admin:mainapp_request_change", args=(mp.request.id,)),
+            )
 
-    linked_to_mypayment.short_description = "جزئیات"
+    linked_to_request.short_description = "سرویس"
+
+    def linked_to_extend(self):
+        try:
+            mp = MyPayment.objects.get(django_pardakht=self)
+        except MyPayment.DoesNotExist:
+            return None
+        if mp.extend:
+            return format_html(
+                '<a href="{}">مشاهده تمدید</a>',
+                reverse("admin:mainapp_extendrequest_change", args=(mp.extend.id,)),
+            )
+
+    linked_to_extend.short_description = "تمدید"

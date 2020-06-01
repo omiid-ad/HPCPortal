@@ -629,24 +629,10 @@ class ResourceLimitA(admin.ModelAdmin):
         return True
 
 
-class MyPaymentA(admin.ModelAdmin):
-    # list_display = ('get_django_pardakht_object', 'linked_to_django_pardakht')
-    list_filter = ('django_pardakht__state',)
-
-    def has_delete_permission(self, request, obj=None):
-        if obj:
-            return True
-        return False
-
-    def has_add_permission(self, request):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-
 class OnlinePaymentA(admin.ModelAdmin):
-    list_display = ('get_user_full_name', 'created_at', 'price', 'trace_number', 'linked_to_mypayment')
+    list_display = (
+        'get_user_full_name', 'created_at', 'price', 'trace_number', 'payment_result', 'linked_to_request',
+        'linked_to_extend')
 
     def get_user_full_name(self, obj):
         if obj.user:
@@ -657,8 +643,6 @@ class OnlinePaymentA(admin.ModelAdmin):
     get_user_full_name.short_description = "نام و نام خانوادگی"
 
     def has_delete_permission(self, request, obj=None):
-        if obj:
-            return True
         return False
 
     def has_add_permission(self, request):
@@ -678,7 +662,6 @@ admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 admin.site.unregister(OnlinePayment)
 admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
-admin.site.register(MyPayment, MyPaymentA)
 admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
