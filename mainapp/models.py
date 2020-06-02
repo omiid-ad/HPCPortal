@@ -109,6 +109,10 @@ class Request(models.Model):
     renewal_status = models.CharField(max_length=200, choices=RENEWAL_STATUS, verbose_name="وضعیت سرویس",
                                       default='Ok')
 
+    def __init__(self, *args, **kwargs):
+        super(Request, self).__init__(*args, **kwargs)
+        self.__description__ = self.description  # to store old desc
+
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
             self.serial_number = serial_generator()
@@ -120,6 +124,11 @@ class Request(models.Model):
             self.date_expired_admin_only = None
         else:
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
+        if self.description != self.__description__:  # description changed
+            self.__description__ = self.description  # update old desc
+            from .utils import send_generic_email
+            send_generic_email(self.user.user, self, "به‌روز شدن توضیحات",
+                               email_template="mainapp/changed_description_email.html")
         super().save()
 
     def __str__(self):
