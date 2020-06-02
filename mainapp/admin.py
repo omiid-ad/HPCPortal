@@ -637,6 +637,7 @@ class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
         'linked_to_extend')
 
     list_filter = ('state',)
+    search_fields = ['trace_number', ]
 
     def get_user_full_name(self, obj):
         if obj.user:
