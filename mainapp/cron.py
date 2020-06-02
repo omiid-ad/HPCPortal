@@ -40,7 +40,7 @@ def expire_outdated_requests():
 #         if days >= 3:
 #             _.acceptance_status = "Rej"
 #             _.date_expired = None
-#             _.description = "درخواست شما بدلیل عدم پرداخت هزینه سرویس در مدت معین، رد شد"
+#             _.description += "| درخواست شما بدلیل عدم پرداخت هزینه سرویس در مدت معین، رد شد"
 #             _.save()
 #
 #
