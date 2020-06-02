@@ -39,7 +39,7 @@
                 <div class="form-group col-sm-3">
                     <label class="label-right" for="cost">هزینه قابل پرداخت</label>
                     <div class="input-group">
-                        <input required name="cost" value="{{ ext.show_cost|intcomma }}" readonly type="text"
+                        <input required name="cost" value="{{ ext.show_cost|intcomma:False }}" readonly type="text"
                                class="form-control border-0 bg-white"
                                id="cost">
                         <div class="input-group-prepend">
