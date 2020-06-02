@@ -297,6 +297,11 @@ button.btn.btn-link {
 
 /*mobile view*/
 @media (max-width: 575px) {
+    #gateway-btn {
+        display: block;
+        width: 100%;
+    }
+
     .pay-info {
         font-size: 12px !important;
     }
