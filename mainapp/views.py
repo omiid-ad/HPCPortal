@@ -250,6 +250,8 @@ def new_request(request):
                                                      show_cost=int(cost), user_description=request.POST["user_desc"],
                                                      show_cost_for_admin_only=int(cost_disc))
             new_request.save()
+            utils.send_mail_to_admins("درخواست جدید", new_request.user.user, new_request,
+                                      "mainapp/new_request_email.html")
             # messages.success(request, "درخواست با موفقیت ارسال شد، برای پیگیری به بخش درخواست ها مراجعه کنید")
             return redirect('index')
         else:
@@ -364,6 +366,8 @@ def extend(request, sn):
             ext_req.save()
             extended_service.acceptance_status = 'Exting'
             extended_service.save()
+            utils.send_mail_to_admins("تمدید جدید", ext_req.request.user.user, ext_req,
+                                      "mainapp/new_extend_email.html")
             # messages.success(request,
             #                  "درخواست تمدید با موفقیت ارسال شد. برای پیگیری وضعیت، به بخش درخواست‌های تمدید مراجعه کنید")
             return redirect('index')
@@ -535,20 +539,6 @@ def pay_online_extend(request):
         login_required=True
     )
     return redirect(result['link'])
-
-
-# def pay_test(request):
-#     from pardakht import handler
-#     price = 1000
-#     description = "20200522-8871528"
-#     result = handler.create_payment(
-#         price,
-#         description,
-#         utils.call_back,
-#         reverse('index'),
-#         login_required=True
-#     )
-#     return redirect(result['link'])
 
 
 def get_limits_based_on_os(request):

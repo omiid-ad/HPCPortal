@@ -64,6 +64,7 @@ def call_back(payment):
         req.save()
         payment.save()
         my.save()
+        send_mail_to_admins("پرداخت جدید", payment.usert, req, "mainapp/new_req_payment_email.html")
 
 
 def call_back_extend(payment):
@@ -90,6 +91,7 @@ def call_back_extend(payment):
         ext.save()
         payment.save()
         my.save()
+        send_mail_to_admins("پرداخت جدید", payment.usert, ext, "mainapp/new_ext_payment_email.html")
 
 
 def send_update_status_email(request, user, email_template="mainapp/update_status_email.html"):
@@ -195,6 +197,32 @@ def send_expire_notify_to_admins(expire_list, email_template):
     for email in email_list:
         send_mail(
             "یادآوری انقضای درخواست ها",
+            plain_message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            html_message=html_message,
+            fail_silently=True
+        )
+
+
+def send_mail_to_admins(subj, user, obj, email_template):
+    from .models import User
+    admins = User.objects.filter(is_staff=True, is_superuser=True, is_active=True)
+    email_list = list()
+    for i in admins:
+        if i.email:
+            email_list.append(i.email)
+    context = {
+        'user': user,
+        'obj': obj,
+        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'time': datetime.datetime.now().strftime("%H:%M"),
+    }
+    html_message = render_to_string(email_template, context)
+    plain_message = strip_tags(html_message)
+    for email in email_list:
+        send_mail(
+            subj,
             plain_message,
             settings.DEFAULT_FROM_EMAIL,
             [email],
