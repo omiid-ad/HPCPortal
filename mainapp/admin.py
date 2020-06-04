@@ -210,8 +210,8 @@ class ExtendRequestA(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return True
 
-    def has_change_permission(self, request, obj=None):
-        return False
+    # def has_change_permission(self, request, obj=None):
+    #     return False
 
     def get_user_full_name(self, obj):
         return obj.request.user.user.get_full_name()
