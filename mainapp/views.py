@@ -227,6 +227,20 @@ def new_request(request):
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('new_request')
 
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req = urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+        if not result['success']:
+            messages.error(request, "reCAPTCHA failed")
+            return redirect('new_request')
+
         if request.POST["os"] != "" and request.POST["ram"] != "" and request.POST["cpu"] != "" and request.POST[
             "disk"] != "" and request.POST.getlist('app_name') and request.POST[
             "days"] != "" and request.POST["cost"] != "" and int(cost) > 0 and request.POST["cost_disc"] != "" and int(

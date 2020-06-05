@@ -4,6 +4,7 @@
 
 {% block head %}
     {{ block.super }}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 {% endblock %}
@@ -131,8 +132,10 @@
                     <textarea class="form-control" id="user_desc" name="user_desc" rows="4"
                               placeholder="اگر سوالی دارید یا نام برنامه مورد نظرتان در لیست نبود، در این قسمت بنویسید..."></textarea>
                 </div>
-
             </div>
+            <div class="captcha g-recaptcha" data-sitekey="6LcMofYUAAAAANa0pT9d7AmBi7YF5n3tV7NuOlBm"></div>
+            <!--local site-key: 6LfBE-kUAAAAAJPkm3umVjcukTc5aRVysfYvlH7o -->
+            <!--server site-key: 6LcMofYUAAAAANa0pT9d7AmBi7YF5n3tV7NuOlBm -->
             <button type="submit" class="btn btn-success btn-block mt-4">ارسال درخواست</button>
         </form>
     </div>
