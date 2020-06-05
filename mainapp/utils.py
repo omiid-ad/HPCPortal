@@ -64,7 +64,7 @@ def call_back(payment):
         req.save()
         payment.save()
         my.save()
-        send_mail_to_admins("پرداخت جدید", payment.usert, req, "mainapp/new_req_payment_email.html")
+        send_mail_to_admins("پرداخت جدید", payment.user, req, "mainapp/new_req_payment_email.html")
 
 
 def call_back_extend(payment):
@@ -91,7 +91,7 @@ def call_back_extend(payment):
         ext.save()
         payment.save()
         my.save()
-        send_mail_to_admins("پرداخت جدید", payment.usert, ext, "mainapp/new_ext_payment_email.html")
+        send_mail_to_admins("پرداخت جدید", payment.user, ext, "mainapp/new_ext_payment_email.html")
 
 
 def send_update_status_email(request, user, email_template="mainapp/update_status_email.html"):
