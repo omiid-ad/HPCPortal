@@ -10,6 +10,7 @@ from .models import *
 
 
 class ProfileA(admin.ModelAdmin):
+    list_per_page = 35
     date_hierarchy = 'user__date_joined'
     list_display = (
         'get_user_full_name', 'get_user_email', 'university', 'field', 'guidance_master_full_name', 'linked_to_user')
@@ -39,6 +40,7 @@ class ProfileA(admin.ModelAdmin):
 
 
 class RequestA(admin.ModelAdmin):
+    list_per_page = 35
     date_hierarchy = 'date_requested'
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'show_cost_for_admin_only', 'user',
@@ -192,6 +194,7 @@ class RequestA(admin.ModelAdmin):
 
 
 class ExtendRequestA(admin.ModelAdmin):
+    list_per_page = 35
     readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
     list_display = (
         'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',
@@ -299,6 +302,7 @@ class ExtendRequestA(admin.ModelAdmin):
 
 
 class CancelRequestA(admin.ModelAdmin):
+    list_per_page = 35
     readonly_fields = ('acceptance_status', 'request')
     list_display = ('request', 'get_user_full_name', 'acceptance_status', 'linked_to_request')
     list_filter = ('acceptance_status',)
@@ -409,6 +413,7 @@ class CancelRequestA(admin.ModelAdmin):
 
 
 class PaymentA(admin.ModelAdmin):
+    list_per_page = 35
     date_hierarchy = 'date_payed'
     readonly_fields = (
         'date_payed', 'acceptance_status', 'receipt', 'description', 'cost', 'request', 'extend', 'online_pay')
@@ -568,6 +573,7 @@ class PaymentA(admin.ModelAdmin):
 
 
 class UserAdminA(admin.ModelAdmin):
+    list_per_page = 35
     list_display = ('username', 'first_name', 'last_name', 'is_active', 'linked_to_profile')
     exclude = ('groups', 'user_permissions', 'is_staff', 'is_superuser')
     fieldsets = (
@@ -622,6 +628,7 @@ class ResourceLimitA(admin.ModelAdmin):
 
 
 class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
+    list_per_page = 35
     date_hierarchy = 'created_at'
     list_display = (
         'get_user_full_name', 'created_at', 'price', 'trace_number', 'state', 'linked_to_request',
