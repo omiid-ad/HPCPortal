@@ -1,0 +1,79 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+{% block title %}نرم افزارهای موردنیاز | مرکز پردازش سریع دانشگاه شهید چمران اهواز{% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block msg %}
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                $(document).ready(function () {
+                    showMsg("{{ message }}", "{{ message.tags }}", null, "باشه", false, 2500);
+                });
+            {% endfor %}
+        </script>
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+    {% ifnotequal obj_count 0 %}
+        <div class="accordion w-75 ml-auto mr-auto mt-3 mb-3" id="softwareAccordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button dir="rtl" class="btn btn-link btn-block d-flex justify-content-center collapsed"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                            برای لینوکس <span class="mr-2"><i
+                                class="fab fa-linux os-icon-linux"></i></span>
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne"
+                     data-parent="#softwareAccordion">
+                    <div class="card-body">
+                        {% for sl in softwares_lin %}
+                            <div class="m-3">
+                                <a class="d-block" href="{{ MEDIA_URL }}{{ sl.uploaded_file.url }}">{{ sl.title }}</a>
+                                <small class="text-muted">{{ sl.description }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                        <button dir="rtl" class="btn btn-link btn-block collapsed d-flex justify-content-center"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            برای ویندوز <span class="mr-2"><i
+                                class="fab fa-windows os-icon-windows"></i></span>
+                        </button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#softwareAccordion">
+                    <div class="card-body">
+                        {% for sw in softwares_win %}
+                            <div class="m-3">
+                                <a class="d-block" href="{{ MEDIA_URL }}{{ sw.uploaded_file.url }}">{{ sw.title }}</a>
+                                <small class="text-muted">{{ sw.description }}</small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <h3 dir="rtl" class="text-center m-5 p-5 fs-100">هیچ نرم افزاری موجود نیست.</h3>
+    {% endifnotequal %}
+{% endblock %}

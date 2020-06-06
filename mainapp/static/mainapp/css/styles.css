@@ -297,6 +297,10 @@ button.btn.btn-link {
 
 /*mobile view*/
 @media (max-width: 575px) {
+    #softwareAccordion {
+        width: 95% !important;
+    }
+
     #gateway-btn {
         display: block;
         width: 100%;
