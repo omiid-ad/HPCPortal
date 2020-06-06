@@ -42,7 +42,7 @@
                     <div class="card-body">
                         {% for sl in softwares_lin %}
                             <div dir="rtl" class="m-3">
-                                <a class="d-block" href="{{ MEDIA_URL }}{{ sl.uploaded_file.url }}">{{ sl.title }}</a>
+                                <a class="d-block text-primary" href="{{ MEDIA_URL }}{{ sl.uploaded_file.url }}">{{ sl.title }}</a>
                                 <small class="text-muted">{{ sl.description }}</small>
                             </div>
                         {% endfor %}
@@ -65,7 +65,7 @@
                     <div class="card-body">
                         {% for sw in softwares_win %}
                             <div dir="rtl" class="m-3">
-                                <a class="d-block" href="{{ MEDIA_URL }}{{ sw.uploaded_file.url }}">{{ sw.title }}</a>
+                                <a class="d-block text-primary" href="{{ MEDIA_URL }}{{ sw.uploaded_file.url }}">{{ sw.title }}</a>
                                 <small class="text-muted">{{ sw.description }}</small>
                             </div>
                         {% endfor %}
