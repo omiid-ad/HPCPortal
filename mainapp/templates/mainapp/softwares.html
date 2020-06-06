@@ -41,7 +41,7 @@
                      data-parent="#softwareAccordion">
                     <div class="card-body">
                         {% for sl in softwares_lin %}
-                            <div class="m-3">
+                            <div dir="rtl" class="m-3">
                                 <a class="d-block" href="{{ MEDIA_URL }}{{ sl.uploaded_file.url }}">{{ sl.title }}</a>
                                 <small class="text-muted">{{ sl.description }}</small>
                             </div>
@@ -64,7 +64,7 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#softwareAccordion">
                     <div class="card-body">
                         {% for sw in softwares_win %}
-                            <div class="m-3">
+                            <div dir="rtl" class="m-3">
                                 <a class="d-block" href="{{ MEDIA_URL }}{{ sw.uploaded_file.url }}">{{ sw.title }}</a>
                                 <small class="text-muted">{{ sw.description }}</small>
                             </div>
