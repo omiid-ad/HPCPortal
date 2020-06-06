@@ -562,3 +562,18 @@ def get_limits_based_on_os(request):
         rm_json = serializers.serialize('json', [rm, ])
         from django.http import JsonResponse
         return JsonResponse(rm_json, safe=False)
+
+
+@login_required(login_url='/login')
+def software_list(request):
+    softwares_win = Software.objects.filter(is_active=True, os='Win')
+    softwares_lin = Software.objects.filter(is_active=True, os='Lin')
+    obj_count = softwares_lin.count() + softwares_win.count()
+
+    context = {
+        'softwares_win': softwares_win,
+        'softwares_lin': softwares_lin,
+        'obj_count': obj_count,
+    }
+
+    return render(request, 'mainapp/softwares.html', context)
