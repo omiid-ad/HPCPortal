@@ -423,7 +423,8 @@ class Software(models.Model):
     title = models.CharField(max_length=150, verbose_name=_("عنوان"))
     uploaded_file = models.FileField(upload_to="softwares", verbose_name=_("فایل"))
     os = models.CharField(choices=req.OS, max_length=50, verbose_name=_("برای سیستم عامل"))
-    description = models.TextField(blank=True, null=True, verbose_name=_("راهنما/توضیحات"), help_text=_('اختیاری'))
+    description = models.TextField(blank=True, null=True, verbose_name=_("راهنما/توضیحات"),
+                                   help_text=_('اختیاری، کوتاه در حد یک خط'))
     is_active = models.BooleanField(default=True, verbose_name=_("فعال"),
                                     help_text=_('مشخص میکند این نرم‌افزار در سایت اصلی نمایش داده شود یا خیر.'
                                                 'بجای پاک کردن نرم افزار، تیک آنرا بردارید.'))
