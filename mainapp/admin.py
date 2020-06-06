@@ -655,6 +655,13 @@ class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
         return False
 
 
+class SoftwareA(admin.ModelAdmin):
+    list_per_page = 35
+    list_display = ('__str__', 'os', 'updated_at', 'is_active')
+    list_filter = ('is_active', 'os')
+    search_fields = ['title', ]
+
+
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
@@ -669,6 +676,7 @@ admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
 admin.site.register(ResourceLimit, ResourceLimitA)
+admin.site.register(Software, SoftwareA)
 
 admin.site.site_header = "پنل مدیریت پرتال"
 admin.site.site_title = "پرتال مرکز پردازش های سریع دانشگاه شهید چمران اهواز"

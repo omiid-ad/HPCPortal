@@ -1,5 +1,6 @@
 import datetime
 
+from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -414,3 +415,22 @@ class OnlinePaymentProxy(OnlinePayment):
             )
 
     linked_to_extend.short_description = "تمدید"
+
+
+class Software(models.Model):
+    created_at = models.DateTimeField(_('تاریخ ایجاد'), auto_now_add=True)
+    updated_at = models.DateTimeField(_('آخرین تغییر'), auto_now=True)
+    title = models.CharField(max_length=150, verbose_name=_("عنوان"))
+    uploaded_file = models.FileField(upload_to="softwares", verbose_name=_("فایل"))
+    os = models.CharField(choices=req.OS, max_length=50, verbose_name=_("برای سیستم عامل"))
+    description = models.TextField(blank=True, null=True, verbose_name=_("راهنما/توضیحات"), help_text=_('اختیاری'))
+    is_active = models.BooleanField(default=True, verbose_name=_("فعال"),
+                                    help_text=_('مشخص میکند این نرم‌افزار در سایت اصلی نمایش داده شود یا خیر.'
+                                                'بجای پاک کردن نرم افزار، تیک آنرا بردارید.'))
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "نرم افزار موردنیاز"
+        verbose_name_plural = "نرم افزارهای موردنیاز"
