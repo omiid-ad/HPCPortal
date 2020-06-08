@@ -104,7 +104,7 @@ def send_update_status_email(request, user, email_template="mainapp/update_statu
         'domain': domain,
         'protocol': protocol,
         'name': user.get_full_name(),
-        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'date': datetime.date.today(),
         'time': datetime.datetime.now().strftime("%H:%M"),
     }
     html_message = render_to_string(email_template, context)
@@ -147,7 +147,7 @@ def send_extend_date_email(user, user_request, email_template="mainapp/extend_da
     context = {
         'name': user.get_full_name(),
         'user_request': user_request,
-        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'date': datetime.date.today(),
         'time': datetime.datetime.now().strftime("%H:%M"),
     }
     html_message = render_to_string(email_template, context)
@@ -166,7 +166,7 @@ def send_generic_email(user, user_request, subject, email_template):
     context = {
         'name': user.get_full_name(),
         'user_request': user_request,
-        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'date': datetime.date.today(),
         'time': datetime.datetime.now().strftime("%H:%M"),
     }
     html_message = render_to_string(email_template, context)
@@ -190,7 +190,7 @@ def send_expire_notify_to_admins(expire_list, email_template):
             email_list.append(i.email)
     context = {
         'expire_list': expire_list,
-        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'date': datetime.date.today(),
     }
     html_message = render_to_string(email_template, context)
     plain_message = strip_tags(html_message)
@@ -215,7 +215,7 @@ def send_mail_to_admins(subj, user, obj, email_template):
     context = {
         'user': user,
         'obj': obj,
-        'date': datetime.date.today().strftime("%Y/%m/%d"),
+        'date': datetime.date.today(),
         'time': datetime.datetime.now().strftime("%H:%M"),
     }
     html_message = render_to_string(email_template, context)

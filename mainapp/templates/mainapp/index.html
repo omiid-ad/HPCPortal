@@ -1,6 +1,7 @@
 {% extends 'mainapp/base.html' %}
 {% load static %}
 {% load humanize %}
+{% load jalali_tags %}
 {% block title %}صفحه اصلی | مرکز پردازش سریع دانشگاه شهید چمران اهواز{% endblock %}
 
 {% block head %}
@@ -24,7 +25,8 @@
 
 {% block content %}
     {% ifequal all_requests.count 0 %}
-        <h3 class="text-center m-5 p-5 fs-100">هیچ درخواستی ندارید، <span class="border-bottom border-success"><strong><a
+        <h3 class="text-center m-5 p-5 fs-100">هیچ درخواستی ندارید، <span
+                class="border-bottom border-success"><strong><a
                 href="{% url 'new_request' %}">برای ثبت درخواست کلیک کنید</a></strong></span>
         </h3>
     {% else %}
@@ -56,7 +58,7 @@
                     <tr class="table-{% ifequal req.acceptance_status 'Pen' %}warning{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}success{% endifequal %}{% ifequal req.acceptance_status 'Rej' %}danger{% endifequal %}{% ifequal req.acceptance_status 'Acc' %}{% ifnotequal req.renewal_status 'Ok' %} table-danger{% endifnotequal %}{% endifequal %}">
                         <td>{{ forloop.counter }}</td>
                         <td id="serial{{ req.pk }}">{{ req.serial_number }}</td>
-                        <td>{{ req.date_expired.isoformat }}</td>
+                        <td>{{ req.date_expired|to_jalali }}</td>
                         <td>
                             <button type="button" class="btn" data-toggle="modal"
                                     data-target="#techModal{{ forloop.counter }}">
@@ -184,7 +186,7 @@
                                                     {% else %}
                                                         <i class="fab fa-windows os-icon-windows"></i>
                                                     {% endifequal %}
-                                                / ‌{{ req.app_name }}
+                                                    / ‌{{ req.app_name }}
                                                 </div>
                                             </div>
                                         </div>

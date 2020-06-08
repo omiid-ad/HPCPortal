@@ -1,8 +1,9 @@
+{% load jalali_tags %}
 <body>
 <div dir="rtl" style="text-align: right; font-family: IranSans,Roboto,sans-serif;">
     <p>کاربر محترم ‌{{ name }}</p>
     <p>در تاریخ
-        <span dir="rtl">{{ date }}</span>
+        <span dir="rtl">{{ date|to_jalali }}</span>
         سرویس شما به شماره سریال
         <span dir="rtl">{{ user_request.serial_number }}</span>
         منقضی شده است، میتوانید برای تمدید آن اقدام کنید. </p>

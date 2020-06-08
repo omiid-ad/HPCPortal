@@ -1,10 +1,11 @@
+{% load jalali_tags %}
 <body>
 <div dir="rtl" style="text-align: right; font-family: IranSans,Roboto,sans-serif;">
     <p>کاربر محترم ‌{{ name }}</p>
     <p>به اطلاع می رساند سرویس شماره
         <span dir="ltr">{{ user_request.serial_number }}</span>
         در تاریخ
-        <span dir="ltr">{{ user_request.date_expired.isoformat }}</span>
+        <span dir="ltr">{{ user_request.date_expired|to_jalali }}</span>
         به پایان خواهد رسید. جهت تمدید به پرتال مراجعه و درخواست تمدید نمایید. </p>
     <br>
     ـــــــــــــــــــــــــــــــ
