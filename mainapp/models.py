@@ -207,12 +207,19 @@ class ExtendRequest(models.Model):
             self.serial_number = serial_generator()
             if self.request.date_expired is not None:
                 self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
+                super().save()
             else:
                 self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
+                super().save()
+        if self.acceptance_status == "Acc" and self.request.date_expired is not None:
+            self.date_expired_admin_only = self.request.date_expired
+            super().save()
         if self.request.date_expired is not None:
             self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
+            super().save()
         else:
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
+            super().save()
         super().save()
 
     def linked_to_request(self):
