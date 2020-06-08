@@ -208,19 +208,23 @@ class ExtendRequest(models.Model):
             if self.request.date_expired is not None:
                 self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
                 super().save()
+                return
             else:
                 self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
                 super().save()
+                return
         if self.acceptance_status == "Acc" and self.request.date_expired is not None:
             self.date_expired_admin_only = self.request.date_expired
             super().save()
+            return
         if self.request.date_expired is not None:
             self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
             super().save()
+            return
         else:
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
             super().save()
-        super().save()
+            return
 
     def linked_to_request(self):
         if self.request:
