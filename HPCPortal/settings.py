@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'kronos',
     'axes',
     'import_export',
+    'mailer',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -173,7 +174,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 SILENCED_SYSTEM_CHECKS = ['mysql.E001']  # to ignore mysql db error
 LOGIN_URL = '/login'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'mailer.backend.DbBackend'
 EMAIL_USE_SSL = True
 EMAIL_TIMEOUT = None
 EMAIL_HOST = 'mail.scu.ac.ir'

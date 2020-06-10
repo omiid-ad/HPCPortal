@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
 from axes.admin import AccessLog, AccessAttempt
 from import_export.admin import ExportActionMixin
+from mailer.admin import Message, DontSendEntry, MessageLog
 
 from mainapp.utils import send_update_status_email, send_extend_date_email
 from .models import *
@@ -671,6 +672,9 @@ admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
 admin.site.unregister(Group)
 admin.site.unregister(OnlinePayment)
+admin.site.unregister(Message)  # uncomment to see emails log
+admin.site.unregister(DontSendEntry)  # uncomment to see emails log
+admin.site.unregister(MessageLog)  # uncomment to see emails log
 admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
 admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
