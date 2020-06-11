@@ -1,5 +1,9 @@
 {% extends 'pardakht/base.html' %}
+{% load static %}
 {% load humanize %}
+{% block extra_header %}
+    <link rel="stylesheet" href="{% static 'mainapp/css/pardakht_styles.css' %}">
+{% endblock %}
 
 {% block container %}
     <div class="ui fluid raised blue segment">
@@ -34,7 +38,7 @@
         {% if payment.return_url is not None %}
             <a class="ui blue labeled icon button" href="{{ payment.return_url }}">
                 <i class="right arrow icon"></i>
-            بازگشت به پرتال
+                بازگشت به پرتال
             </a>
         {% endif %}
     </div>
