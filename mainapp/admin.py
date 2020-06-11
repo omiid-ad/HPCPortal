@@ -44,8 +44,8 @@ class RequestA(admin.ModelAdmin):
     list_per_page = 35
     date_hierarchy = 'date_requested'
     readonly_fields = (
-        'days', 'date_requested', 'date_expired', 'serial_number', 'show_cost', 'show_cost_for_admin_only', 'user',
-        'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
+        'days', 'date_requested', 'date_expired', 'os', 'serial_number', 'show_cost', 'show_cost_for_admin_only',
+        'user', 'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
     list_display = (
         'serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',
         'linked_to_payment')
@@ -54,7 +54,7 @@ class RequestA(admin.ModelAdmin):
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
         ('جزئیات زمانی درخواست', {'fields': (('date_requested', 'date_expired'), ('days', 'date_expired_admin_only'))}),
-        ('جزئیات فنی درخواست', {'fields': (('cpu', 'ram', 'disk'), 'app_name')}),
+        ('جزئیات فنی درخواست', {'fields': ('os', ('cpu', 'ram', 'disk'), 'app_name')}),
         ('جزئیات مالی درخواست', {'fields': (('show_cost', 'show_cost_for_admin_only'),)}),
         ('توضیحات', {'fields': (('user_description', 'description'),)}),
         ('وضعیت درخواست', {'fields': (('acceptance_status', 'renewal_status'),)}),
