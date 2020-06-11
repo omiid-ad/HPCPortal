@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'axes',
     'import_export',
     'mailer',
+    'dbbackup',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -195,6 +196,15 @@ SAMAN2_TERMINAL_ID = data['saman_payment'][0]["SAMAN2_TERMINAL_ID"]
 SAMAN2_USERNAME = data['saman_payment'][0]["SAMAN2_USERNAME"]
 SAMAN2_PASSWORD = data['saman_payment'][0]["SAMAN2_PASSWORD"]
 SAMAN2_PRIVATE_KEY_PATH = ""
+
+# BACKUP SETTING
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'location': '/var/backups/HPCBackup',
+}
+DBBACKUP_CLEANUP_KEEP = 7  # keep maximum 7 b-ups
+DBBACKUP_CLEANUP_KEEP_MEDIA = 7  # keep maximum 7 b-ups
+DBBACKUP_DATE_FORMAT = '%Y-%m-%d-%H_%M_%S'
 
 # SECURITY SETTING
 CSRF_COOKIE_SECURE = True  # to avoid transmitting the CSRF cookie over HTTP accidentally.
