@@ -198,9 +198,9 @@ SAMAN2_PASSWORD = data['saman_payment'][0]["SAMAN2_PASSWORD"]
 SAMAN2_PRIVATE_KEY_PATH = ""
 
 # BACKUP SETTING
-DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE = data['db_backup'][0]["STORAGE"]
 DBBACKUP_STORAGE_OPTIONS = {
-    'location': '/var/backups/HPCBackup',
+    'location': data['db_backup'][0]["LOCATION"],
 }
 DBBACKUP_CLEANUP_KEEP = 7  # keep maximum 7 b-ups
 DBBACKUP_CLEANUP_KEEP_MEDIA = 7  # keep maximum 7 b-ups
