@@ -1,7 +1,7 @@
 {% extends "admin/base.html" %}
 {% load static %}
 {% block extrastyle %}
-    <link rel="icon" href="{% static 'mainapp/img/big-logo.png' %}">
+    <link rel="icon" href="{% static 'mainapp/img/logo-new.png' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'mainapp/css/adminsite_styles.css' %}">
 {% endblock %}
 
@@ -9,8 +9,8 @@
 
 {% block branding %}
     <h1 id="site-name">
-        <a href="{% url 'admin:index' %}">
-            <img style="display: block;margin: 0 auto;" src="{% static 'mainapp/img/big-logo.png' %}" alt="logo"
+        <a href="{% url 'index' %}">
+            <img style="display: block;margin: 0 auto;" src="{% static 'mainapp/img/logo-new.png' %}" alt="logo"
                  height="80px"/>
         </a>
     </h1>
