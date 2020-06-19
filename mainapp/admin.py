@@ -632,10 +632,12 @@ class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
     list_display = (
         'get_user_full_name', 'created_at', 'price', 'trace_number', 'state', 'linked_to_request',
         'linked_to_extend')
-    fieldsets = ('price', 'state', 'payment_result', 'description', 'user', 'ref_number')
+    fieldsets = (
+        ('', {'fields': ('price', 'state', 'payment_result', 'description', 'user', 'ref_number')}),
+    )
 
     list_filter = ('state',)
-    search_fields = ['trace_number', ]
+    search_fields = ['trace_number', 'user__first_name', 'user__last_name', 'user__email', ]
 
     def get_user_full_name(self, obj):
         if obj.user:
