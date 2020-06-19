@@ -48,7 +48,7 @@ class RequestA(admin.ModelAdmin):
         'user', 'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
     list_display = ('serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',)
     list_filter = ('acceptance_status', 'renewal_status', 'os')
-    search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
+    search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name', 'user__user__email']
     fieldsets = (
         ('اطلاعات کاربر', {'fields': ('user',)}),
         ('جزئیات زمانی درخواست', {'fields': (('date_requested', 'date_expired'), ('days', 'date_expired_admin_only'))}),
@@ -198,7 +198,8 @@ class ExtendRequestA(admin.ModelAdmin):
     list_display = (
         'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',)
     list_filter = ('acceptance_status',)
-    search_fields = ['request__serial_number', 'serial_number']
+    search_fields = ['request__serial_number', 'serial_number', 'request__user__user__first_name',
+                     'request__user__user__last_name', 'request__user__user__email']
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
         ('بیشتر',
@@ -420,7 +421,7 @@ class PaymentA(admin.ModelAdmin):
         'linked_to_extend')
     list_filter = ('acceptance_status',)
     search_fields = ['request__user__user__first_name', 'request__user__user__last_name', 'request__serial_number',
-                     'extend__serial_number']
+                     'extend__serial_number', 'request__user__user__email']
 
     fieldsets = (
         ('اطلاعات پرداخت', {'fields': ('date_payed', ('request', 'extend'), 'cost', 'receipt')}),
