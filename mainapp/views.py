@@ -337,7 +337,10 @@ def edit_profile(request):
 
 @login_required(login_url='/login')
 def extend(request, sn):
-    extended_service = get_object_or_404(Request, serial_number=sn)
+    try:
+        extended_service = request.user.profile.request_set.get(serial_number=sn)
+    except Request.DoesNotExist:
+        raise Http404
     rm = get_object_or_404(ResourceLimit, os__exact=extended_service.os)
     if extended_service.acceptance_status != 'Acc':
         messages.error(request, "امکان ارسال درخواست تمدید برای سرویس موردنظر وجود ندارد")
@@ -425,7 +428,10 @@ def cancel(request):
 
 @login_required(login_url='/login')
 def pay(request, sn):
-    found_request = get_object_or_404(Request, serial_number=sn)
+    try:
+        found_request = request.user.profile.request_set.get(serial_number=sn)
+    except Request.DoesNotExist:
+        raise Http404
     try:
         Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
@@ -469,6 +475,8 @@ def pay(request, sn):
 @login_required(login_url='/login')
 def pay_extend(request, sn):
     found_extend = get_object_or_404(ExtendRequest, serial_number=sn)
+    if found_extend.request.user.user != request.user:
+        raise Http404
     try:
         Profile.objects.get(user=request.user)
     except Profile.DoesNotExist:
