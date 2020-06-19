@@ -46,9 +46,7 @@ class RequestA(admin.ModelAdmin):
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'os', 'serial_number', 'show_cost', 'show_cost_for_admin_only',
         'user', 'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
-    list_display = (
-        'serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',
-        'linked_to_payment')
+    list_display = ('serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',)
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name']
     fieldsets = (
@@ -198,8 +196,7 @@ class ExtendRequestA(admin.ModelAdmin):
     list_per_page = 35
     readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
     list_display = (
-        'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',
-        'linked_to_payment')
+        'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',)
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', 'serial_number']
     fieldsets = (
@@ -422,10 +419,11 @@ class PaymentA(admin.ModelAdmin):
         'get_user_full_name', 'request', 'cost', 'acceptance_status', 'linked_receipt_new_tab', 'linked_to_request',
         'linked_to_extend')
     list_filter = ('acceptance_status',)
-    search_fields = ['request__user__user__first_name', 'request__user__user__last_name', 'request__serial_number']
+    search_fields = ['request__user__user__first_name', 'request__user__user__last_name', 'request__serial_number',
+                     'extend__serial_number']
 
     fieldsets = (
-        ('اطلاعات پرداخت', {'fields': ('online_pay', 'date_payed', ('request', 'extend'), 'cost', 'receipt')}),
+        ('اطلاعات پرداخت', {'fields': ('date_payed', ('request', 'extend'), 'cost', 'receipt')}),
         ('بیشتر', {'fields': ('description', 'acceptance_status',)}),
     )
 
@@ -634,6 +632,7 @@ class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
     list_display = (
         'get_user_full_name', 'created_at', 'price', 'trace_number', 'state', 'linked_to_request',
         'linked_to_extend')
+    fieldsets = ('price', 'state', 'payment_result', 'description', 'user', 'ref_number')
 
     list_filter = ('state',)
     search_fields = ['trace_number', ]
