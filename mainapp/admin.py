@@ -574,7 +574,7 @@ class PaymentA(admin.ModelAdmin):
 
 class UserAdminA(admin.ModelAdmin):
     list_per_page = 35
-    list_display = ('username', 'first_name', 'last_name', 'is_active', 'linked_to_profile')
+    list_display = ('username', 'first_name', 'last_name', 'is_active', 'get_active_services', 'linked_to_profile')
     exclude = ('groups', 'user_permissions', 'is_staff', 'is_superuser')
     fieldsets = (
         ('', {'fields': (('username',),)}),
@@ -585,6 +585,11 @@ class UserAdminA(admin.ModelAdmin):
     list_filter = ('is_active',)
 
     readonly_fields = ('last_login', 'date_joined')
+
+    def get_active_services(self, obj):
+        return len(obj.profile.request_set.filter(acceptance_status="Acc", renewal_status="Ok"))
+
+    get_active_services.short_description = "سرویس‌های فعال"
 
     def has_add_permission(self, request):
         return False
