@@ -644,7 +644,7 @@ class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
     )
 
     list_filter = ('state',)
-    search_fields = ['trace_number', 'user__first_name', 'user__last_name', 'user__email', ]
+    search_fields = ['trace_number', 'user__first_name', 'user__last_name', 'user__email', 'ref_number']
 
     def get_user_full_name(self, obj):
         if obj.user:

@@ -138,6 +138,7 @@ class Request(models.Model):
     class Meta:
         verbose_name_plural = "درخواست سرویس‌ها"
         verbose_name = "درخواست سرویس"
+        ordering = ('-date_requested',)
 
     def extend(self, days):
         if days > 0:
@@ -196,6 +197,7 @@ class ExtendRequest(models.Model):
     class Meta:
         verbose_name_plural = "درخواست های تمدید"
         verbose_name = "درخواست تمدید"
+        ordering = ('-date_requested',)
 
     def __str__(self):
         if self.serial_number:
