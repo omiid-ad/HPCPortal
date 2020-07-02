@@ -583,6 +583,7 @@ class UserAdminA(admin.ModelAdmin):
         ('اطلاعات ورود', {'fields': (('last_login', 'date_joined'),)}),
     )
     list_filter = ('is_active',)
+    search_fields = ['username', 'email', 'last_name']
 
     readonly_fields = ('last_login', 'date_joined')
 
