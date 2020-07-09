@@ -243,8 +243,9 @@ def new_request(request):
 
         if request.POST["os"] != "" and request.POST["ram"] != "" and request.POST["cpu"] != "" and request.POST[
             "disk"] != "" and request.POST.getlist('app_name') and request.POST[
-            "days"] != "" and request.POST["cost"] != "" and int(cost) > 0 and request.POST["cost_disc"] != "" and int(
-            cost_disc) > 0:
+            "days"] != "" and request.POST["cost"] != "" and int(cost) >= 5000 and request.POST[
+            "cost_disc"] != "" and int(
+            cost_disc) >= 1000:
 
             app_name_list = request.POST.getlist('app_name')
             app_name = ', '.join(app_name_list)
@@ -371,7 +372,7 @@ def extend(request, sn):
         rm = ResourceLimit.objects.get(os__exact=extended_service.os)
         if request.POST["days"] != "" and int(rm.days_min) <= int(request.POST["days"]) <= int(rm.days_max) and \
                 request.POST["cost"] != "" and \
-                int(cost) > 0 and request.POST["cost_disc"] != "" and int(cost_disc) > 0:
+                int(cost) >= 1000 and request.POST["cost_disc"] != "" and int(cost_disc) >= 1000:
 
             if profile.university.__contains__("چمران") or profile.university.__contains__(
                     "chamran") or profile.university.__contains__("chamraan"):
