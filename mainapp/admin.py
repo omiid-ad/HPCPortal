@@ -204,6 +204,7 @@ class ExtendRequestA(admin.ModelAdmin):
         ('اطلاعات سرویس', {'fields': ('request',)}),
         ('بیشتر',
          {'fields': (('serial_number', 'days', 'date_expired_admin_only'), ('show_cost', 'acceptance_status'))}),
+        ('توضیحات', {'fields': ('description',)}),
     )
 
     def has_add_permission(self, request, obj=None):

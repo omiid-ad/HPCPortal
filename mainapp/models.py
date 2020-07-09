@@ -193,6 +193,7 @@ class ExtendRequest(models.Model):
     acceptance_status = models.CharField(max_length=200, choices=ACCEPTANCE_STATUS, verbose_name="وضعیت تایید",
                                          default='Pen')
     serial_number = models.CharField(max_length=16, null=True, editable=False, unique=True, verbose_name="شماره سریال")
+    description = models.TextField(blank=True, null=True, verbose_name="توضیحات")
 
     class Meta:
         verbose_name_plural = "درخواست های تمدید"
@@ -204,17 +205,21 @@ class ExtendRequest(models.Model):
             return self.serial_number
         return str(self.id)
 
+    def __init__(self, *args, **kwargs):
+        super(ExtendRequest, self).__init__(*args, **kwargs)
+        self.__description__ = self.description  # to store old desc
+
     def save(self, *args, **kwargs):
         if not self.id:  # occur just for creating object, not for Editing object
             self.serial_number = serial_generator()
             if self.request.date_expired is not None:
                 self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
                 super().save()
-                return
+                # return
             else:
                 self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
                 super().save()
-                return
+                # return
         if self.acceptance_status == "Acc" and self.request.date_expired is not None:
             self.date_expired_admin_only = self.request.date_expired
             super().save()
@@ -222,11 +227,16 @@ class ExtendRequest(models.Model):
         if self.request.date_expired is not None:
             self.date_expired_admin_only = self.request.date_expired + datetime.timedelta(days=self.days)
             super().save()
-            return
+            # return
         else:
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
             super().save()
-            return
+            # return
+        if self.description != self.__description__:  # description changed
+            self.__description__ = self.description  # update old desc
+            from .utils import send_generic_email
+            send_generic_email(self.request.user.user, self, "به‌روز شدن توضیحات",
+                               email_template="mainapp/changed_description_extend_email.html")
 
     def linked_to_request(self):
         if self.request:

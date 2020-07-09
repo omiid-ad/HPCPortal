@@ -44,6 +44,7 @@
                     <th>هزینه تمدید</th>
                     <th>وضعیت تایید</th>
                     <th>پرداخت</th>
+                    <th>توضیحات</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -77,7 +78,35 @@
                                 </a>
                             {% endifequal %}
                         </td>
+                        <td>
+                            {% if ext.description %}
+                                <button type="button" class="btn" data-toggle="modal"
+                                        data-target="#myModal{{ forloop.counter }}">
+                                    <i class="fas fa-comment text-info"></i>
+                                </button>
+                            {% endif %}
+                        </td>
                     </tr>
+                    {% if ext.description %}
+                        <!-- The DescriptionModal -->
+                        <div class="modal fade" id="myModal{{ forloop.counter }}">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">توضیحات</h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body text-right">
+                                        {{ ext.description|linebreaks }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>
