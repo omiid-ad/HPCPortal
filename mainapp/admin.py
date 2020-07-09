@@ -589,7 +589,7 @@ class UserAdminA(admin.ModelAdmin):
     readonly_fields = ('last_login', 'date_joined')
 
     def get_active_services(self, obj):
-        return len(obj.profile.request_set.filter(acceptance_status="Acc", renewal_status="Ok"))
+        return obj.profile.request_set.filter(acceptance_status="Acc", renewal_status="Ok").count()
 
     get_active_services.short_description = "سرویس‌های فعال"
 

@@ -232,6 +232,9 @@ class ExtendRequest(models.Model):
             self.date_expired_admin_only = timezone.now() + datetime.timedelta(days=self.days)
             super().save()
             # return
+        if self.__description__ is None:
+            self.__description__ = ""  # to prevent sending email if no description provided
+
         if self.description != self.__description__:  # description changed
             self.__description__ = self.description  # update old desc
             from .utils import send_generic_email
