@@ -387,7 +387,7 @@ def extend(request, sn):
                                       "mainapp/new_extend_email.html")
             # messages.success(request,
             #                  "درخواست تمدید با موفقیت ارسال شد. برای پیگیری وضعیت، به بخش درخواست‌های تمدید مراجعه کنید")
-            return redirect('index')
+            return redirect('extend_requests')
         else:
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('extend', sn=extended_service.serial_number)
