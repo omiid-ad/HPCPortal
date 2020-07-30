@@ -145,7 +145,7 @@ class Request(models.Model):
             if self.acceptance_status == "Acc":
                 if self.renewal_status == "Ok":
                     if self.date_expired is not None:
-                        self.date_expired = self.date_expired + datetime.timedelta(days=days)
+                        self.date_expired += datetime.timedelta(days=days)
                         return True
 
     def gonna_expire_today(self):
