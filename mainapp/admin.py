@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.shortcuts import render
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
@@ -59,12 +60,6 @@ class RequestA(admin.ModelAdmin):
     )
 
     def extend_date(self, request, queryset):
-        from django.shortcuts import render
-        for q in queryset:
-            if q.extend(1) is None:
-                self.message_user(request, "امکان تمدید یک یا چند درخواست انتخاب شده، وجود ندارد",
-                                  level=messages.ERROR)
-                return HttpResponseRedirect(".")
         if 'apply' in request.POST:
             days = int(request.POST.get("days"))
             for obj in queryset:
