@@ -1,0 +1,77 @@
+{% extends 'admin/base_site.html' %}
+
+{% block extrahead %}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+{% endblock %}
+{% block content %}
+    <h1>آمار پرتال تا امروز:</h1>
+    <h3>برای مشاهده‌ی جزئیات هر قسمت، بر روی تایتل آن کلیک کنید</h3>
+    <div class="results">
+        <table class="table-responsive" id="result_list" style="margin: 10px auto;width: 100%;">
+            <thead>
+            <tr>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a href="{% url 'admin:mainapp_request_changelist' %}"><span>کل درخواست‌ها</span></a>
+                    </div>
+                    <div class="clear"></div>
+                </th>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a
+                            href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Acc&renewal_status__exact=Ok"><span>سرویس‌های فعال</span></a>
+                    </div>
+                    <div class="clear"></div>
+                </th>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a
+                            href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Pen"><span>در انتظار تایید</span></a>
+                    </div>
+                    <div class="clear"></div>
+                </th>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a
+                            href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Paying"><span>در انتظار پرداخت</span></a>
+                    </div>
+                    <div class="clear"></div>
+                </th>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a href="{% url 'admin:mainapp_cancelrequest_changelist' %}"><span>سرویس‌‌های لغو شده</span></a></div>
+                    <div class="clear"></div>
+                </th>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a href="{% url 'admin:mainapp_onlinepaymentproxy_changelist' %}?state__exact=successful"><span>پرداخت‌های موفق</span></a></div>
+                    <div class="clear"></div>
+                </th>
+                <th scope="col" class="column-__str__">
+                    <div class="text"><a href="{% url 'admin:mainapp_payment_changelist' %}"><span>پرداخت‌های آفلاین</span></a></div>
+                    <div class="clear"></div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="row1">
+                <th class="field-__str__ count">{{ context.all_requests }}</th>
+                <th class="field-__str__ count">{{ context.active_requests }}</th>
+                <th class="field-__str__ count"><a href="#">{{ context.pending_requests }}</a></th>
+                <th class="field-__str__ count">{{ context.paying_requests }}</th>
+                <th class="field-__str__ count">{{ context.canceled_requests }}</th>
+                <th class="field-__str__ count">{{ context.success_payments }}</th>
+                <th class="field-__str__ count">{{ context.offline_payments }}</th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('.count').each(function () {
+            $(this).prop('Counter', 0).animate({
+                Counter: $(this).text()
+            }, {
+                duration: 3000,
+                easing: 'swing',
+                step: function (now) {
+                    $(this).text(Math.ceil(now));
+                }
+            });
+        });
+    </script>
+{% endblock %}

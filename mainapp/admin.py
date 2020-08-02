@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.shortcuts import render
+from django.urls import path
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from pardakht.admin import Payment as OnlinePayment
@@ -667,10 +668,41 @@ class SoftwareA(admin.ModelAdmin):
     search_fields = ['title', ]
 
 
+# @admin.register(Request)
+class CustomAdminSite(admin.ModelAdmin):
+    def get_urls(self):
+        urls = super(CustomAdminSite, self).get_urls()
+        my_urls = [
+            path('statistics/', self.admin_site.admin_view(self.test_config), name='statistics'),
+        ]
+        return my_urls + urls
+
+    def test_config(self, request):
+        context = dict(
+            self.admin_site.each_context(request),  # Include common variables for rendering the admin template.
+            context={
+                "all_requests": Request.objects.all().count(),
+                "active_requests": Request.objects.filter(acceptance_status="Acc", renewal_status="Ok").count(),
+                "success_payments": OnlinePaymentProxy.objects.filter(state="successful").count(),
+                "canceled_requests": CancelRequest.objects.all().count(),
+                "offline_payments": Payment.objects.all().count(),
+                "pending_requests": Request.objects.filter(acceptance_status="Pen").count(),
+                "paying_requests": Request.objects.filter(acceptance_status="Paying").count(),
+            },
+        )
+        from django.template.response import TemplateResponse
+        return TemplateResponse(request, "admin/statistics.html", context=context)
+
+
+class CustomAdminPass(RequestA, CustomAdminSite):
+    pass
+
+
+admin.site.register(Request, CustomAdminPass)
 admin.site.unregister(User)
 admin.site.register(CustomUser, UserAdminA)
 admin.site.register(Profile, ProfileA)
-admin.site.register(Request, RequestA)
+# admin.site.register(Request, RequestA)
 admin.site.register(ExtendRequest, ExtendRequestA)
 admin.site.register(CancelRequest, CancelRequestA)
 admin.site.register(Payment, PaymentA)
