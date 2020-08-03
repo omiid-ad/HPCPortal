@@ -35,6 +35,16 @@ class CustomUser(User):
 
     linked_to_profile.short_description = "پروفایل"
 
+    def get_service_usage_days(self):
+        total = 0
+        for service in self.profile.request_set.all():
+            total += service.days
+        for extended_service in ExtendRequest.objects.filter(request__user=self.profile):
+            total += extended_service.days
+        return total
+
+    get_service_usage_days.short_description = "تعداد روزهای استفاده از سرویس"
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="کاربر")

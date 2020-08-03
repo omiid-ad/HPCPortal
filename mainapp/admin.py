@@ -571,7 +571,8 @@ class PaymentA(admin.ModelAdmin):
 
 class UserAdminA(admin.ModelAdmin):
     list_per_page = 35
-    list_display = ('username', 'first_name', 'last_name', 'is_active', 'get_active_services', 'linked_to_profile')
+    list_display = ('username', 'first_name', 'last_name', 'is_active', 'get_active_services', 'get_service_usage_days',
+                    'linked_to_profile')
     exclude = ('groups', 'user_permissions', 'is_staff', 'is_superuser')
     fieldsets = (
         ('', {'fields': (('username',),)}),
