@@ -6,61 +6,105 @@
 {% endblock %}
 {% block content %}
     <h1>آمار پرتال تا امروز:</h1>
-    <h3>برای مشاهده‌ی جزئیات هر قسمت، بر روی تایتل آن کلیک کنید</h3>
-    <div class="results">
-        <table class="table-responsive" id="result_list" style="margin: 10px auto;width: 100%;">
-            <thead>
-            <tr>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a href="{% url 'admin:mainapp_request_changelist' %}"><span>کل درخواست‌ها</span></a>
-                    </div>
-                    <div class="clear"></div>
-                </th>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a
-                            href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Acc&renewal_status__exact=Ok"><span>سرویس‌های فعال</span></a>
-                    </div>
-                    <div class="clear"></div>
-                </th>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a
-                            href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Pen"><span>در انتظار تایید</span></a>
-                    </div>
-                    <div class="clear"></div>
-                </th>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a
-                            href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Paying"><span>در انتظار پرداخت</span></a>
-                    </div>
-                    <div class="clear"></div>
-                </th>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a href="{% url 'admin:mainapp_cancelrequest_changelist' %}"><span>سرویس‌‌های لغو شده</span></a></div>
-                    <div class="clear"></div>
-                </th>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a href="{% url 'admin:mainapp_onlinepaymentproxy_changelist' %}?state__exact=successful"><span>پرداخت‌های موفق</span></a></div>
-                    <div class="clear"></div>
-                </th>
-                <th scope="col" class="column-__str__">
-                    <div class="text"><a href="{% url 'admin:mainapp_payment_changelist' %}"><span>پرداخت‌های آفلاین</span></a></div>
-                    <div class="clear"></div>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="row1">
-                <th class="field-__str__ count">{{ context.all_requests }}</th>
-                <th class="field-__str__ count">{{ context.active_requests }}</th>
-                <th class="field-__str__ count"><a href="#">{{ context.pending_requests }}</a></th>
-                <th class="field-__str__ count">{{ context.paying_requests }}</th>
-                <th class="field-__str__ count">{{ context.canceled_requests }}</th>
-                <th class="field-__str__ count">{{ context.success_payments }}</th>
-                <th class="field-__str__ count">{{ context.offline_payments }}</th>
-            </tr>
-            </tbody>
-        </table>
+    <h3>برای مشاهده‌ی جزئیات هر قسمت، بر روی کارت مربوطه کلیک کنید</h3>
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around;">
+        <a href="{% url 'admin:mainapp_request_changelist' %}">
+            <div class=" card primary">
+                <h2 class="title"> کل درخواست‌ها </h2>
+                <h1 class="count value">{{ context.all_requests }}</h1>
+            </div>
+        </a>
+        <a href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Acc&renewal_status__exact=Ok">
+
+            <div class="card success">
+                <h2 class="title"> سرویس‌های فعال </h2>
+                <h1 class="count value">{{ context.active_requests }}</h1>
+            </div>
+        </a>
+        <a href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Pen">
+
+            <div class="card warning">
+                <h2 class="title"> درانتظار تایید </h2>
+                <h1 class="count value">{{ context.pending_requests }}</h1>
+            </div>
+        </a>
+        <a href="{% url 'admin:mainapp_request_changelist' %}?acceptance_status__exact=Paying">
+
+            <div class="card warning">
+                <h2 class="title"> درانتظار پرداخت </h2>
+                <h1 class="count value">{{ context.paying_requests }}</h1>
+            </div>
+        </a>
+        <a href="{% url 'admin:mainapp_cancelrequest_changelist' %}">
+
+            <div class="card danger">
+                <h2 class="title"> سرویس‌‌های لغو شده </h2>
+                <h1 class="count value">{{ context.canceled_requests }}</h1>
+            </div>
+        </a>
+        <a href="{% url 'admin:mainapp_onlinepaymentproxy_changelist' %}?state__exact=successful">
+
+            <div class="card success">
+                <h2 class="title"> پرداخت‌های موفق </h2>
+                <h1 class="count value">{{ context.success_payments }}</h1>
+            </div>
+        </a>
+        <a href="{% url 'admin:mainapp_payment_changelist' %}">
+            <div class="card primary">
+                <h2 class="title"> پرداخت‌های آفلاین </h2>
+                <h1 class="count value">{{ context.offline_payments }}</h1>
+            </div>
+        </a>
     </div>
+    <style>
+        .title {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            color: white;
+            stroke: red;
+            padding: 20px 50px;
+            font-size: 11px;
+            text-align: center;
+            word-wrap: normal;
+        }
+
+        .value {
+            text-align: center;
+            font-size: 35px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .card {
+            width: 200px;
+            height: auto;
+            margin: 20px;
+            transition: 100ms linear 20ms;
+            border: 1px solid #5a6268;
+            border-bottom-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        .card:hover {
+            box-shadow: 2px 4px 9px #5a6268;
+            cursor: pointer;
+        }
+
+        .primary {
+            background-color: #2EC0EF;
+        }
+
+        .success {
+            background-color: #69F071;
+        }
+
+        .warning {
+            background-color: #F39C12;
+        }
+
+        .danger {
+            background-color: #DD4B39;
+        }
+    </style>
     <script>
         $('.count').each(function () {
             $(this).prop('Counter', 0).animate({
