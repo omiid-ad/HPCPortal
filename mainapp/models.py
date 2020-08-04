@@ -1,6 +1,7 @@
 import datetime
 
 from django.utils.translation import gettext as _
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -37,13 +38,33 @@ class CustomUser(User):
 
     def get_service_usage_days(self):
         total = 0
-        for service in self.profile.request_set.all():
-            total += service.days
-        for extended_service in ExtendRequest.objects.filter(request__user=self.profile):
-            total += extended_service.days
+        # count all requests and extends days that user payed for (online)
+        for payment in MyPayment.objects.filter(django_pardakht__user=self, django_pardakht__state="successful"):
+            if payment.request:
+                total += payment.request.days
+            if payment.extend:
+                total += payment.extend.days
+        # count all requests and extends days that user payed for (offline)
+        for offline_payment in Payment.objects.filter(request__user=self.profile, acceptance_status="Acc"):
+            if offline_payment.request:
+                total += offline_payment.request.days
+            if offline_payment.extend:
+                total += offline_payment.extend.days
         return total
 
     get_service_usage_days.short_description = "تعداد روزهای استفاده از سرویس"
+
+    def get_total_user_pay(self):
+        # online pays
+        total = 0
+        for payment in OnlinePaymentProxy.objects.filter(user=self, state="successful"):
+            total += payment.price
+        # offline pays
+        for off_payment in Payment.objects.filter(request__user=self.profile, acceptance_status="Acc"):
+            total += off_payment.cost
+        return intcomma(total, False)
+
+    get_total_user_pay.short_description = "پرداخت کل"
 
 
 class Profile(models.Model):
