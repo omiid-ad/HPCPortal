@@ -701,7 +701,7 @@ class CustomAdminSite(admin.ModelAdmin):
                 "offline_payments": Payment.objects.all().count(),
                 "pending_requests": Request.objects.filter(acceptance_status="Pen").count(),
                 "paying_requests": Request.objects.filter(acceptance_status="Paying").count(),
-                "total_payments": total_payment,
+                "total_payments": total_payment * 10,
             },
         )
         from django.template.response import TemplateResponse
