@@ -40,13 +40,13 @@ class CustomUser(User):
         total = 0
         # count all requests and extends days that user payed for (online)
         for payment in MyPayment.objects.filter(django_pardakht__user=self, django_pardakht__state="successful"):
-            if payment.request:
+            if payment.request and not payment.extend:
                 total += payment.request.days
             if payment.extend:
                 total += payment.extend.days
         # count all requests and extends days that user payed for (offline)
         for offline_payment in Payment.objects.filter(request__user=self.profile, acceptance_status="Acc"):
-            if offline_payment.request:
+            if offline_payment.request and not offline_payment.extend:
                 total += offline_payment.request.days
             if offline_payment.extend:
                 total += offline_payment.extend.days
