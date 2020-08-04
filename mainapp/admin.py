@@ -689,7 +689,7 @@ class CustomAdminSite(admin.ModelAdmin):
         for op in OnlinePaymentProxy.objects.filter(state="successful"):
             total_payment += op.price
         for ofp in Payment.objects.filter(acceptance_status="Acc"):
-            total_payment += ofp
+            total_payment += ofp.cost
 
         context = dict(
             self.admin_site.each_context(request),  # Include common variables for rendering the admin template.
