@@ -411,6 +411,7 @@ req = Request()  # to access OS variable
 
 
 class ResourceLimit(models.Model):
+    date_modified = models.DateTimeField(auto_now=True, verbose_name="آخرین تغییر")
     os = models.CharField(choices=req.OS, max_length=50, verbose_name="برای سیستم عامل")
     cpu_min = models.IntegerField(default=0, verbose_name="حداقل پردازنده")
     cpu_max = models.IntegerField(default=0, verbose_name="حداکثر پردازنده")
