@@ -48,7 +48,8 @@ class RequestA(admin.ModelAdmin):
     readonly_fields = (
         'days', 'date_requested', 'date_expired', 'os', 'serial_number', 'show_cost', 'show_cost_for_admin_only',
         'user', 'acceptance_status', 'renewal_status', 'user_description', 'date_expired_admin_only')
-    list_display = ('serial_number', 'get_user_full_name', 'renewal_status', 'date_expired', 'acceptance_status',)
+    list_display = (
+        'serial_number', 'get_user_full_name', 'date_requested', 'renewal_status', 'date_expired', 'acceptance_status',)
     list_filter = ('acceptance_status', 'renewal_status', 'os')
     search_fields = ['serial_number', 'user__user__first_name', 'user__user__last_name', 'user__user__email']
     fieldsets = (
@@ -190,16 +191,21 @@ class RequestA(admin.ModelAdmin):
 
 class ExtendRequestA(admin.ModelAdmin):
     list_per_page = 35
-    readonly_fields = ('acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request', 'serial_number')
+    readonly_fields = (
+        'date_requested', 'acceptance_status', 'days', 'show_cost', 'date_expired_admin_only', 'request',
+        'serial_number')
     list_display = (
-        'serial_number', 'get_user_full_name', 'days', 'acceptance_status', 'show_cost', 'linked_to_request',)
+        'serial_number', 'get_user_full_name', 'date_requested', 'days', 'date_expired_admin_only', 'acceptance_status',
+        'show_cost', 'linked_to_request',)
     list_filter = ('acceptance_status',)
     search_fields = ['request__serial_number', 'serial_number', 'request__user__user__first_name',
                      'request__user__user__last_name', 'request__user__user__email']
     fieldsets = (
         ('اطلاعات سرویس', {'fields': ('request',)}),
         ('بیشتر',
-         {'fields': (('serial_number', 'days', 'date_expired_admin_only'), ('show_cost', 'acceptance_status'))}),
+         {'fields': (
+             ('serial_number', 'date_requested', 'days', 'date_expired_admin_only'),
+             ('show_cost', 'acceptance_status'))}),
         ('توضیحات', {'fields': ('description',)}),
     )
 
@@ -572,7 +578,7 @@ class PaymentA(admin.ModelAdmin):
 class UserAdminA(admin.ModelAdmin):
     list_per_page = 35
     list_display = ('username', 'first_name', 'last_name', 'is_active', 'get_active_services', 'get_service_usage_days',
-                    'linked_to_profile')
+                    'get_total_user_pay', 'linked_to_profile')
     exclude = ('groups', 'user_permissions', 'is_staff', 'is_superuser')
     fieldsets = (
         ('', {'fields': (('username',),)}),
@@ -608,7 +614,7 @@ class UserAdminA(admin.ModelAdmin):
 
 
 class ResourceLimitA(admin.ModelAdmin):
-    list_display = ('os',)
+    list_display = ('os', 'date_modified')
     fieldsets = (
         ('', {'fields': (('os',),)}),
         ('پردازنده', {'fields': (('cpu_min', 'cpu_max'),)}),
@@ -674,11 +680,17 @@ class CustomAdminSite(admin.ModelAdmin):
     def get_urls(self):
         urls = super(CustomAdminSite, self).get_urls()
         my_urls = [
-            path('statistics/', self.admin_site.admin_view(self.test_config), name='statistics'),
+            path('statistics/', self.admin_site.admin_view(self.statistics), name='statistics'),
         ]
         return my_urls + urls
 
-    def test_config(self, request):
+    def statistics(self, request):
+        total_payment = 0
+        for op in OnlinePaymentProxy.objects.filter(state="successful"):
+            total_payment += op.price
+        for ofp in Payment.objects.filter(acceptance_status="Acc"):
+            total_payment += ofp
+
         context = dict(
             self.admin_site.each_context(request),  # Include common variables for rendering the admin template.
             context={
@@ -689,6 +701,7 @@ class CustomAdminSite(admin.ModelAdmin):
                 "offline_payments": Payment.objects.all().count(),
                 "pending_requests": Request.objects.filter(acceptance_status="Pen").count(),
                 "paying_requests": Request.objects.filter(acceptance_status="Paying").count(),
+                "total_payments": total_payment,
             },
         )
         from django.template.response import TemplateResponse

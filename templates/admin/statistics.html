@@ -55,6 +55,12 @@
                 <h1 class="count value">{{ context.offline_payments }}</h1>
             </div>
         </a>
+        <a href="#">
+            <div class="card success">
+                <h2 class="title"> مجموع پرداخت‌شده (ریال) </h2>
+                <h1 class="count value" id="pay">{{ context.total_payments }}</h1>
+            </div>
+        </a>
     </div>
     <style>
         .title {
@@ -110,12 +116,20 @@
             $(this).prop('Counter', 0).animate({
                 Counter: $(this).text()
             }, {
-                duration: 3000,
+                duration: 2500,
                 easing: 'swing',
                 step: function (now) {
                     $(this).text(Math.ceil(now));
                 }
             });
+        });
+
+        $(document).ready(function (x) {
+            x = {{ context.total_payments }};
+            out = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            setTimeout(function () {
+                document.getElementById("pay").innerHTML = out;
+            }, 2700);
         });
     </script>
 {% endblock %}
