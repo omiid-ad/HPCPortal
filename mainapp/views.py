@@ -35,8 +35,15 @@ def index(request):
             #         req.renewal_status = 'Exp'
             #         req.date_expired = None
             #         req.save()
+            extend_req_notif = False
+            for req in profile.request_set.all():
+                for ext in req.extendrequest_set.all():
+                    if ext.acceptance_status == 'Paying':
+                        extend_req_notif = True
+
             context = {
                 'all_requests': all_requests,
+                'extend_req_notif': extend_req_notif,
             }
             return render(request, 'mainapp/index.html', context)
 

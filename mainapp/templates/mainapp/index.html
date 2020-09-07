@@ -23,6 +23,19 @@
     {% endif %}
 {% endblock %}
 
+{% block notif %}
+    {% if extend_req_notif %}
+        <span class="m-1 badge badge-pill badge-danger">!</span>
+    {% endif %}
+{% endblock %}
+
+{% block notif_child %}
+    {% if extend_req_notif %}
+        <span class="m-1 badge badge-pill badge-danger">!</span>
+    {% endif %}
+{% endblock %}
+
+
 {% block content %}
     {% ifequal all_requests.count 0 %}
         <h3 class="text-center m-5 p-5 fs-100">هیچ درخواستی ندارید، <span

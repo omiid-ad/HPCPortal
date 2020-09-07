@@ -32,11 +32,12 @@
                                     <a onmouseenter="profileHover()" class="nav-link dropdown-toggle my-link" href="#"
                                        id="navbardrop"
                                        data-toggle="dropdown">
-                                        {{ user.first_name }} {{ user.last_name }}
+                                        {{ user.first_name }} {{ user.last_name }}{% block notif %}{% endblock %}
                                     </a>
                                     <div onmouseleave="profileHover()" class="dropdown-menu">
                                         <a class=" my-link" href="{% url 'index' %}">درخواست‌ها</a>
-                                        <a class=" my-link" href="{% url 'extend_requests' %}">درخواست‌های تمدید</a>
+                                        <a class=" my-link" href="{% url 'extend_requests' %}">درخواست‌های
+                                            تمدید {% block notif_child %}{% endblock %}</a>
                                         <a class=" my-link" href="{% url 'software_list' %}">نرم‌افزارهای موردنیاز</a>
                                         <a class=" my-link" href="{% url 'edit_profile' %}">ویرایش پروفایل</a>
                                         <div class="dropdown-divider"></div>
