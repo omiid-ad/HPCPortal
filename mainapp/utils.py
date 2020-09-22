@@ -15,8 +15,8 @@ def calc_cost(os, cpu, ram, disk, days):
     rm = ResourceLimit.objects.get(os__exact=os)
     if int(rm.cpu_min) <= cpu <= int(rm.cpu_max) and int(rm.ram_min) <= ram <= int(rm.ram_max) and int(
             rm.disk_min) <= disk <= int(rm.disk_max) and int(rm.days_min) <= days <= int(rm.days_max):
-        total = ((cpu * 6600) + ((ram / 4) * 10000) + ((disk / 30) * 10000)) * (days / 30)
-        total_disc = (70 * total) / 100
+        total = ((cpu * 7000) + ((ram / 4) * 11000) + ((disk / 30) * 10500)) * (days / 30)
+        total_disc = (75 * total) / 100
 
         total_disc = trunc(round(total_disc) / 1000) * 1000
         total_disc = f'{total_disc:,d}'
