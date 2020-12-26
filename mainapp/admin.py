@@ -3,9 +3,11 @@ from django.shortcuts import render
 from django.urls import path
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
+from import_export import resources
+from import_export.fields import Field
 from pardakht.admin import Payment as OnlinePayment
 from axes.admin import AccessLog, AccessAttempt
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ExportActionModelAdmin
 from mailer.admin import Message, DontSendEntry, MessageLog
 
 from mainapp.utils import send_update_status_email, send_extend_date_email
@@ -637,7 +639,23 @@ class ResourceLimitA(admin.ModelAdmin):
         return True
 
 
-class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
+class OnlinePaymentResource(resources.ModelResource):
+    full_name = Field()
+
+    class Meta:
+        model = OnlinePaymentProxy
+        fields = ('full_name', 'price', 'trace_number', 'state', 'created_at', 'description',
+                  'ref_number')
+
+    def dehydrate_full_name(self, obj):
+        return '{} {}'.format(obj.user.first_name, obj.user.last_name)
+
+
+class OnlinePaymentAdmin(ExportActionModelAdmin):
+    resource_class = OnlinePaymentResource
+
+
+class OnlinePaymentA(admin.ModelAdmin):
     list_per_page = 35
     date_hierarchy = 'created_at'
     list_display = (
@@ -666,6 +684,10 @@ class OnlinePaymentA(ExportActionMixin, admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
+
+
+class OnlinePaymentB(OnlinePaymentA, OnlinePaymentAdmin):
+    pass
 
 
 class SoftwareA(admin.ModelAdmin):
@@ -725,7 +747,7 @@ admin.site.unregister(OnlinePayment)
 admin.site.unregister(Message)  # uncomment to see emails log
 admin.site.unregister(DontSendEntry)  # uncomment to see emails log
 admin.site.unregister(MessageLog)  # uncomment to see emails log
-admin.site.register(OnlinePaymentProxy, OnlinePaymentA)
+admin.site.register(OnlinePaymentProxy, OnlinePaymentB)
 admin.site.unregister(AccessLog)
 admin.site.unregister(AccessAttempt)
 admin.site.disable_action('delete_selected')
