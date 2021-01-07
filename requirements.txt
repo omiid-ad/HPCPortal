@@ -4,7 +4,6 @@ appdirs==1.4.3
 asgiref==3.2.7
 billiard==3.6.3.0
 cached-property==1.5.1
-celery==4.4.5
 certifi==2020.4.5.1
 chardet==3.0.4
 DateTime==4.3
@@ -15,8 +14,6 @@ django-admin-interface==0.12.2
 django-admin-notifications==0.6.3
 django-appconf==1.0.4
 django-axes==5.3.1
-django-celery==3.3.1
-django-celery-email==3.0.0
 django-colorfield==0.3.0
 django-dbbackup==3.3.0
 django-extensions==1.9.8
