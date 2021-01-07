@@ -78,33 +78,43 @@
 {% block scripts %}
     {{ block.super }}
     <script type="text/javascript">
-        $(document).ready(function () {
+        function calculateCosts(ram, cpu, disk, days, os) {
+            $.ajax({
+                url: '{% url 'calc_cost' %}',
+                type: "GET",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'ram': ram,
+                    'cpu': cpu,
+                    'disk': disk,
+                    'days': days,
+                    'os': os,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    let cost = document.getElementById('cost');
+                    let cost_dics = document.getElementById('cost_disc');
+                    cost.value = data.total;
+                    cost_dics.value = data.total_disc;
+                }
+            });
+        }
+
+        (function () {
             let os = "{{ extended_service.os }}";
             let cpu = {{ extended_service.cpu }};
             let ram = {{ extended_service.ram }};
             let disk = {{ extended_service.disk }};
-            let days = $("#days").val();
-            $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
-                if (result.status === 200) {
-                    $("#cost").val(result.total);
-                    $("#cost_disc").val(result.total_disc);
-                } else {
-                    $("#cost").val("NaN");
-                    $("#cost_disc").val("NaN");
-                }
-            });
-            $("#days").keyup(function () {
-                days = $("#days").val();
-                $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
-                    if (result.status === 200) {
-                        $("#cost").val(result.total);
-                        $("#cost_disc").val(result.total_disc);
-                    } else {
-                        $("#cost").val("NaN");
-                        $("#cost_disc").val("NaN");
-                    }
-                });
-            });
+            let days = document.getElementById('days').value;
+            calculateCosts(ram, cpu, disk, days, os);
+        })();
+        document.getElementById('days').addEventListener('change', (e) => {
+            let os = "{{ extended_service.os }}";
+            let cpu = {{ extended_service.cpu }};
+            let ram = {{ extended_service.ram }};
+            let disk = {{ extended_service.disk }};
+            let days = e.target.value;
+            calculateCosts(ram, cpu, disk, days, os);
         });
     </script>
 

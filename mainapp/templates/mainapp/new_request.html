@@ -144,145 +144,87 @@
 {% block scripts %}
     {{ block.super }}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#os").change(function () {
-                setTimeout(function () {
-                    let os = $("#os").val();
-                    let cpu = $("#cpu").val();
-                    let ram = $("#ram").val();
-                    let disk = $("#disk").val();
-                    let days = $("#days").val();
-                    $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
-                        if (result.status === 200) {
-                            $("#cost").val(result.total);
-                            $("#cost_disc").val(result.total_disc);
-                        } else {
-                            $("#cost").val("NaN");
-                            $("#cost_disc").val("NaN");
-                        }
-                    });
-                }, 700);
-            })
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            let os = $("#os").val();
-            $.getJSON("/get_limits_based_on_os?os=" + os, function (result) {
-                    let res = $.parseJSON(result);
-                    // set initial values
-                    $("#cpu").val(res[0].fields["cpu_min"]);
-                    $("#ram").val(res[0].fields["ram_min"]);
-                    $("#disk").val(res[0].fields["disk_min"]);
-                    $("#days").val(res[0].fields["days_min"]);
-                    //set limits
-                    $("#cpu").attr(
-                        {
-                            "min": res[0].fields["cpu_min"],
-                            "max": res[0].fields["cpu_max"]
-                        }
-                    );
-                    $("#ram").attr(
-                        {
-                            "min": res[0].fields["ram_min"],
-                            "max": res[0].fields["ram_max"]
-                        }
-                    );
-                    $("#disk").attr(
-                        {
-                            "min": res[0].fields["disk_min"],
-                            "max": res[0].fields["disk_max"]
-                        }
-                    );
-                    $("#days").attr(
-                        {
-                            "min": res[0].fields["days_min"],
-                            "max": res[0].fields["days_max"]
-                        }
-                    );
+        function calculateCosts(ram, cpu, disk, days, os) {
+            $.ajax({
+                url: '{% url 'calc_cost' %}',
+                type: "GET",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'ram': ram,
+                    'cpu': cpu,
+                    'disk': disk,
+                    'days': days,
+                    'os': os,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    let cost = document.getElementById('cost');
+                    let cost_dics = document.getElementById('cost_disc');
+                    cost.value = data.total;
+                    cost_dics.value = data.total_disc;
                 }
-            );
-            $("#os").change(function () {
-                let os = $("#os").val();
-                $.getJSON("/get_limits_based_on_os?os=" + os, function (result) {
-                    let res = $.parseJSON(result);
-                    // set initial values
-                    $("#cpu").val(res[0].fields["cpu_min"]);
-                    $("#ram").val(res[0].fields["ram_min"]);
-                    $("#disk").val(res[0].fields["disk_min"]);
-                    $("#days").val(res[0].fields["days_min"]);
+            });
+        }
 
-                    //set limits
-                    $("#cpu").attr(
-                        {
-                            "min": res[0].fields["cpu_min"],
-                            "max": res[0].fields["cpu_max"],
-                        }
-                    );
-                    $("#ram").attr(
-                        {
-                            "min": res[0].fields["ram_min"],
-                            "max": res[0].fields["ram_max"]
-                        }
-                    );
-                    $("#disk").attr(
-                        {
-                            "min": res[0].fields["disk_min"],
-                            "max": res[0].fields["disk_max"]
-                        }
-                    );
-                    $("#days").attr(
-                        {
-                            "min": res[0].fields["days_min"],
-                            "max": res[0].fields["days_max"]
-                        }
-                    );
-                })
+        function changeValuesBasedOnOs(os) {
+            $.ajax({
+                url: '{% url 'get_limits_based_on_os' %}',
+                type: "GET",
+                data: {
+                    'csrfmiddlewaretoken': '{{ cstf_token }}',
+                    'os': os,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    let result = JSON.parse(data)[0]['fields'];
+                    let cpu = document.getElementById('cpu');
+                    let ram = document.getElementById('ram');
+                    let disk = document.getElementById('disk');
+                    let days = document.getElementById('days');
+                    cpu.value = result['cpu_min'];
+                    cpu.setAttribute('min', result['cpu_min']);
+                    cpu.setAttribute('max', result['cpu_max']);
+                    ram.value = result['ram_min'];
+                    ram.setAttribute('min', result['ram_min']);
+                    ram.setAttribute('max', result['ram_max']);
+                    disk.value = result['disk_min'];
+                    disk.setAttribute('min', result['disk_min']);
+                    disk.setAttribute('max', result['disk_max']);
+                    days.value = result['days_min'];
+                    days.setAttribute('min', result['days_min']);
+                    days.setAttribute('max', result['days_max']);
+                    calculateCosts(ram.value, cpu.value, disk.value, days.value, os);
+                }
+            });
+        }
+
+        (function () {
+            let el = document.getElementById('os');
+            changeValuesBasedOnOs(el.value);
+        })();
+
+        document.getElementById('os').addEventListener('change', (e) => {
+            let el = e.target;
+            changeValuesBasedOnOs(el.value)
+        });
+
+        let elementsArray = [document.getElementById('ram'), document.getElementById('cpu'), document.getElementById('disk'), document.getElementById('days')]
+
+        elementsArray.forEach(function (elem) {
+            elem.addEventListener('change', function () {
+                let cpu = document.getElementById('cpu').value;
+                let ram = document.getElementById('ram').value;
+                let disk = document.getElementById('disk').value;
+                let days = document.getElementById('days').value;
+                let os = document.getElementById('os').value;
+                calculateCosts(ram, cpu, disk, days, os);
             })
-        });
-
+        })
     </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            setTimeout(function () {
-                let os = $("#os").val();
-                let cpu = $("#cpu").val();
-                let ram = $("#ram").val();
-                let disk = $("#disk").val();
-                let days = $("#days").val();
-                $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
-                    if (result.status === 200) {
-                        $("#cost").val(result.total);
-                        $("#cost_disc").val(result.total_disc);
-                    } else {
-                        $("#cost").val("NaN");
-                        $("#cost_disc").val("NaN");
-                    }
-                });
-            }, 1000);
 
-            setTimeout(function () {
-                $("input").keyup(function () {
-                    os = $("#os").val();
-                    cpu = $("#cpu").val();
-                    ram = $("#ram").val();
-                    disk = $("#disk").val();
-                    days = $("#days").val();
-                    $.getJSON("/calc_cost?os=" + os + '&' + "cpu=" + cpu + '&' + "ram=" + ram + '&' + "disk=" + disk + '&' + "days=" + days, function (result) {
-                        if (result.status === 200) {
-                            $("#cost").val(result.total);
-                            $("#cost_disc").val(result.total_disc);
-                        } else {
-                            $("#cost").val("NaN");
-                            $("#cost_disc").val("NaN");
-                        }
-                    });
-                });
-            }, 1000);
-
-        });
-    </script>
     <script>
         $('#apps').selectpicker();
     </script>
