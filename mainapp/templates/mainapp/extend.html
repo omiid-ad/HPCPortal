@@ -108,7 +108,7 @@
             let days = document.getElementById('days').value;
             calculateCosts(ram, cpu, disk, days, os);
         })();
-        document.getElementById('days').addEventListener('change', (e) => {
+        document.getElementById('days').addEventListener('keyup', (e) => {
             let os = "{{ extended_service.os }}";
             let cpu = {{ extended_service.cpu }};
             let ram = {{ extended_service.ram }};

@@ -214,7 +214,7 @@
         let elementsArray = [document.getElementById('ram'), document.getElementById('cpu'), document.getElementById('disk'), document.getElementById('days')]
 
         elementsArray.forEach(function (elem) {
-            elem.addEventListener('change', function () {
+            elem.addEventListener('keyup', function () {
                 let cpu = document.getElementById('cpu').value;
                 let ram = document.getElementById('ram').value;
                 let disk = document.getElementById('disk').value;
