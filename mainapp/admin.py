@@ -641,14 +641,18 @@ class ResourceLimitA(admin.ModelAdmin):
 
 class OnlinePaymentResource(resources.ModelResource):
     full_name = Field()
+    jalali_created_at = Field()
 
     class Meta:
         model = OnlinePaymentProxy
-        fields = ('full_name', 'price', 'trace_number', 'state', 'created_at', 'description',
+        fields = ('full_name', 'price', 'trace_number', 'state', 'created_at', 'jalali_created_at', 'description',
                   'ref_number')
 
     def dehydrate_full_name(self, obj):
         return '{} {}'.format(obj.user.first_name, obj.user.last_name)
+
+    def dehydrate_jalali_created_at(self, obj):
+        return obj.jcreated_at()
 
 
 class OnlinePaymentAdmin(ExportActionModelAdmin):
