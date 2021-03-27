@@ -59,7 +59,7 @@
                             <a class="navbar-link my-link" href="{% url 'register' %}">ثبت نام</a>
                             <a class="navbar-link my-link d-none d-sm-flex" href="{% url 'index' %}">خانه</a>
                         {% else %}
-                            <a class="navbar-link my-link btn disabled" href="#">ارسال درخواست جدید</a>
+                            <a class="navbar-link my-link" href="{% url 'new_request' %}">ارسال درخواست جدید</a>
                             <a class="navbar-link my-link d-none d-sm-flex" href="{% url 'index' %}">خانه</a>
                         {% endif %}
                     </div>
