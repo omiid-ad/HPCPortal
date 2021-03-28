@@ -132,8 +132,9 @@ class Request(models.Model):
     ram = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="رم")
     disk = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="دیسک")
     days = models.IntegerField(default=0, verbose_name="تعداد روزها")
-    show_cost = models.IntegerField(default=0, verbose_name="هزینه‌ی قابل پرداخت")
-    show_cost_for_admin_only = models.IntegerField(default=0, verbose_name="هزینه‌ی با/بی تخفیف", null=True)
+    show_cost = models.IntegerField(default=0, verbose_name="هزینه نهایی (قابل پرداخت)", help_text='تومان')
+    show_cost_for_admin_only = models.IntegerField(default=0, verbose_name="هزینه واقعی دوره", null=True,
+                                                   help_text='تومان')
     description = models.TextField(blank=True, verbose_name="توضیحات")
     user_description = models.TextField(blank=True, verbose_name="توضیحات کاربر")
     serial_number = models.CharField(max_length=16, editable=False, unique=True, verbose_name="شماره سریال")

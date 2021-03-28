@@ -49,7 +49,7 @@
                            min="{{ rm.days_min }}" max="{{ rm.days_max }}">
                 </div>
                 <div class="form-group col-sm-4">
-                    <label class="label-right" for="cost">هزینه کاربران سایر دانشگاه‌ها</label>
+                    <label class="label-right" for="cost">هزینه واقعی دوره</label>
                     <div class="input-group">
                         <input required name="cost" value="0" readonly type="text"
                                class="form-control" id="cost">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-4">
-                    <label class="label-right" for="cost_disc">هزینه کاربران دانشگاه</label>
+                    <label class="label-right" for="cost_disc">هزینه نهایی دوره</label>
                     <div class="input-group">
                         <input required name="cost_disc" value="0" readonly type="text" class="form-control"
                                id="cost_disc">
@@ -94,8 +94,8 @@
                 success: function (data) {
                     let cost = document.getElementById('cost');
                     let cost_dics = document.getElementById('cost_disc');
-                    cost.value = data.total;
-                    cost_dics.value = data.total_disc;
+                    cost.value = data.total_real_cost;
+                    cost_dics.value = data.total_final_cost;
                 }
             });
         }

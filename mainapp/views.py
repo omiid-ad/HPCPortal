@@ -208,8 +208,8 @@ def new_request(request):
 
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         try:
-            cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
-            cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
+            real_cost = locale.atoi(request.POST["cost"])  # real cost
+            final_cost = locale.atoi(request.POST["cost_disc"])  # final cost
         except ValueError:
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('new_request')
@@ -222,7 +222,7 @@ def new_request(request):
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('new_request')
         if res["status"] == 200:
-            if cost != locale.atoi(res["total"]) or cost_disc != locale.atoi(res["total_disc"]):
+            if real_cost != locale.atoi(res["total_real_cost"]) or final_cost != locale.atoi(res["total_final_cost"]):
                 messages.error(request, "فرم را به درستی پر کنید")
                 return redirect('new_request')
 
@@ -250,27 +250,19 @@ def new_request(request):
 
         if request.POST["os"] != "" and request.POST["ram"] != "" and request.POST["cpu"] != "" and request.POST[
             "disk"] != "" and request.POST.getlist('app_name') and request.POST[
-            "days"] != "" and request.POST["cost"] != "" and int(cost) >= 5000 and request.POST[
+            "days"] != "" and request.POST["cost"] != "" and int(real_cost) >= 5000 and request.POST[
             "cost_disc"] != "" and int(
-            cost_disc) >= 1000:
+            final_cost) >= 1000:
 
             app_name_list = request.POST.getlist('app_name')
             app_name = ', '.join(app_name_list)
 
-            if profile.university.__contains__("چمران") or profile.university.__contains__(
-                    "chamran") or profile.university.__contains__("chamraan"):
-                new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
-                                                     cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
-                                                     app_name=app_name, days=int(request.POST["days"]),
-                                                     show_cost=int(cost_disc),
-                                                     user_description=request.POST["user_desc"],
-                                                     show_cost_for_admin_only=int(cost))
-            else:
-                new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
-                                                     cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
-                                                     app_name=app_name, days=int(request.POST["days"]),
-                                                     show_cost=int(cost), user_description=request.POST["user_desc"],
-                                                     show_cost_for_admin_only=int(cost_disc))
+            new_request = Request.objects.create(user=profile, os=request.POST["os"], ram=int(request.POST["ram"]),
+                                                 cpu=int(request.POST["cpu"]), disk=int(request.POST["disk"]),
+                                                 app_name=app_name, days=int(request.POST["days"]),
+                                                 show_cost=int(final_cost), user_description=request.POST["user_desc"],
+                                                 show_cost_for_admin_only=int(real_cost))
+
             new_request.save()
             utils.send_mail_to_admins("درخواست جدید", new_request.user.user, new_request,
                                       "mainapp/new_request_email.html")
@@ -371,23 +363,18 @@ def extend(request, sn):
             return redirect('complete_profile')
         locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
         try:
-            cost = locale.atoi(request.POST["cost"])  # cost for non-chamran
-            cost_disc = locale.atoi(request.POST["cost_disc"])  # cost for chamran
+            real_cost = locale.atoi(request.POST["cost"])
+            final_cost = locale.atoi(request.POST["cost_disc"])
         except ValueError:
             messages.error(request, "فرم را به درستی پر کنید")
             return redirect('extend', sn=extended_service.serial_number)
         rm = ResourceLimit.objects.get(os__exact=extended_service.os)
         if request.POST["days"] != "" and int(rm.days_min) <= int(request.POST["days"]) <= int(rm.days_max) and \
                 request.POST["cost"] != "" and \
-                int(cost) >= 1000 and request.POST["cost_disc"] != "" and int(cost_disc) >= 1000:
+                int(real_cost) >= 1000 and request.POST["cost_disc"] != "" and int(final_cost) >= 1000:
 
-            if profile.university.__contains__("چمران") or profile.university.__contains__(
-                    "chamran") or profile.university.__contains__("chamraan"):
-                ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
-                                                       show_cost=int(cost_disc))
-            else:
-                ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
-                                                       show_cost=int(cost))
+            ext_req = ExtendRequest.objects.create(request=extended_service, days=int(request.POST["days"]),
+                                                   show_cost=int(final_cost))
             ext_req.save()
             extended_service.acceptance_status = 'Exting'
             extended_service.save()

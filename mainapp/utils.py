@@ -64,6 +64,10 @@ def calc_cost(os, cpu, ram, disk, days):
     rm = ResourceLimit.objects.get(os__exact=os)
     if int(rm.cpu_min) <= cpu <= int(rm.cpu_max) and int(rm.ram_min) <= ram <= int(rm.ram_max) and int(
             rm.disk_min) <= disk <= int(rm.disk_max) and int(rm.days_min) <= days <= int(rm.days_max):
+        if days <= 14:
+            days_mul = 0.8
+        else:
+            days_mul = 0.9
         if cpu < 8:
             cpu_price = 400
         else:
@@ -81,18 +85,19 @@ def calc_cost(os, cpu, ram, disk, days):
         else:
             disk_price = 95
 
-        total = ((cpu * cpu_price) + (ram * ram_price) + (disk * disk_price)) * (days / 30)
-        total_disc = (75 * total) / 100
+        total = ((cpu * cpu_price) + (ram * ram_price) + (disk * disk_price))
+        total_real_cost = total * days
+        total_final_cost = total_real_cost * days_mul
 
-        total_disc = trunc(round(total_disc) / 1000) * 1000
-        total_disc = f'{total_disc:,d}'
+        total_final_cost = trunc(round(total_final_cost) / 1000) * 1000
+        total_final_cost = f'{total_final_cost:,d}'
 
-        total = trunc(round(total) / 1000) * 1000
-        total = f'{total:,d}'
+        total_real_cost = trunc(round(total_real_cost) / 1000) * 1000
+        total_real_cost = f'{total_real_cost:,d}'
 
         data = {
-            'total': total,
-            'total_disc': total_disc,
+            'total_real_cost': total_real_cost,
+            'total_final_cost': total_final_cost,
             'status': 200
         }
         return JsonResponse(data)
