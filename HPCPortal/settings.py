@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'import_export',
     'mailer',
     'dbbackup',
+    'widget_tweaks',
 ]
 
 AUTHENTICATION_BACKENDS = [
