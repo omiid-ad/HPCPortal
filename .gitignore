@@ -2,7 +2,6 @@
 # Created by https://www.gitignore.io/api/linux,django,python,pycharm,virtualenv,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=linux,django,python,pycharm,virtualenv,visualstudiocode
 
-static
 migrations
 config.json
 cron_commands_config.conf
