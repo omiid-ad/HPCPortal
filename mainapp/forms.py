@@ -59,14 +59,15 @@ class FactorForm(forms.Form):
     def generate_pdf(self):
         pathlib.Path(settings.BASE_DIR + settings.MEDIA_URL + 'factors').mkdir(parents=True, exist_ok=True)
         fn = str(uuid.uuid1()) + ".pdf"
-        outfile = 'media/factors/{}'.format(fn)  # output file name
-        template = PdfReader("template.pdf", decompress=False).pages[0]  # read template pdf
+        outfile = '/home/hpc/HPCPortal/media/factors/{}'.format(fn)  # output file name
+        file_path = 'media/factors/{}'.format(fn)
+        template = PdfReader("/home/hpc/HPCPortal/template.pdf", decompress=False).pages[0]  # read template pdf
         template_obj = pagexobj(template)
         canvas = Canvas(outfile)
         xobj_name = makerl(canvas, template_obj)
         canvas.doForm(xobj_name)
 
-        pdfmetrics.registerFont(TTFont('BNazanin', 'mainapp/static/mainapp/fonts/B Nazanin Bold_YasDL.com.ttf'))
+        pdfmetrics.registerFont(TTFont('BNazanin', '/home/hpc/HPCPortal/mainapp/static/mainapp/fonts/B Nazanin Bold_YasDL.com.ttf'))
         canvas.setFont('BNazanin', 14)  # set font family and size to detect persian letters
 
         full_name = arabic_reshaper.reshape(u'{}'.format(self.request.user.get_full_name()))
@@ -78,4 +79,4 @@ class FactorForm(forms.Form):
         canvas.drawString(180, 518, gregorian_to_jalali(self.cleaned_data['start_date']).strftime("%Y/%m/%d"))  # from
         canvas.drawString(80, 518, gregorian_to_jalali(self.cleaned_data['end_date']).strftime("%Y/%m/%d"))  # to
         canvas.save()
-        return outfile
+        return file_path
