@@ -1,0 +1,62 @@
+{% extends 'mainapp/base.html' %}
+{% load static humanize jalali_tags widget_tweaks %}
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'mainapp/css/kamadatepicker.min.css' %}">
+    <script src="{% static 'mainapp/js/kamadatepicker.js' %}"></script>
+{% endblock %}
+{% block title %}دریافت فاکتور مالی | مرکز پردازش سریع دانشگاه شهید چمران اهواز{% endblock %}
+
+{% block content %}
+    <div class="box box-50">
+        <div class="row">
+            <div class="col">
+                <form dir="rtl" class="row g-3 label-right" method="post">
+                    {% csrf_token %}
+                    <div class="col-md-6">
+                        {{ form.start_date.label_tag }}
+                        {% render_field form.start_date class+="form-control" autocomplete+="off" %}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.end_date.label_tag }}
+                        {% render_field form.end_date class+="form-control" autocomplete+="off" %}
+                    </div>
+                    <div class="col-12">
+                        <ul class="error-form">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ field.label }}: {{ error|escape }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for er in form.non_field_errors %}
+                                <li>{{ er|escape }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col text-center">
+                        <input class="btn btn-success mt-3" type="submit" value="دریافت فاکتور">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .bd-main {
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        let settings = {
+            placeholder: "انتخاب کنید",
+            markToday: true,
+            gotoToday: true,
+        }
+        kamaDatepicker('id_start_date', settings);
+        kamaDatepicker('id_end_date', settings);
+    </script>
+
+{% endblock %}
