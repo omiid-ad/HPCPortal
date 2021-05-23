@@ -1,16 +1,26 @@
-from math import trunc
-
 import datetime
+
+from math import trunc
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from jdatetime import GregorianToJalali
 
 from HPCPortal import settings
 
 from .calendar import jalali
 from django.utils import timezone
+
+
+def gregorian_to_jalali(date):
+    """get gregorian date as Date object
+    return corresponding jalali Date object"""
+    raw_date = GregorianToJalali(int(date.year), int(date.month), int(date.day))
+    raw_date_list = raw_date.getJalaliList()
+    jdate = datetime.date(raw_date_list[0], raw_date_list[1], raw_date_list[2])
+    return jdate
 
 
 def persian_numbers_converter(mystr):
