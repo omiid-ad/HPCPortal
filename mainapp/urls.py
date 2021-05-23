@@ -5,6 +5,7 @@ from .views import *
 urlpatterns = [
     path('', index, name="index"),
     path('login/', login, name="login"),
+    path('factor/', GetFactorView.as_view(), name="factor"),
     path('logout/', logout, name="logout"),
     path('register/', register, name="register"),
     path('new_request/', new_request, name="new_request"),

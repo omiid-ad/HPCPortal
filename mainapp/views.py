@@ -6,17 +6,36 @@ import requests
 from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.utils.html import strip_tags
+from django.views.generic import FormView
 
 from HPCPortal import settings
 from .models import *
 from . import utils
+from .forms import FactorForm
+
+
+class GetFactorView(LoginRequiredMixin, FormView):
+    form_class = FactorForm
+    template_name = 'mainapp/get_factor.html'
+    success_url = reverse_lazy('factor')
+
+    def get_form_kwargs(self):
+        kwargs = super(GetFactorView, self).get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_valid(self, form):
+        file_path = form.generate_pdf()
+        return redirect('/' + file_path)
 
 
 def index(request):
