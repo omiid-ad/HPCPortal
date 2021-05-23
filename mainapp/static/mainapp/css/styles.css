@@ -86,6 +86,13 @@ label.custom-file-label {
     text-align: right;
 }
 
+.error-form {
+    padding: 0 15px;
+    margin: 12px 0;
+    color: #e01111;
+    font-size: 13px;
+}
+
 .footer {
     position: absolute;
     bottom: 0;
