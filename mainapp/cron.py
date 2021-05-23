@@ -1,6 +1,9 @@
 import datetime
 import kronos
+import glob
+import os
 
+from HPCPortal import settings
 from mainapp.utils import send_before_expire_email, send_generic_email, send_expire_notify_to_admins
 from .models import Request, ExtendRequest
 
@@ -30,6 +33,13 @@ def expire_outdated_requests():
             _.date_expired = None
             _.save()
             send_generic_email(_.user.user, _, "انقضای سرویس", email_template="mainapp/request_expired_email.html")
+
+
+@kronos.register('30 0 * * *')  # every day at 00:30 AM
+def remove_generated_factors():
+    files = glob.glob(settings.MEDIA_ROOT + '/factors/' + '*.pdf')
+    for f in files:
+        os.remove(f)
 
 # @kronos.register('55 23 * * *')
 # def reject_requests_not_payed_by_3_days():
