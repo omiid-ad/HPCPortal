@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="{% static 'mainapp/css/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'mainapp/css/styles.css' %}">
         <link rel="icon" href="{% static 'mainapp/img/logo-new.png' %}">
+        {% block extrahead %}{% endblock %}
         <script src="https://code.jquery.com/jquery-3.5.0.min.js"
                 integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
                 crossorigin="anonymous"></script>
@@ -39,6 +40,7 @@
                                         <a class=" my-link" href="{% url 'extend_requests' %}">درخواست‌های
                                             تمدید {% block notif_child %}{% endblock %}</a>
                                         <a class=" my-link" href="{% url 'software_list' %}">نرم‌افزارهای موردنیاز</a>
+                                        <a class=" my-link" href="{% url 'factor' %}">دریافت فاکتور</a>
                                         <a class=" my-link" href="{% url 'edit_profile' %}">ویرایش پروفایل</a>
                                         <div class="dropdown-divider"></div>
                                         <a class=" my-link" href="{% url 'logout' %}">خروج از حساب</a>
