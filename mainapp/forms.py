@@ -60,7 +60,7 @@ class FactorForm(forms.Form):
         pathlib.Path(settings.BASE_DIR + settings.MEDIA_URL + 'factors').mkdir(parents=True, exist_ok=True)
         fn = str(uuid.uuid1()) + ".pdf"
         outfile = 'media/factors/{}'.format(fn)  # output file name
-        template = PdfReader("mainapp/templates/mainapp/template.pdf", decompress=False).pages[0]  # read template pdf
+        template = PdfReader("template.pdf", decompress=False).pages[0]  # read template pdf
         template_obj = pagexobj(template)
         canvas = Canvas(outfile)
         xobj_name = makerl(canvas, template_obj)
