@@ -15,19 +15,29 @@ from reportlab.pdfbase.ttfonts import TTFont
 from bidi.algorithm import get_display
 
 from HPCPortal import settings
-from mainapp.models import OnlinePaymentProxy
+from mainapp.models import OnlinePaymentProxy, CustomUser
 from pardakht.models import Payment as PardakhtPayment
 
 from mainapp.utils import gregorian_to_jalali
 
 
 class FactorForm(forms.Form):
+    user = forms.ModelChoiceField(required=True, label='کاربر', queryset=CustomUser.objects.all(),
+                                  empty_label='انتخاب کنید')
     start_date = JalaliDateField(required=True, label='از تاریخ', input_formats=['%Y/%m/%d'])
     end_date = JalaliDateField(required=True, label='تا تاریخ', input_formats=['%Y/%m/%d'])
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         super(FactorForm, self).__init__(*args, **kwargs)
+        if not self.request.user.is_staff:
+            self.fields['user'].widget = forms.HiddenInput()
+            self.fields['user'].disabled = True
+            self.fields['user'].widget.attrs.update({
+                'readonly': 'readonly'
+            })
+            self.fields['user'].initial = self.request.user
+            self.fields['user'].queryset = CustomUser.objects.filter(pk=self.request.user.pk)
 
     def clean(self):
         data = super(FactorForm, self).clean()
@@ -41,7 +51,7 @@ class FactorForm(forms.Form):
         data = self.cleaned_data
         start_date, end_date = data.get('start_date'), data.get('end_date')
         qs = OnlinePaymentProxy.objects.filter(
-            user=self.request.user, state=PardakhtPayment.STATE_SUCCESS,
+            user=data['user'], state=PardakhtPayment.STATE_SUCCESS,
         )
         payments = list()
         for pay in qs:
@@ -67,10 +77,11 @@ class FactorForm(forms.Form):
         xobj_name = makerl(canvas, template_obj)
         canvas.doForm(xobj_name)
 
-        pdfmetrics.registerFont(TTFont('BNazanin', '/home/hpc/HPCPortal/mainapp/static/mainapp/fonts/B Nazanin Bold_YasDL.com.ttf'))
+        pdfmetrics.registerFont(
+            TTFont('BNazanin', '/home/hpc/HPCPortal/mainapp/static/mainapp/fonts/B Nazanin Bold_YasDL.com.ttf'))
         canvas.setFont('BNazanin', 14)  # set font family and size to detect persian letters
 
-        full_name = arabic_reshaper.reshape(u'{}'.format(self.request.user.get_full_name()))
+        full_name = arabic_reshaper.reshape(u'{}'.format(self.cleaned_data['user'].get_full_name()))
         full_name = get_display(full_name)
         today = timezone.localdate(timezone.now())
         canvas.drawString(21, 786, gregorian_to_jalali(today).strftime("%Y/%m/%d"))  # header date

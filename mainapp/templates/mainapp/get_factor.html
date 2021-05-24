@@ -3,6 +3,8 @@
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'mainapp/css/kamadatepicker.min.css' %}">
     <script src="{% static 'mainapp/js/kamadatepicker.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 {% endblock %}
 {% block title %}دریافت فاکتور مالی | مرکز پردازش سریع دانشگاه شهید چمران اهواز{% endblock %}
 
@@ -12,6 +14,13 @@
             <div class="col">
                 <form dir="rtl" class="row g-3 label-right" method="post">
                     {% csrf_token %}
+                    <div class="col-12 {% if not user.is_staff %}d-none{% endif %}">
+                        <div class="col-md-6 pr-0">
+                            {{ form.user.label_tag }}
+                            {% render_field form.user class+="form-control" %}
+                        </div>
+                    </div>
+
                     <div class="col-md-6">
                         {{ form.start_date.label_tag }}
                         {% render_field form.start_date class+="form-control" autocomplete+="off" %}
@@ -44,6 +53,42 @@
         .bd-main {
             font-size: 14px;
         }
+
+        span.select2.select2-container.select2-container--default {
+            width: 100% !important;
+            margin-bottom: 10px!important;
+        }
+
+        span.select2-selection.select2-selection--single {
+            border-color: #ced4da;
+            height: calc(1.5em + .75rem + 2px);
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+        }
+
+        #select2-id_user-container {
+            color: #495057;
+            line-height: calc(1.5em + .75rem + 2px);
+        }
+
+        span.select2-selection__arrow {
+            height: calc(1.5em + .75rem + 2px) !important;
+        }
+
+        span.select2-search.select2-search--dropdown > input {
+            font-size: 16px;
+            height: calc(1.5em + .75rem);
+            border-radius: 5px;
+        }
+
+        span > span.select2-results {
+            text-align: right;
+            font-size: 14px;
+        }
+
+
     </style>
 {% endblock %}
 
@@ -57,6 +102,9 @@
         }
         kamaDatepicker('id_start_date', settings);
         kamaDatepicker('id_end_date', settings);
+        $(document).ready(function () {
+            $('#id_user').select2();
+        });
     </script>
 
 {% endblock %}
