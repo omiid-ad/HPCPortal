@@ -22,7 +22,7 @@ from mainapp.utils import gregorian_to_jalali
 
 
 class FactorForm(forms.Form):
-    user = forms.ModelChoiceField(required=True, label='کاربر', queryset=CustomUser.objects.all(),
+    user = forms.ModelChoiceField(required=True, label='کاربر', queryset=CustomUser.objects.all().order_by('last_name'),
                                   empty_label='انتخاب کنید')
     start_date = JalaliDateField(required=True, label='از تاریخ', input_formats=['%Y/%m/%d'])
     end_date = JalaliDateField(required=True, label='تا تاریخ', input_formats=['%Y/%m/%d'])
@@ -38,6 +38,12 @@ class FactorForm(forms.Form):
             })
             self.fields['user'].initial = self.request.user
             self.fields['user'].queryset = CustomUser.objects.filter(pk=self.request.user.pk)
+
+    def clean_end_date(self):
+        end_date = self.cleaned_data['end_date']
+        if end_date > timezone.localdate(timezone.now()):
+            raise ValidationError("تاریخ پایان نمیتواند در آینده باشد")
+        return end_date
 
     def clean(self):
         data = super(FactorForm, self).clean()
