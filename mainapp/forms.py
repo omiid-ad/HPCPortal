@@ -51,8 +51,8 @@ class FactorForm(forms.Form):
         if start_date and end_date:
             if start_date > end_date:
                 raise ValidationError("تاریخ شروع نمیتواند از تاریخ پایان بزرگتر باشد")
-        if len(self.get_payments()) == 0:
-            raise ValidationError("در تاریخ مشخص شده، هیچ پرداختی نداشته اید")
+            if len(self.get_payments()) == 0:
+                raise ValidationError("در تاریخ مشخص شده، هیچ پرداختی نداشته اید")
 
     def get_payments(self):
         data = self.cleaned_data
