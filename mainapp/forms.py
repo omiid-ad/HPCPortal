@@ -42,14 +42,15 @@ class FactorForm(forms.Form):
     def clean_end_date(self):
         end_date = self.cleaned_data['end_date']
         if end_date > timezone.localdate(timezone.now()):
-            raise ValidationError("تاریخ پایان نمیتواند در آینده باشد")
+            raise ValidationError("نمیتواند در آینده باشد")
         return end_date
 
     def clean(self):
         data = super(FactorForm, self).clean()
         start_date, end_date = data.get('start_date'), data.get('end_date')
-        if start_date > end_date:
-            raise ValidationError("تاریخ شروع نمیتواند از تاریخ پایان بزرگتر باشد")
+        if start_date and end_date:
+            if start_date > end_date:
+                raise ValidationError("تاریخ شروع نمیتواند از تاریخ پایان بزرگتر باشد")
         if len(self.get_payments()) == 0:
             raise ValidationError("در تاریخ مشخص شده، هیچ پرداختی نداشته اید")
 
