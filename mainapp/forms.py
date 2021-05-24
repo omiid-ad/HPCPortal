@@ -36,7 +36,7 @@ class FactorForm(forms.Form):
             self.fields['user'].widget.attrs.update({
                 'readonly': 'readonly'
             })
-            self.fields['user'].initial = self.request.user
+            self.fields['user'].initial = self.request.user.pk
             self.fields['user'].queryset = CustomUser.objects.filter(pk=self.request.user.pk)
 
     def clean_end_date(self):
