@@ -35,11 +35,11 @@ def expire_outdated_requests():
             send_generic_email(_.user.user, _, "انقضای سرویس", email_template="mainapp/request_expired_email.html")
 
 
-@kronos.register('30 0 * * *')  # every day at 00:30 AM
-def remove_generated_factors():
-    files = glob.glob(settings.MEDIA_ROOT + '/factors/' + '*.pdf')
-    for f in files:
-        os.remove(f)
+# @kronos.register('30 0 * * *')  # every day at 00:30 AM
+# def remove_generated_factors():
+#     files = glob.glob(settings.MEDIA_ROOT + '/factors/' + '*.pdf')
+#     for f in files:
+#         os.remove(f)
 
 # @kronos.register('55 23 * * *')
 # def reject_requests_not_payed_by_3_days():
