@@ -75,4 +75,45 @@
                 متداول</a>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 style="text-align: center; width: 100%; direction: rtl; font-weight: 900;" class="modal-title"
+                        id="exampleModalLongTitle">قابل توجه کاربران گرامی</h5>
+                </div>
+                <div class="modal-body" id="modal-content-wraper">
+                    <p>بنا بر دلایلی، تا اطلاع ثانوی امکان ارائه سرویس وجود ندارد.</p>
+                    <p>لذا از ایجاد درخواست جدید <span style="color: red; font-size: 16px; font-weight: bolder;">خودداری نمایید</span>.
+                    </p>
+                </div>
+                <div class="modal-footer" style="flex-direction: row-reverse">
+                    <button type="button" data-dismiss="modal" class="btn btn-danger">مطالعه کردم</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #modal-content-wraper {
+            text-align: justify;
+            direction: rtl;
+            font-size: 14px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                $('#exampleModalCenter').modal('show');
+            }, 1200);
+        });
+    </script>
 {% endblock %}
