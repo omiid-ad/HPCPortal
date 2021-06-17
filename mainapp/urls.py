@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.generic import RedirectView
 
 from .views import *
 
@@ -10,7 +9,7 @@ urlpatterns = [
     path('logout/', logout, name="logout"),
     path('register/', register, name="register"),
     # path('new_request/', new_request, name="new_request"),
-    path('new_request/', RedirectView.as_view(pattern_name='index', permanent=False), name="new_request"),
+    path('new_request/', RedirectView.as_view(pattern_name='index'), name="new_request"),
     path('complete_profile/', complete_profile, name="complete_profile"),
     path('calc_cost/', calc_cost, name="calc_cost"),
     path('edit_profile/', edit_profile, name="edit_profile"),
