@@ -15,7 +15,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.html import strip_tags
-from django.views.generic import FormView
+from django.views.generic import FormView, RedirectView
 
 from HPCPortal import settings
 from .models import *
@@ -36,6 +36,10 @@ class GetFactorView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         file_path = form.generate_pdf()
         return redirect('/' + file_path)
+
+
+class ExtendRequestRedirectView(RedirectView):
+    url = reverse_lazy('index', kwargs=None)
 
 
 def index(request):

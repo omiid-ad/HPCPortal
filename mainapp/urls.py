@@ -15,7 +15,7 @@ urlpatterns = [
     path('calc_cost/', calc_cost, name="calc_cost"),
     path('edit_profile/', edit_profile, name="edit_profile"),
     # path('extend/<slug:sn>', extend, name="extend"),
-    path('extend/<slug:sn>', RedirectView.as_view(pattern_name='index', permanent=False), name="extend"),
+    path('extend/<slug:sn>', ExtendRequestRedirectView.as_view(), name="extend"),
     path('pay/<slug:sn>', pay, name="pay"),
     path('pay_extend/<slug:sn>', pay_extend, name="pay_extend"),
     path('pay_online/', pay_online, name="pay_online"),
