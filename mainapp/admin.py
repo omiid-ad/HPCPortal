@@ -599,6 +599,8 @@ class UserAdminA(admin.ModelAdmin):
     get_active_services.short_description = "سرویس‌های فعال"
 
     def has_add_permission(self, request):
+        if request.user.is_superuser:
+            return super(UserAdminA, self).has_add_permission(request)
         return False
 
     def response_change(self, request, obj):
