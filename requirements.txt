@@ -44,7 +44,7 @@ mysqlclient==1.4.6
 odfpy==1.4.1
 openpyxl==3.0.3
 pdfrw==0.4
-Pillow==7.1.1
+Pillow==9.0.0
 pycryptodome==3.9.7
 python-bidi==0.4.2
 python-crontab==2.4.2
