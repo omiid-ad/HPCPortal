@@ -38,7 +38,7 @@ jdatetime==3.6.2
 jdcal==1.4.1
 kombu==4.6.10
 lockfile==0.12.2
-lxml==4.6.2
+lxml==4.9.1
 MarkupPy==1.14
 mysqlclient==1.4.6
 odfpy==1.4.1
