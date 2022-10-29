@@ -141,6 +141,7 @@ def register(request):
             except ValidationError as val_err:
                 for err_msg in val_err.messages:
                     messages.error(request, err_msg)
+                return render(request, 'mainapp/register.html')
             try:
                 dup_email = User.objects.get(email=request.POST['email'])
             except User.DoesNotExist:
