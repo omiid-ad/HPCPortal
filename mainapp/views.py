@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import login as django_login, authenticate, logout as django_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
@@ -135,9 +136,11 @@ def register(request):
             if request.POST['password1'] != request.POST['password2']:
                 messages.error(request, "کلمه عبور و تکرار آن مطابقت ندارند")
                 return render(request, 'mainapp/register.html')
-            if len(request.POST['password1']) < 8:
-                messages.error(request, "رمز عبور باید حداقل ۸ کاراکتر باشد")
-                return render(request, 'mainapp/register.html')
+            try:
+                validate_password(request.POST['password1'])
+            except ValidationError as val_err:
+                for err_msg in val_err.messages:
+                    messages.error(request, err_msg)
             try:
                 dup_email = User.objects.get(email=request.POST['email'])
             except User.DoesNotExist:
